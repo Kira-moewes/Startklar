@@ -1,0 +1,26 @@
+@import '@fontsource-variable/outfit';
+@import '@fontsource-variable/inter';
+@import 'tailwindcss';
+
+@theme {
+  --color-pine: #1B3931;
+  --color-cream: #FBF4E2;
+  --color-coral: #F47B5B;
+  --color-pine-soft: #2C4F45;
+  --color-pine-mist: #E4EAE7;
+  --color-coral-deep: #D95F41;
+  --color-cream-card: #FFFDF6;
+  --color-ink: #16302A;
+  --font-display: 'Outfit Variable', system-ui, sans-serif;
+  --font-body: 'Inter Variable', system-ui, sans-serif;
+  --radius-card: 1.25rem;
+  --radius-field: 0.875rem;
+  --radius-pill: 9999px;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-cream);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+}
