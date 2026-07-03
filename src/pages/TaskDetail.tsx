@@ -1,22 +1,26 @@
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { journeys } from '../data'
+import { relevanteTasks } from '../data/visibility'
+import { useProfile } from '../hooks/useProfile'
 import { useProgress } from '../hooks/useProgress'
 import CategoryBadge from '../components/CategoryBadge'
 
 export default function TaskDetail() {
   const { journeyId = '', taskId = '' } = useParams()
   const navigate = useNavigate()
+  const { profile } = useProfile()
   const journey = journeys.find(j => j.id === journeyId)
-  const taskIds = journey?.tasks.map(t => t.id) ?? []
+  const tasks = journey ? relevanteTasks(journey, profile) : []
+  const taskIds = tasks.map(t => t.id)
   const { done, toggle } = useProgress(journeyId, taskIds)
 
   if (!journey) return <p className="p-6">Nicht gefunden. <Link to="/" className="underline">Zur Startseite</Link></p>
-  const idx = journey.tasks.findIndex(t => t.id === taskId)
-  const task = journey.tasks[idx]
+  const task = journey.tasks.find(t => t.id === taskId)
   if (!task) return <p className="p-6">Aufgabe nicht gefunden. <Link to={`/journey/${journey.id}`} className="underline">Zur Übersicht</Link></p>
 
-  const prev = journey.tasks[idx - 1]
-  const next = journey.tasks[idx + 1]
+  const idx = tasks.findIndex(t => t.id === taskId)
+  const prev = tasks[idx - 1]
+  const next = tasks[idx + 1]
   const isDone = done[task.id] ?? false
 
   return (

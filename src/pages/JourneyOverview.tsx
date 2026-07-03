@@ -1,17 +1,21 @@
 import { Link, useParams } from 'react-router-dom'
 import { journeys } from '../data'
+import { relevanteTasks } from '../data/visibility'
+import { useProfile } from '../hooks/useProfile'
 import { useProgress } from '../hooks/useProgress'
 import CategoryBadge from '../components/CategoryBadge'
 
 export default function JourneyOverview() {
   const { journeyId = '' } = useParams()
+  const { profile } = useProfile()
   const journey = journeys.find(j => j.id === journeyId)
-  const taskIds = journey?.tasks.map(t => t.id) ?? []
+  const tasks = journey ? relevanteTasks(journey, profile) : []
+  const taskIds = tasks.map(t => t.id)
   const { done, toggle, doneCount, loading } = useProgress(journeyId, taskIds)
 
   if (!journey) return <p className="p-6">Diese Reise gibt es nicht. <Link to="/" className="underline">Zur Startseite</Link></p>
 
-  const total = journey.tasks.length
+  const total = tasks.length
   const pct = total ? Math.round((doneCount / total) * 100) : 0
   const allDone = !loading && doneCount === total
 
@@ -39,7 +43,7 @@ export default function JourneyOverview() {
       </section>
 
       <ul aria-label="Aufgaben" className="flex flex-col gap-4">
-        {journey.tasks.map(task => (
+        {tasks.map(task => (
           <li key={task.id} className="rounded-card bg-cream-card border border-pine-mist p-5 shadow-sm flex gap-4 items-start">
             <input
               type="checkbox"
