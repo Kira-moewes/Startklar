@@ -1,4 +1,4 @@
-export type TaskCategory = 'amt' | 'versicherung' | 'wohnen' | 'finanzen' | 'mobilitaet'
+export type TaskCategory = 'amt' | 'versicherung' | 'wohnen' | 'finanzen' | 'mobilitaet' | 'gesundheit' | 'recht' | 'arbeit'
 
 export interface Task {
   id: string

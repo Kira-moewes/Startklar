@@ -1,7 +1,8 @@
 import { ersteWohnungJourney } from './journeys/erste-wohnung'
 import { mobilitaetJourney } from './journeys/mobilitaet'
 import { finanzenJourney } from './journeys/finanzen'
+import { startJourney } from './journeys/start'
 
-export const journeys = [ersteWohnungJourney, mobilitaetJourney, finanzenJourney]
+export const journeys = [startJourney, ersteWohnungJourney, finanzenJourney, mobilitaetJourney]
 
-export { ersteWohnungJourney, mobilitaetJourney, finanzenJourney }
+export { startJourney, ersteWohnungJourney, mobilitaetJourney, finanzenJourney }

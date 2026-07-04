@@ -6,6 +6,9 @@ const meta: Record<TaskCategory, { label: string; cls: string }> = {
   wohnen: { label: 'Wohnen', cls: 'bg-coral text-white' },
   finanzen: { label: 'Finanzen', cls: 'bg-coral-deep text-white' },
   mobilitaet: { label: 'Mobilität', cls: 'bg-pine-mist text-pine' },
+  gesundheit: { label: 'Gesundheit', cls: 'bg-pine text-cream' },
+  recht: { label: 'Recht', cls: 'bg-pine-mist text-pine' },
+  arbeit: { label: 'Arbeit', cls: 'bg-coral-deep text-white' },
 }
 
 export default function CategoryBadge({ category }: { category: TaskCategory }) {
