@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout'
 import Home from './pages/Home'
+import Dashboard from './pages/Dashboard'
 import JourneyOverview from './pages/JourneyOverview'
 import TaskDetail from './pages/TaskDetail'
 import Impressum from './pages/Impressum'
@@ -13,6 +14,7 @@ export default function App() {
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/journey/:journeyId" element={<JourneyOverview />} />
           <Route path="/journey/:journeyId/task/:taskId" element={<TaskDetail />} />
           <Route path="/onboarding" element={<Onboarding />} />

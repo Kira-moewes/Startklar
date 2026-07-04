@@ -8,6 +8,7 @@ export default function Layout() {
           <Link to="/" className="font-display text-2xl font-semibold text-pine">Startklar</Link>
           <nav className="flex gap-5 text-sm" aria-label="Hauptnavigation">
             <NavLink to="/" className="text-pine hover:text-coral-deep">Start</NavLink>
+            <NavLink to="/dashboard" className="text-pine hover:text-coral-deep">Überblick</NavLink>
             <NavLink to="/impressum" className="text-pine hover:text-coral-deep">Impressum</NavLink>
             <NavLink to="/datenschutz" className="text-pine hover:text-coral-deep">Datenschutz</NavLink>
           </nav>
