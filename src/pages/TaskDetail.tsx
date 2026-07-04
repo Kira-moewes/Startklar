@@ -1,5 +1,6 @@
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { journeys } from '../data'
+import { faktum } from '../data/fakten'
 import { relevanteTasks } from '../data/visibility'
 import { useProfile } from '../hooks/useProfile'
 import { useProgress } from '../hooks/useProgress'
@@ -22,6 +23,13 @@ export default function TaskDetail() {
   const prev = tasks[idx - 1]
   const next = tasks[idx + 1]
   const isDone = done[task.id] ?? false
+  const factEntries = (task.faktenKeys ?? []).map(key => faktum(key)).filter(Boolean)
+  const hasUnverified = factEntries.some(entry => entry?.geprueft === null)
+  const latestDate = factEntries
+    .map(entry => entry?.geprueft)
+    .filter((value): value is string => Boolean(value))
+    .sort()
+    .at(-1) ?? null
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-10 flex flex-col gap-8">
@@ -51,6 +59,15 @@ export default function TaskDetail() {
         <p className="mt-2"><span className="font-medium text-coral-deep">Frist:</span> {task.deadline}</p>
         <p className="mt-2 text-ink/90">{task.consequence}</p>
         <p className="mt-3 text-sm text-ink/60">Kein Grund zur Panik – jetzt weißt du ja Bescheid.</p>
+        {task.faktenKeys && task.faktenKeys.length > 0 && (
+          <div className="mt-4 flex items-center gap-2 text-sm">
+            {hasUnverified ? (
+              <span className="rounded-full bg-[#f9d9d3] px-3 py-1 text-[#a84a3a]">Wird gerade geprüft</span>
+            ) : latestDate ? (
+              <span className="text-ink/70">Zuletzt geprüft am {latestDate}</span>
+            ) : null}
+          </div>
+        )}
       </section>
 
       <button

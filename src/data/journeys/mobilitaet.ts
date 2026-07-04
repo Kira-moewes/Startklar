@@ -16,7 +16,8 @@ export const mobilitaetJourney: Journey = {
       ],
       deadline: '{FRIST_FUEHRERSCHEIN}', // [GEGENCHECKEN: von Kira zu verifizieren]
       consequence: 'Wenn Fristen verstreichen, müssen oft Teile neu gemacht werden – das ist nervig, aber meist noch machbar.',
-      category: 'mobilitaet'
+      category: 'mobilitaet',
+      faktenKeys: ['FRIST_FUEHRERSCHEIN']
     },
     {
       id: 'kfz-anmelden',
@@ -30,7 +31,8 @@ export const mobilitaetJourney: Journey = {
       ],
       deadline: '{FRIST_ZULASSUNG}', // [GEGENCHECKEN: von Kira zu verifizieren]
       consequence: 'Ohne Anmeldung darfst du das Auto nicht legal im öffentlichen Straßenverkehr nutzen.',
-      category: 'mobilitaet'
+      category: 'mobilitaet',
+      faktenKeys: ['FRIST_ZULASSUNG', 'BETRAG_ZULASSUNG']
     },
     {
       id: 'kfz-versicherung',

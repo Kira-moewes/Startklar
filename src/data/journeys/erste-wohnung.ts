@@ -17,7 +17,8 @@ export const ersteWohnungJourney: Journey = {
       ],
       deadline: '{FRIST_ANMELDUNG}', // [GEGENCHECKEN: von Kira zu verifizieren]
       consequence: 'Wenn du dich nicht rechtzeitig anmeldest, kann es zu Problemen bei Versicherungen, der Bank oder anderen wichtigen Kontakten kommen.',
-      category: 'amt'
+      category: 'amt',
+      faktenKeys: ['FRIST_ANMELDUNG']
     },
     {
       id: 'rundfunkbeitrag',
@@ -31,7 +32,8 @@ export const ersteWohnungJourney: Journey = {
       ],
       deadline: '{FRIST_RUNDFUNKBEITRAG}', // [GEGENCHECKEN: von Kira zu verifizieren]
       consequence: 'Wenn du den Beitrag nicht meldest, kann es später zu Rückfragen oder Nachforderungen kommen.',
-      category: 'wohnen'
+      category: 'wohnen',
+      faktenKeys: ['FRIST_RUNDFUNKBEITRAG', 'BETRAG_RUNDFUNK']
     },
     {
       id: 'haftpflichtversicherung',
@@ -45,7 +47,8 @@ export const ersteWohnungJourney: Journey = {
       ],
       deadline: '{FRIST_VERSICHERUNG}', // [GEGENCHECKEN: von Kira zu verifizieren]
       consequence: 'Wenn du die Versicherung nicht prüfst, kann ein Lückenfall später teuer werden.',
-      category: 'versicherung'
+      category: 'versicherung',
+      faktenKeys: ['FRIST_VERSICHERUNG']
     },
     {
       id: 'adress-aenderungen',
@@ -59,7 +62,8 @@ export const ersteWohnungJourney: Journey = {
       ],
       deadline: '{FRIST_ADRESSAENDERUNG}', // [GEGENCHECKEN: von Kira zu verifizieren]
       consequence: 'Wenn du die Adresse nicht aktualisierst, können Post, Zahlungen oder wichtige Nachrichten verloren gehen.',
-      category: 'finanzen'
+      category: 'finanzen',
+      faktenKeys: ['FRIST_ADRESSAENDERUNG']
     }
   ]
 }

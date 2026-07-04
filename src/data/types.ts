@@ -8,6 +8,7 @@ export interface Task {
   deadline: string
   consequence: string
   category: TaskCategory
+  faktenKeys?: string[]
 }
 
 export interface Journey {

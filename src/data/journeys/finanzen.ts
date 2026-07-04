@@ -29,7 +29,8 @@ export const finanzenJourney: Journey = {
       ],
       deadline: '{FRIST_STEUER}', // [GEGENCHECKEN: von Kira zu verifizieren]
       consequence: 'Wenn du sie nicht prüfst, verpasst du vielleicht eine Rückerstattung oder einen wichtigen Hinweis.',
-      category: 'finanzen'
+      category: 'finanzen',
+      faktenKeys: ['FRIST_STEUER', 'BETRAG_RUECKERSTATTUNG']
     },
     {
       id: 'familienversicherung-check',
@@ -42,7 +43,8 @@ export const finanzenJourney: Journey = {
       ],
       deadline: '{FRIST_FAMILIENVERSICHERUNG}', // [GEGENCHECKEN: von Kira zu verifizieren]
       consequence: 'Wenn du die Versicherung nicht rechtzeitig prüfst, kann es später zu einer Lücke kommen.',
-      category: 'versicherung'
+      category: 'versicherung',
+      faktenKeys: ['FRIST_FAMILIENVERSICHERUNG']
     },
     {
       id: 'schufa',
@@ -55,7 +57,8 @@ export const finanzenJourney: Journey = {
       ],
       deadline: 'Kein fester Termin', // [GEGENCHECKEN: von Kira zu verifizieren]
       consequence: 'Wenn du die Schufa nicht kennst, können Unklarheiten später schwerer aufgelöst werden.',
-      category: 'finanzen'
+      category: 'finanzen',
+      faktenKeys: ['ANZAHL_SCHUFA_KOSTENLOS']
     }
   ]
 }
