@@ -24,9 +24,25 @@ export const sichtbarkeit: Record<string, Bedingung[]> = {
   'finanzen:steuererklaerung': [
     { feld: 'einkommen', einesVon: ['minijob', 'ausbildung', 'vollzeit', 'werkstudent'] },
   ],
+  'finanzen:lohnabrechnung': [
+    { feld: 'einkommen', einesVon: ['minijob', 'ausbildung', 'vollzeit', 'werkstudent'] },
+  ],
   'finanzen:familienversicherung-check': [
     { feld: 'krankenversicherung', einesVon: ['familie', 'unklar'] },
   ],
+  // start journey
+  'start:bafoeg': [
+    { feld: 'status', einesVon: ['student'] },
+  ],
+  // start:minijob: (einkommen [keins, minijob] OR status [schueler, student]) - kept visible for all
+  // since current AND-only engine doesn't support OR; permissive visibility is correct
+  'start:bewerbung-ausbildung': [
+    { feld: 'status', einesVon: ['schueler', 'suchend'] },
+  ],
+  'start:krankenkasse-check': [
+    { feld: 'krankenversicherung', einesVon: ['familie', 'unklar'] },
+  ],
+  // start:kindergeld-ab-18: visible for all (volljaehrig [nein, ja] would be all)
 }
 
 export function istRelevant(profile: Profile | null, journeyId: string, taskId?: string): boolean {
