@@ -1,17 +1,22 @@
 @import '@fontsource-variable/outfit';
 @import '@fontsource-variable/inter';
+@import '@fontsource-variable/fraunces';
 @import 'tailwindcss';
 
 @theme {
   --color-pine: #1B3931;
+  --color-forest: #283618;
+  --color-olive: #606C38;
+  --color-olive-soft: #7C8A4E;
   --color-cream: #FBF4E2;
-  --color-coral: #F47B5B;
-  --color-pine-soft: #2C4F45;
-  --color-pine-mist: #E4EAE7;
-  --color-coral-deep: #D95F41;
+  --color-cornsilk: #FEFAE0;
   --color-cream-card: #FFFDF6;
+  --color-pine-mist: #E4EAE7;
+  --color-coral: #F47B5B;
+  --color-coral-deep: #D95F41;
   --color-ink: #16302A;
   --font-display: 'Outfit Variable', system-ui, sans-serif;
+  --font-serif: 'Fraunces Variable', Georgia, serif;
   --font-body: 'Inter Variable', system-ui, sans-serif;
   --radius-card: 1.25rem;
   --radius-field: 0.875rem;
