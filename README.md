@@ -1,32 +1,42 @@
-# React + TypeScript + Vite
+# Startklar
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Erwachsenwerden – aber machbar. Startklar begleitet junge Menschen bei den
+ersten Behörden-, Geld- und Wohnungs-To-dos: verständlich, neutral und ohne
+erhobenen Zeigefinger.
 
-Currently, two official plugins are available:
+## Module (Planungskonzept v2)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Onboarding & Personalisierung** – 7 Fragen, danach werden nur relevante
+  Bereiche und Schritte angezeigt (`src/data/profile.ts`, `src/data/visibility.ts`).
+- **Bereiche & Aufgaben** – Journeys wie „Erste Wohnung", „Finanzen",
+  „Mobilität" mit Schritt-für-Schritt-Anleitungen und Fristen (`src/data/journeys/`).
+- **Suche** – Volltextsuche über alle Schritte inkl. Kategorie-Filter und
+  Treffer in den Vergleichen (`/suche`).
+- **Anbieter-Vergleich** – neutrale Vergleichstabellen (Strom, Internet,
+  Haftpflicht, Hausrat, Girokonto, Kfz, Handy). Kriterien kommen von Startklar,
+  Angebote trägt man selbst ein, Favorit markierbar. Keine Werbung, keine
+  Provision (`/vergleich`).
+- **Fortschritt** – Gesamt-Ring, Fortschritt je Bereich, Aktivitäts-Heatmap
+  aus echten Erledigt-Daten, zuletzt erledigte und nächste Schritte
+  (`/fortschritt`).
+- **Termine/Agenda** – Termine anlegen (auch direkt aus einer Aufgabe),
+  Gruppierung in Überfällig/Heute/Nächste 7 Tage/Später, ICS-Export für den
+  Kalender (`/termine`).
 
-## React Compiler
+Alle Nutzerdaten bleiben lokal auf dem Gerät (IndexedDB via localforage).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Entwicklung
 
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev      # Entwicklungsserver
+npm run build    # Type-Check + Produktions-Build (inkl. PWA)
+npm run lint     # oxlint
+npm run preview  # Build lokal testen
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Stack: React 19, TypeScript, Vite 8, Tailwind CSS 4, react-router 7,
+localforage, vite-plugin-pwa. Deployment via Vercel (`vercel.json`).
+
+Hinweis: Inhalte sind keine Rechtsberatung; Beträge und Fristen stehen als
+`{PLATZHALTER}` in `src/data/fakten.ts`, bis sie redaktionell geprüft sind.

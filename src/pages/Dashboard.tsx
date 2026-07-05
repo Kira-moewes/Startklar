@@ -3,92 +3,100 @@ import { Link } from 'react-router-dom'
 import { journeys } from '../data'
 import { relevanteTasks, istRelevant } from '../data/visibility'
 import { useProfile } from '../hooks/useProfile'
-import { useProgress } from '../hooks/useProgress'
+import { useAllProgress } from '../hooks/useProgress'
+import { useTermine } from '../hooks/useTermine'
 import Ring from '../components/ui/Ring'
 import Bar from '../components/ui/Bar'
 import StatCard from '../components/ui/StatCard'
 import Heatmap from '../components/ui/Heatmap'
+import type { Task } from '../data/types'
+
+const heute = () => new Date().toISOString().slice(0, 10)
+
+function formatDatum(iso: string) {
+  return new Date(iso + 'T00:00:00').toLocaleDateString('de-DE', { weekday: 'short', day: 'numeric', month: 'long' })
+}
 
 export default function Dashboard() {
   const { profile, loading: profileLoading } = useProfile()
+  const { termine } = useTermine()
 
-  // Get relevant journeys
-  const relevantJourneys = useMemo(
-    () => journeys.filter(j => istRelevant(profile, j.id)),
-    [profile]
-  )
-
-  // For each relevant journey, collect tasks and progress
   const journeyData = useMemo(() => {
-    return relevantJourneys.map(journey => {
-      const tasks = relevanteTasks(journey, profile)
-      return {
-        journey,
-        tasks,
-        taskCount: tasks.length,
-      }
-    })
-  }, [relevantJourneys, profile])
+    return journeys
+      .filter(j => istRelevant(profile, j.id))
+      .map(journey => {
+        const tasks = relevanteTasks(journey, profile)
+        return { journey, tasks, taskIds: tasks.map(t => t.id) }
+      })
+  }, [profile])
 
-  // Load progress for all journeys by calling useProgress for each one
-  const progressByJourney = journeyData.map(jd => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const taskIds = jd.tasks.map(t => t.id)
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const { done, doneCount } = useProgress(jd.journey.id, taskIds)
-    return { journeyId: jd.journey.id, done, doneCount, taskCount: taskIds.length }
-  })
+  const progressItems = useMemo(
+    () => journeyData.map(jd => ({ journeyId: jd.journey.id, taskIds: jd.taskIds })),
+    [journeyData]
+  )
+  const { progress, dates, loading: progressLoading } = useAllProgress(progressItems)
 
-  // Calculate aggregated stats
   const stats = useMemo(() => {
-    const totalDone = progressByJourney.reduce((sum, p) => sum + p.doneCount, 0)
-    const totalTasks = progressByJourney.reduce((sum, p) => sum + p.taskCount, 0)
-    const overallPercent = totalTasks > 0 ? Math.round((totalDone / totalTasks) * 100) : 0
+    const totalDone = progress.reduce((sum, p) => sum + p.doneCount, 0)
+    const totalTasks = progress.reduce((sum, p) => sum + p.taskCount, 0)
     return {
       totalDone,
       totalTasks,
-      overallPercent,
+      overallPercent: totalTasks > 0 ? Math.round((totalDone / totalTasks) * 100) : 0,
       numAreas: journeyData.length,
     }
-  }, [progressByJourney, journeyData])
+  }, [progress, journeyData])
 
-  // Create heatmap data: 5 weeks × 7 days grid
-  // Distribute done count across cells
+  // Echte Aktivität: erledigte Aufgaben der letzten 5 Wochen, ein Feld pro Tag.
   const heatmapData = useMemo(() => {
-    const cellCount = 35 // 5 weeks × 7 days
+    const cellCount = 35
     const cells = new Array(cellCount).fill(0)
-    const totalDone = stats.totalDone
-
-    if (totalDone > 0) {
-      // Distribute tasks proportionally across cells, with later cells getting more density
-      for (let i = 0; i < cellCount; i++) {
-        const weight = 1 + (i / cellCount) * 0.5 // Later cells are slightly heavier
-        cells[i] = Math.round((totalDone / cellCount) * weight)
-      }
+    const today = new Date()
+    for (const iso of Object.values(dates)) {
+      const diff = Math.floor((today.getTime() - new Date(iso + 'T00:00:00').getTime()) / 86400000)
+      if (diff >= 0 && diff < cellCount) cells[cellCount - 1 - diff] += 1
     }
-
     return cells
-  }, [stats.totalDone])
+  }, [dates])
 
-  // Find next tasks (first 1-3 not done from relevant journeys)
-  const nextTasks = useMemo(() => {
-    const notDone: Array<{ journeyId: string; task: any }> = []
-
+  // Zuletzt erledigte Aufgaben mit Datum
+  const zuletztErledigt = useMemo(() => {
+    const list: Array<{ journeyId: string; task: Task; datum: string }> = []
     journeyData.forEach(jd => {
-      const journeyProgress = progressByJourney.find(p => p.journeyId === jd.journey.id)
+      jd.tasks.forEach(task => {
+        const d = dates[`${jd.journey.id}:${task.id}`]
+        if (d) list.push({ journeyId: jd.journey.id, task, datum: d })
+      })
+    })
+    return list.sort((a, b) => (a.datum < b.datum ? 1 : -1)).slice(0, 3)
+  }, [journeyData, dates])
+
+  const nextTasks = useMemo(() => {
+    const notDone: Array<{ journeyId: string; task: Task }> = []
+    journeyData.forEach(jd => {
+      const journeyProgress = progress.find(p => p.journeyId === jd.journey.id)
       if (journeyProgress) {
         jd.tasks.forEach(task => {
-          if (!journeyProgress.done[task.id]) {
-            notDone.push({ journeyId: jd.journey.id, task })
-          }
+          if (!journeyProgress.done[task.id]) notDone.push({ journeyId: jd.journey.id, task })
         })
       }
     })
-
     return notDone.slice(0, 3)
-  }, [journeyData, progressByJourney])
+  }, [journeyData, progress])
 
-  if (profileLoading) {
+  const naechsteTermine = useMemo(
+    () => termine
+      .filter(t => !t.erledigt && t.datum >= heute())
+      .sort((a, b) => ((a.datum + (a.uhrzeit ?? '')) < (b.datum + (b.uhrzeit ?? '')) ? -1 : 1))
+      .slice(0, 3),
+    [termine]
+  )
+  const ueberfaellig = useMemo(
+    () => termine.filter(t => !t.erledigt && t.datum < heute()).length,
+    [termine]
+  )
+
+  if (profileLoading || progressLoading) {
     return (
       <div className="mx-auto max-w-3xl px-6 py-12">
         <p className="text-ink/60">Lädt...</p>
@@ -96,12 +104,11 @@ export default function Dashboard() {
     )
   }
 
-  // Empty state
   if (!profile) {
     return (
       <div className="mx-auto max-w-3xl px-6 py-12 flex flex-col gap-8">
         <div>
-          <h1 className="font-serif text-4xl font-bold text-pine">Dein Überblick</h1>
+          <h1 className="font-serif text-4xl font-bold text-pine">Dein Fortschritt</h1>
           <p className="mt-2 text-lg text-ink/80">
             Schritt für Schritt. Wir zeigen dir, was noch zu tun ist.
           </p>
@@ -119,50 +126,16 @@ export default function Dashboard() {
     )
   }
 
-  // Nothing done yet
-  if (stats.totalDone === 0) {
-    return (
-      <div className="mx-auto max-w-3xl px-6 py-12 flex flex-col gap-8">
-        <div>
-          <h1 className="font-serif text-4xl font-bold text-pine">Dein Überblick</h1>
-          <p className="mt-2 text-lg text-ink/80">
-            Schritt für Schritt. Wir zeigen dir, was noch zu tun ist.
-          </p>
-        </div>
-        <div className="rounded-card bg-cream-card border border-pine-mist p-8">
-          <p className="text-ink/80 mb-6">
-            Du hast noch nichts angefangen – sehr normal! Wähle einen Bereich und leg los, wann es passt.
-          </p>
-          {journeyData.length > 0 && (
-            <div className="space-y-3">
-              {journeyData.slice(0, 2).map(jd => (
-                <Link
-                  key={jd.journey.id}
-                  to={`/journey/${jd.journey.id}`}
-                  className="block p-4 rounded-card bg-cream border border-pine-mist hover:border-coral transition"
-                >
-                  <p className="font-display font-semibold text-pine">{jd.journey.title}</p>
-                  <p className="text-sm text-ink/70">{jd.taskCount} Schritte</p>
-                </Link>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className="mx-auto max-w-3xl px-6 py-12 flex flex-col gap-12">
-      {/* Header */}
       <div>
-        <h1 className="font-serif text-4xl md:text-5xl font-bold text-pine">Dein Überblick</h1>
+        <h1 className="font-serif text-4xl md:text-5xl font-bold text-pine">Dein Fortschritt</h1>
         <p className="mt-2 text-lg text-ink/80">
-          Schritt für Schritt. Du packst das.
+          {stats.totalDone === 0 ? 'Schritt für Schritt. Wir zeigen dir, wo du anfängst.' : 'Schritt für Schritt. Du packst das.'}
         </p>
       </div>
 
-      {/* Top row: Big Ring + 3 StatCards */}
+      {/* Kennzahlen */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-start">
         <div className="flex justify-center">
           <Ring
@@ -171,27 +144,44 @@ export default function Dashboard() {
             label={`${stats.overallPercent}%`}
           />
         </div>
-        <StatCard
-          label="Bereiche für dich"
-          value={stats.numAreas}
-        />
-        <StatCard
-          label="Schritte gesamt"
-          value={stats.totalTasks}
-        />
-        <StatCard
-          label="Erledigt"
-          value={stats.totalDone}
-        />
+        <StatCard label="Bereiche für dich" value={stats.numAreas} />
+        <StatCard label="Schritte gesamt" value={stats.totalTasks} />
+        <StatCard label="Erledigt" value={stats.totalDone} />
       </div>
 
-      {/* Per-journey bars */}
-      {progressByJourney.length > 0 && (
+      {/* Termine-Vorschau */}
+      {(naechsteTermine.length > 0 || ueberfaellig > 0) && (
+        <section className="space-y-4">
+          <div className="flex items-baseline justify-between">
+            <h2 className="font-display text-xl font-semibold text-pine">Deine nächsten Termine</h2>
+            <Link to="/termine" className="text-sm text-pine underline underline-offset-2 hover:text-coral-deep">
+              Alle Termine
+            </Link>
+          </div>
+          {ueberfaellig > 0 && (
+            <Link to="/termine" className="block rounded-card border-2 border-coral bg-cream-card p-4 text-coral-deep font-medium hover:bg-cream transition">
+              {ueberfaellig} {ueberfaellig === 1 ? 'Termin ist' : 'Termine sind'} überfällig – schau kurz rein.
+            </Link>
+          )}
+          <div className="space-y-3">
+            {naechsteTermine.map(t => (
+              <div key={t.id} className="rounded-card bg-cream-card border border-pine-mist p-4">
+                <p className="font-display font-semibold text-pine">{t.titel}</p>
+                <p className="text-sm text-ink/70">{formatDatum(t.datum)}{t.uhrzeit ? `, ${t.uhrzeit} Uhr` : ''}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Bereichs-Fortschritt */}
+      {stats.totalTasks > 0 && (
         <section className="space-y-6">
           <h2 className="font-display text-xl font-semibold text-pine">Deine Bereiche</h2>
           <div className="space-y-4">
-            {progressByJourney.map((prog, idx) => {
-              const journey = journeyData[idx].journey
+            {progress.map(prog => {
+              const journey = journeyData.find(jd => jd.journey.id === prog.journeyId)?.journey
+              if (!journey) return null
               return (
                 <Link
                   key={prog.journeyId}
@@ -199,11 +189,7 @@ export default function Dashboard() {
                   className="block p-5 rounded-card bg-cream-card border border-pine-mist hover:border-coral transition"
                 >
                   <p className="text-sm font-medium text-ink/60 mb-3">{journey.title}</p>
-                  <Bar
-                    label=""
-                    value={prog.doneCount}
-                    max={prog.taskCount}
-                  />
+                  <Bar label="" value={prog.doneCount} max={prog.taskCount} />
                 </Link>
               )
             })}
@@ -211,21 +197,38 @@ export default function Dashboard() {
         </section>
       )}
 
-      {/* Heatmap */}
-      <section className="space-y-4">
-        <h2 className="font-display text-xl font-semibold text-pine">Aktivität</h2>
-        <Heatmap
-          data={heatmapData}
-          caption="Heller = mehr geschafft. (Letzte 5 Wochen)"
-          cols={7}
-        />
-      </section>
+      {/* Aktivität */}
+      {stats.totalDone > 0 && (
+        <section className="space-y-4">
+          <h2 className="font-display text-xl font-semibold text-pine">Aktivität</h2>
+          <Heatmap
+            data={heatmapData}
+            caption="Ein Feld pro Tag, kräftiger = mehr erledigt. (Letzte 5 Wochen)"
+            cols={7}
+          />
+        </section>
+      )}
 
-      {/* Next tasks */}
+      {/* Zuletzt erledigt */}
+      {zuletztErledigt.length > 0 && (
+        <section className="space-y-4">
+          <h2 className="font-display text-xl font-semibold text-pine">Zuletzt erledigt</h2>
+          <div className="space-y-3">
+            {zuletztErledigt.map(z => (
+              <div key={`${z.journeyId}-${z.task.id}`} className="rounded-card bg-cream-card border border-pine-mist p-4 flex items-center gap-3">
+                <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-pine text-cream text-xs">✓</span>
+                <p className="flex-1 font-display text-pine">{z.task.title}</p>
+                <p className="text-sm text-ink/50">{formatDatum(z.datum)}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Nächste Schritte */}
       {nextTasks.length > 0 && (
         <section className="space-y-4">
-          <h2 className="font-display text-xl font-semibold text-pine">Zuletzt verpasst?</h2>
-          <p className="text-sm text-ink/70 mb-4">Das sind deine nächsten Schritte:</p>
+          <h2 className="font-display text-xl font-semibold text-pine">Deine nächsten Schritte</h2>
           <div className="space-y-3">
             {nextTasks.map((nt, i) => (
               <Link
@@ -248,6 +251,14 @@ export default function Dashboard() {
             ))}
           </div>
         </section>
+      )}
+
+      {stats.totalTasks > 0 && stats.totalDone === 0 && (
+        <div className="rounded-card bg-cream-card border border-pine-mist p-6">
+          <p className="text-ink/80">
+            Du hast noch nichts abgehakt – sehr normal! Fang mit einem der Schritte oben an, wann es passt.
+          </p>
+        </div>
       )}
     </div>
   )

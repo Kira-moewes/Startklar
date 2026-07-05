@@ -1,6 +1,7 @@
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { journeys } from '../data'
 import { faktum } from '../data/fakten'
+import { kategorie, vergleichFuerTask } from '../data/vergleich'
 import { relevanteTasks } from '../data/visibility'
 import { useProfile } from '../hooks/useProfile'
 import { useProgress } from '../hooks/useProgress'
@@ -70,12 +71,42 @@ export default function TaskDetail() {
         )}
       </section>
 
-      <button
-        onClick={() => toggle(task.id)}
-        className={`min-h-14 rounded-pill px-8 font-display text-lg font-semibold transition ${isDone ? 'bg-pine text-cream active:bg-pine-soft' : 'bg-coral text-white active:bg-coral-deep'}`}
-      >
-        {isDone ? '✓ Erledigt – rückgängig machen' : 'Als erledigt markieren'}
-      </button>
+      {(vergleichFuerTask[`${journey.id}:${task.id}`] ?? []).length > 0 && (
+        <section aria-label="Passender Vergleich" className="rounded-card bg-pine p-6 text-cream">
+          <h2 className="font-display text-xl font-semibold">Anbieter vergleichen</h2>
+          <p className="mt-1 text-cream/85">Zu diesem Schritt gibt es einen neutralen Vergleich – trag deine Angebote ein und behalte den Überblick.</p>
+          <div className="mt-4 flex flex-wrap gap-3">
+            {(vergleichFuerTask[`${journey.id}:${task.id}`] ?? []).map(katId => {
+              const kat = kategorie(katId)
+              if (!kat) return null
+              return (
+                <Link
+                  key={katId}
+                  to={`/vergleich/${katId}`}
+                  className="rounded-pill bg-coral px-5 py-2.5 font-display font-semibold text-white hover:bg-coral-deep transition"
+                >
+                  {kat.titel} →
+                </Link>
+              )
+            })}
+          </div>
+        </section>
+      )}
+
+      <div className="flex flex-col sm:flex-row gap-3">
+        <button
+          onClick={() => toggle(task.id)}
+          className={`flex-1 min-h-14 rounded-pill px-8 font-display text-lg font-semibold transition ${isDone ? 'bg-pine text-cream active:bg-pine-soft' : 'bg-coral text-white active:bg-coral-deep'}`}
+        >
+          {isDone ? '✓ Erledigt – rückgängig machen' : 'Als erledigt markieren'}
+        </button>
+        <Link
+          to={`/termine?neu=1&titel=${encodeURIComponent(task.title)}&journey=${journey.id}&task=${task.id}`}
+          className="min-h-14 rounded-pill border-2 border-pine px-8 font-display text-lg font-semibold text-pine flex items-center justify-center hover:bg-pine-mist/50 transition"
+        >
+          📅 Termin dazu anlegen
+        </Link>
+      </div>
 
       <nav aria-label="Aufgaben-Navigation" className="flex justify-between gap-4">
         {prev ? (

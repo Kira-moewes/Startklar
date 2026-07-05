@@ -1,16 +1,22 @@
 import { Link, NavLink, Outlet } from 'react-router-dom'
 
+const navClass = ({ isActive }: { isActive: boolean }) =>
+  `transition ${isActive ? 'text-coral-deep font-semibold' : 'text-pine hover:text-coral-deep'}`
+
 export default function Layout() {
   return (
     <div className="min-h-dvh flex flex-col bg-cream text-ink">
       <header className="border-b border-pine-mist bg-cream-card/80 backdrop-blur">
-        <div className="mx-auto max-w-3xl px-6 h-16 flex items-center justify-between">
+        <div className="mx-auto max-w-3xl px-6 min-h-16 py-3 flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
           <Link to="/" className="font-display text-2xl font-semibold text-pine">Startklar</Link>
-          <nav className="flex gap-5 text-sm" aria-label="Hauptnavigation">
-            <NavLink to="/" className="text-pine hover:text-coral-deep">Start</NavLink>
-            <NavLink to="/dashboard" className="text-pine hover:text-coral-deep">Überblick</NavLink>
-            <NavLink to="/impressum" className="text-pine hover:text-coral-deep">Impressum</NavLink>
-            <NavLink to="/datenschutz" className="text-pine hover:text-coral-deep">Datenschutz</NavLink>
+          <nav className="flex flex-wrap gap-x-5 gap-y-1 text-sm" aria-label="Hauptnavigation">
+            <NavLink to="/" end className={navClass}>Start</NavLink>
+            <NavLink to="/fortschritt" className={navClass}>Fortschritt</NavLink>
+            <NavLink to="/termine" className={navClass}>Termine</NavLink>
+            <NavLink to="/vergleich" className={navClass}>Vergleich</NavLink>
+            <NavLink to="/suche" className={navClass} aria-label="Suche">
+              <span aria-hidden="true">🔍</span> Suche
+            </NavLink>
           </nav>
         </div>
       </header>
