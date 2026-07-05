@@ -1,33 +1,48 @@
 import { Link, NavLink, Outlet } from 'react-router-dom'
+import { useProfile } from '../hooks/useProfile'
 
 const navClass = ({ isActive }: { isActive: boolean }) =>
-  `transition ${isActive ? 'text-coral-deep font-semibold' : 'text-pine hover:text-coral-deep'}`
+  `text-[15px] font-medium py-1 transition ${isActive ? 'text-olive' : 'text-pine hover:text-olive'}`
 
 export default function Layout() {
+  const { profile, loading } = useProfile()
+
   return (
     <div className="min-h-dvh flex flex-col bg-cream text-ink">
-      <header className="border-b border-pine-mist bg-cream-card/80 backdrop-blur">
-        <div className="mx-auto max-w-3xl px-6 min-h-16 py-3 flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
-          <Link to="/" className="font-display text-2xl font-semibold text-pine">Startklar</Link>
-          <nav className="flex flex-wrap gap-x-5 gap-y-1 text-sm" aria-label="Hauptnavigation">
+      <header className="sticky top-0 z-50 bg-cream/85 backdrop-blur-md border-b border-pine/12">
+        <div className="mx-auto max-w-[1200px] px-7 min-h-[68px] py-2 flex flex-wrap items-center justify-between gap-x-6 gap-y-1">
+          <Link to="/" className="flex items-baseline">
+            <span className="font-serif text-[27px] text-pine">Startklar</span>
+          </Link>
+          <nav className="flex flex-wrap items-center gap-x-5 gap-y-1" aria-label="Hauptnavigation">
             <NavLink to="/" end className={navClass}>Start</NavLink>
             <NavLink to="/fortschritt" className={navClass}>Fortschritt</NavLink>
             <NavLink to="/termine" className={navClass}>Termine</NavLink>
             <NavLink to="/vergleich" className={navClass}>Vergleich</NavLink>
-            <NavLink to="/suche" className={navClass} aria-label="Suche">
-              <span aria-hidden="true">🔍</span> Suche
-            </NavLink>
+            <NavLink to="/suche" className={navClass}>Suche</NavLink>
+            <NavLink to="/profil" className={navClass}>Profil</NavLink>
+            {!loading && !profile && (
+              <Link
+                to="/onboarding"
+                className="rounded-pill bg-pine text-cream px-5 py-2.5 text-sm font-semibold hover:bg-olive transition"
+              >
+                Loslegen
+              </Link>
+            )}
           </nav>
         </div>
       </header>
       <main className="flex-1">
         <Outlet />
       </main>
-      <footer className="border-t border-pine-mist bg-cream-card">
-        <div className="mx-auto max-w-3xl px-6 py-5 text-sm text-ink/70 flex flex-wrap gap-x-6 gap-y-2 items-center">
+      <footer className="bg-pine text-cream/65 border-t border-cream/10">
+        <div className="mx-auto max-w-[1200px] px-7 py-6 flex flex-wrap gap-x-6 gap-y-2 items-center text-[13.5px]">
+          <span className="font-serif text-[17px] text-cream">Startklar</span>
           <span>Keine Rechtsberatung. Angaben können sich ändern.</span>
-          <Link to="/impressum" className="underline underline-offset-2 hover:text-coral-deep">Impressum</Link>
-          <Link to="/datenschutz" className="underline underline-offset-2 hover:text-coral-deep">Datenschutz</Link>
+          <span className="ml-auto flex gap-4.5">
+            <Link to="/impressum" className="underline underline-offset-3 hover:text-cream transition">Impressum</Link>
+            <Link to="/datenschutz" className="underline underline-offset-3 hover:text-cream transition">Datenschutz</Link>
+          </span>
         </div>
       </footer>
     </div>

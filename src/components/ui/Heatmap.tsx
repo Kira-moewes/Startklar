@@ -8,14 +8,14 @@ function interpolateColor(value: number, min: number, max: number): string {
   // Normalize value between 0 and 1
   const normalized = (value - min) / (max - min)
 
-  // Colors: pine-mist (#E4EAE7) to coral (#F47B5B)
-  const startR = 0xe4 / 255
-  const startG = 0xea / 255
-  const startB = 0xe7 / 255
+  // Colors: pine-mist (#E2DFC6) to olive (#606C38)
+  const startR = 0xe2 / 255
+  const startG = 0xdf / 255
+  const startB = 0xc6 / 255
 
-  const endR = 0xf4 / 255
-  const endG = 0x7b / 255
-  const endB = 0x5b / 255
+  const endR = 0x60 / 255
+  const endG = 0x6c / 255
+  const endB = 0x38 / 255
 
   const r = Math.round((startR + (endR - startR) * normalized) * 255)
   const g = Math.round((startG + (endG - startG) * normalized) * 255)

@@ -1,26 +1,33 @@
-@import '@fontsource-variable/outfit';
-@import '@fontsource-variable/inter';
-@import '@fontsource-variable/fraunces';
+@import '@fontsource-variable/instrument-sans';
+@import '@fontsource/instrument-serif';
+@import '@fontsource/instrument-serif/400-italic.css';
 @import 'tailwindcss';
 
 @theme {
-  --color-pine: #1B3931;
+  /* Palette aus dem Redesign: Cornsilk + Waldgrün + Olive */
+  --color-pine: #283618;
   --color-forest: #283618;
   --color-olive: #606C38;
   --color-olive-soft: #7C8A4E;
-  --color-cream: #FBF4E2;
+  --color-olive-deep: #4A5426;
+  --color-pine-soft: #7C8A4E;
+  --color-tile: #33471F;
+  --color-cream: #FEFAE0;
   --color-cornsilk: #FEFAE0;
-  --color-cream-card: #FFFDF6;
-  --color-pine-mist: #E4EAE7;
-  --color-coral: #F47B5B;
-  --color-coral-deep: #D95F41;
-  --color-ink: #16302A;
-  --font-display: 'Outfit Variable', system-ui, sans-serif;
-  --font-serif: 'Fraunces Variable', Georgia, serif;
-  --font-body: 'Inter Variable', system-ui, sans-serif;
+  --color-cream-card: #FFFDF0;
+  --color-pine-mist: #E2DFC6;
+  /* Frühere Coral-Akzente laufen jetzt auf Olive */
+  --color-coral: #606C38;
+  --color-coral-deep: #4A5426;
+  --color-ink: #283618;
+  --font-display: 'Instrument Sans Variable', system-ui, sans-serif;
+  --font-serif: 'Instrument Serif', Georgia, serif;
+  --font-body: 'Instrument Sans Variable', system-ui, sans-serif;
   --radius-card: 1.25rem;
   --radius-field: 0.875rem;
   --radius-pill: 9999px;
+
+  --animate-rise: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
 body {
@@ -28,4 +35,78 @@ body {
   background: var(--color-cream);
   color: var(--color-ink);
   -webkit-font-smoothing: antialiased;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Animationen aus dem Redesign */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(26px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes mq {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes drawPath {
+  from { stroke-dashoffset: 1200; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes flyIn {
+  0% { transform: translate(-52vw, 26vh) rotate(-24deg); opacity: 0; }
+  12% { opacity: 1; }
+  60% { transform: translate(6vw, -4vh) rotate(8deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+@keyframes glide {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-14px) rotate(3deg); }
+}
+@keyframes drift {
+  0% { transform: translate(0, 0); }
+  33% { transform: translate(12px, -10px); }
+  66% { transform: translate(-8px, 8px); }
+  100% { transform: translate(0, 0); }
+}
+@keyframes doorSwing {
+  0%, 100% { transform: perspective(500px) rotateY(0deg); }
+  50% { transform: perspective(500px) rotateY(-28deg); }
+}
+@keyframes coinDrop {
+  0% { transform: translateY(-110px); opacity: 0; }
+  22% { opacity: 1; }
+  48% { transform: translateY(0); }
+  62% { transform: translateY(-16px); }
+  74% { transform: translateY(0); }
+  84% { transform: translateY(-6px); }
+  92%, 100% { transform: translateY(0); opacity: 1; }
+}
+@keyframes carDrive {
+  0% { transform: translateX(-90px); opacity: 0; }
+  8% { opacity: 1; }
+  88% { opacity: 1; }
+  100% { transform: translateX(240px); opacity: 0; }
+}
+@keyframes blink {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+@keyframes sweep {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

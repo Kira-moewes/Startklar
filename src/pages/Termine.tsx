@@ -80,7 +80,7 @@ export default function Termine() {
   return (
     <div className="mx-auto max-w-3xl px-6 py-12 flex flex-col gap-10">
       <div>
-        <h1 className="font-serif text-4xl font-bold text-pine">Deine Termine</h1>
+        <h1 className="font-serif text-5xl font-normal text-pine">Deine Termine</h1>
         <p className="mt-2 text-lg text-ink/80">
           Bürgeramt, Beratung, Übergabe – hier landet alles mit Datum. Nichts geht verloren.
         </p>
