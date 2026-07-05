@@ -4,6 +4,13 @@ Erwachsenwerden – aber machbar. Startklar begleitet junge Menschen bei den
 ersten Behörden-, Geld- und Wohnungs-To-dos: verständlich, neutral und ohne
 erhobenen Zeigefinger.
 
+## Konzept v3 (in Arbeit)
+
+Runde 3 ist als vollständiges Planungsdokument ausgearbeitet:
+[docs/konzept-r3.md](docs/konzept-r3.md) – KI-Assistent „Klaro" (hybrid:
+lokal + optionale Cloud-KI), Profilseite mit Einzelantwort-Bearbeitung sowie
+Einstellungen (Dark Mode, Akzentfarbe, Schriftgröße, Datenexport/-import).
+
 ## Module (Planungskonzept v2)
 
 - **Onboarding & Personalisierung** – 7 Fragen, danach werden nur relevante
