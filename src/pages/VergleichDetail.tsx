@@ -114,7 +114,7 @@ export default function VergleichDetail() {
             onChange={e => setNeuerName(e.target.value)}
             placeholder="Name des Anbieters oder Tarifs"
             aria-label="Neues Angebot hinzufügen"
-            className="flex-1 rounded-field border border-pine-mist bg-cream-card px-4 py-3 focus:outline-2 focus:outline-coral"
+            className="flex-1 min-w-0 rounded-field border border-pine-mist bg-cream-card px-4 py-3 focus:outline-2 focus:outline-coral"
           />
           <button type="submit" className="rounded-pill bg-coral px-6 py-3 font-display font-semibold text-white hover:bg-coral-deep transition shrink-0">
             + Angebot
