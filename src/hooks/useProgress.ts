@@ -36,6 +36,40 @@ export function useProgress(journeyId: string, taskIds: string[]) {
   return { done, toggle, doneCount, loading }
 }
 
+// Fortschritt für eine beliebige Aufgabenliste über mehrere Journeys hinweg
+// (Themenseiten, Checkout). Schlüssel im Ergebnis: `journeyId:taskId`.
+export function useTaskListProgress(items: { journeyId: string; taskId: string }[]) {
+  const signature = items.map(i => keyOf(i.journeyId, i.taskId)).join('|')
+  const [done, setDone] = useState<Record<string, boolean>>({})
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    let active = true
+    ;(async () => {
+      const map: Record<string, boolean> = {}
+      for (const key of signature ? signature.split('|') : []) {
+        map[key] = (await store.getItem<boolean>(key)) ?? false
+      }
+      if (active) { setDone(map); setLoading(false) }
+    })()
+    return () => { active = false }
+  }, [signature])
+
+  const toggle = useCallback((journeyId: string, taskId: string) => {
+    const key = keyOf(journeyId, taskId)
+    setDone(prev => {
+      const next = { ...prev, [key]: !prev[key] }
+      void store.setItem(key, next[key])
+      if (next[key]) void dateStore.setItem(key, heute())
+      else void dateStore.removeItem(key)
+      return next
+    })
+  }, [])
+
+  const doneCount = Object.values(done).filter(Boolean).length
+  return { done, toggle, doneCount, loading }
+}
+
 export type JourneyProgress = {
   journeyId: string
   done: Record<string, boolean>

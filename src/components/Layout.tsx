@@ -12,8 +12,10 @@ export default function Layout() {
           <nav className="flex flex-wrap gap-x-5 gap-y-1 text-sm" aria-label="Hauptnavigation">
             <NavLink to="/" end className={navClass}>Start</NavLink>
             <NavLink to="/dashboard" className={navClass}>Dashboard</NavLink>
-            <NavLink to="/termine" className={navClass}>Termine</NavLink>
             <NavLink to="/vergleich" className={navClass}>Vergleich</NavLink>
+            <NavLink to="/dokumente" className={navClass}>Dokumente</NavLink>
+            <NavLink to="/termine" className={navClass}>Termine</NavLink>
+            <NavLink to="/wallet" className={navClass}>Wallet</NavLink>
             <NavLink to="/suche" className={navClass} aria-label="Suche">
               <span aria-hidden="true">🔍</span> Suche
             </NavLink>

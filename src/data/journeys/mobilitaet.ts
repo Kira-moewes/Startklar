@@ -45,7 +45,8 @@ export const mobilitaetJourney: Journey = {
       ],
       deadline: 'Vor der Zulassung', // [GEGENCHECKEN: von Kira zu verifizieren]
       consequence: 'Ohne Versicherung ist eine Zulassung nicht möglich.',
-      category: 'versicherung'
+      category: 'versicherung',
+      vergleichAbSchritt: 3
     }
   ]
 }

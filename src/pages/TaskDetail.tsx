@@ -1,11 +1,12 @@
 import { Link, useParams } from 'react-router-dom'
 import { journeys } from '../data'
-import { faktum } from '../data/fakten'
+import { faktum, mitFakten } from '../data/fakten'
 import { kategorie, vergleichFuerTask } from '../data/vergleich'
 import { relevanteTasks } from '../data/visibility'
 import { useProfile } from '../hooks/useProfile'
 import { useProgress } from '../hooks/useProgress'
 import CategoryBadge from '../components/CategoryBadge'
+import VergleichChip from '../components/VergleichChip'
 
 export default function TaskDetail() {
   const { journeyId = '', taskId = '' } = useParams()
@@ -47,7 +48,14 @@ export default function TaskDetail() {
           {task.steps.map((step, i) => (
             <li key={i} className="flex gap-4">
               <span className="flex size-8 shrink-0 items-center justify-center rounded-pill bg-pine text-cream font-display font-semibold text-sm">{i + 1}</span>
-              <p className="pt-1">{step}</p>
+              <div className="pt-1 flex-1">
+                <p>{mitFakten(step)}</p>
+                {task.vergleichAbSchritt === i + 1 && (
+                  <div className="mt-2">
+                    <VergleichChip journeyId={journey.id} taskId={task.id} />
+                  </div>
+                )}
+              </div>
             </li>
           ))}
         </ol>
@@ -55,8 +63,8 @@ export default function TaskDetail() {
 
       <section aria-label="Was, wenn nicht?" className="rounded-card border-2 border-pine-mist bg-cream p-6">
         <h2 className="font-display text-xl font-semibold text-pine">Was, wenn nicht?</h2>
-        <p className="mt-2"><span className="font-medium text-coral-deep">Frist:</span> {task.deadline}</p>
-        <p className="mt-2 text-ink/90">{task.consequence}</p>
+        <p className="mt-2"><span className="font-medium text-coral-deep">Frist:</span> {mitFakten(task.deadline)}</p>
+        <p className="mt-2 text-ink/90">{mitFakten(task.consequence)}</p>
         {task.faktenKeys && task.faktenKeys.length > 0 && (
           <div className="mt-4 flex items-center gap-2 text-sm">
             {hasUnverified ? (

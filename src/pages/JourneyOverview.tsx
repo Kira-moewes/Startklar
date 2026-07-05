@@ -1,9 +1,11 @@
 import { Link, useParams } from 'react-router-dom'
 import { journeys } from '../data'
 import { relevanteTasks } from '../data/visibility'
+import { mitFakten } from '../data/fakten'
 import { useProfile } from '../hooks/useProfile'
 import { useProgress } from '../hooks/useProgress'
 import CategoryBadge from '../components/CategoryBadge'
+import VergleichChip from '../components/VergleichChip'
 
 export default function JourneyOverview() {
   const { journeyId = '' } = useParams()
@@ -52,16 +54,21 @@ export default function JourneyOverview() {
               aria-label={`${task.title} als erledigt markieren`}
               className="mt-1 size-6 shrink-0 accent-[#F47B5B] rounded"
             />
-            <Link to={`/journey/${journey.id}/task/${task.id}`} className="flex-1 min-w-0">
-              <div className="flex flex-wrap items-center gap-2">
-                <h2 className={`font-display text-lg font-semibold ${done[task.id] ? 'text-ink/40 line-through' : 'text-pine'}`}>
-                  {task.title}
-                </h2>
-                <CategoryBadge category={task.category} />
+            <div className="flex-1 min-w-0">
+              <Link to={`/journey/${journey.id}/task/${task.id}`} className="block">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h2 className={`font-display text-lg font-semibold ${done[task.id] ? 'text-ink/40 line-through' : 'text-pine'}`}>
+                    {task.title}
+                  </h2>
+                  <CategoryBadge category={task.category} />
+                </div>
+                <p className="mt-1 text-sm text-ink/80">{task.summary}</p>
+                <p className="mt-2 text-sm text-coral-deep font-medium">Frist: {mitFakten(task.deadline)}</p>
+              </Link>
+              <div className="mt-2">
+                <VergleichChip journeyId={journey.id} taskId={task.id} />
               </div>
-              <p className="mt-1 text-sm text-ink/80">{task.summary}</p>
-              <p className="mt-2 text-sm text-coral-deep font-medium">Frist: {task.deadline}</p>
-            </Link>
+            </div>
           </li>
         ))}
       </ul>

@@ -36,6 +36,17 @@ fakten['BETRAG_PLASMA'] = { wert: '{BETRAG_PLASMA}', geprueft: null }
 fakten['FRIST_BAFOEG'] = { wert: '{FRIST_BAFOEG}', geprueft: null }
 fakten['BETRAG_MINIJOB'] = { wert: '{BETRAG_MINIJOB}', geprueft: null }
 
+// Ersetzt {KEY}-Platzhalter in Texten durch redaktionell geprüfte Werte.
+// Solange ein Wert noch nicht geprüft ist, erscheint stattdessen „wird geprüft"
+// statt des rohen Tokens.
+export function mitFakten(text: string): string {
+  return text.replace(/\{([A-Z0-9_]+)\}/g, (roh, key: string) => {
+    const f = fakten[key]
+    if (!f || f.wert === roh || f.geprueft === null) return 'wird geprüft'
+    return f.wert
+  })
+}
+
 export function faktum(key: string): Faktum | null {
   return fakten[key] ?? null
 }

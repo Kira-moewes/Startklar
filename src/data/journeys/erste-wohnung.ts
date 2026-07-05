@@ -62,7 +62,8 @@ export const ersteWohnungJourney: Journey = {
       deadline: 'Vor dem Einzug',
       consequence: 'Wenn du keine Verträge rechtzeitig kündest, zahlst du doppelt oder ohne Strom — eine rechtzeitige Planung macht das einfach.',
       category: 'wohnen',
-      faktenKeys: ['FRIST_KUENDIGUNG_STROM']
+      faktenKeys: ['FRIST_KUENDIGUNG_STROM'],
+      vergleichAbSchritt: 2
     },
     {
       id: 'hausrat',
@@ -76,7 +77,8 @@ export const ersteWohnungJourney: Journey = {
       ],
       deadline: 'Zeitnah nach Einzug',
       consequence: 'Ohne Hausratversicherung trägst du das volle Risiko bei Schäden — das kann teuer werden, ist aber möglich zu tragen.',
-      category: 'versicherung'
+      category: 'versicherung',
+      vergleichAbSchritt: 3
     },
     {
       id: 'rundfunkbeitrag',

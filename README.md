@@ -4,20 +4,31 @@ Erwachsenwerden – aber machbar. Startklar begleitet junge Menschen bei den
 ersten Behörden-, Geld- und Wohnungs-To-dos: verständlich, neutral und ohne
 erhobenen Zeigefinger.
 
-## Module (Planungskonzept v2)
+## Module (Konzept Runde 2, umgesetzt)
 
 - **Onboarding & Personalisierung** – 7 Fragen, danach werden nur relevante
   Bereiche und Schritte angezeigt (`src/data/profile.ts`, `src/data/visibility.ts`).
+- **Themenblöcke** – 7 Oberthemen (Finanzen, Wohnen, Amt & Recht, …) als
+  Karten-Grid auf der Startseite mit Mini-Fortschritt; Themenseiten bündeln
+  Aufgaben journey-übergreifend (`src/data/themen.ts`, `/thema/:themaId`).
 - **Bereiche & Aufgaben** – Journeys wie „Erste Wohnung", „Finanzen",
-  „Mobilität" mit Schritt-für-Schritt-Anleitungen und Fristen (`src/data/journeys/`).
+  „Mobilität" mit Schritt-für-Schritt-Anleitungen und Fristen (`src/data/journeys/`);
+  Aufgaben mit passendem Vergleichsmodul verlinken direkt dorthin.
 - **Suche** – tokenbasierte Volltextsuche (UND-Logik, Bindestrich-tolerant,
   Synonyme wie „GEZ"→Rundfunkbeitrag in `src/data/synonyme.ts`) über alle
   Schritte inkl. Kategorie-Filter und Treffer in den Vergleichen (`/suche`).
-- **Anbieter-Vergleich** – Vergleichstabellen (Strom, Internet, Haftpflicht,
-  Hausrat, Girokonto, Kfz, Handy). Kriterien kommen von Startklar, Angebote
-  trägt man selbst ein, Favorit markierbar (`/vergleich`). Runde 2 sieht
-  kuratierte Anbieter-Angebote mit transparentem Provisionsmodell vor –
-  siehe `KONZEPT.md`.
+- **Anbieter-Vergleich** – kuratierte Angebote echter Anbieter (Tibber, Trade
+  Republic, HUK24, fraenk …) plus eigene Einträge in Vergleichstabellen
+  (Strom, Internet, Haftpflicht, Hausrat, Girokonto, Depot, Kfz, Handy).
+  Transparentes Provisionsmodell: kostenlos für Nutzer:innen, der Anbieter
+  zahlt bei Abschluss eine Provision (`/vergleich`, `src/data/anbieter.ts`).
+- **Wallet & Checkout** – Zahlungsmittel einmal (maskiert) hinterlegen,
+  Angebote in 3 Schritten direkt über die App abschließen; Bestätigung landet
+  automatisch in den Dokumenten, inkl. Termin- und Erledigt-Vorschlag
+  (`/wallet`, `src/pages/Checkout.tsx`).
+- **Dokumente** – Ablage mit automatischer Einsortierung nach Thema und
+  Unterordner (Schlüsselwort-Regeln), Suche, Verschieben, Download
+  (`/dokumente`, `src/data/dokumentRegeln.ts`).
 - **Dashboard** – Widget-Grid mit Gesamtfortschritts-Ring, Stat-Kacheln,
   Fortschritt je Bereich, Aktivitäts-Heatmap aus echten Erledigt-Daten,
   Termin-Vorschau sowie nächsten und zuletzt erledigten Schritten

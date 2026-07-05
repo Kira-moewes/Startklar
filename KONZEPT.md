@@ -2,12 +2,11 @@
 
 > Stand: Juli 2026. Dieses Dokument ist die code-fertige Ausarbeitung von Runde 2.
 > Jeder Abschnitt enthält Ziel, Seitenaufbau, Datenmodell, Speicherung, Routen,
-> Beispieltexte und Akzeptanzkriterien – so dass die Umsetzung ohne weitere
-> Konzeptarbeit möglich ist.
+> Beispieltexte und Akzeptanzkriterien.
 >
-> **Bereits umgesetzt** (in diesem Branch): Suche v2 (Token-Suche + Synonyme),
-> Panik-Satz entfernt, Pfeil-Navigation in der Aufgabenansicht entfernt,
-> Fortschrittseite → „Dashboard" als Widget-Grid. Siehe Abschnitt 9.
+> **Status: vollständig umgesetzt** (in diesem Branch) – alle Abschnitte 1–8
+> sind implementiert, siehe Abschnitt 9. Offen bleibt nur die redaktionelle
+> Arbeit (Abschnitt 10, Punkt „Redaktion").
 
 ---
 
@@ -422,29 +421,33 @@ Stat-Kacheln (Desktop) bzw. reihen sich mobil ein.
 
 ---
 
-## 9. In diesem Branch bereits umgesetzt (Referenz)
+## 9. In diesem Branch umgesetzt (Referenz)
 
 | Änderung | Dateien |
 |---|---|
-| **Suche v2**: Token-Suche mit UND-Logik statt Exakt-Substring; Satzzeichen/Bindestriche normalisiert („kfz versicherung" findet „KFZ-Versicherung"); Synonym-Wörterbuch („GEZ"→Rundfunkbeitrag, „Auto"→KFZ …); Vergleichs-Suche durchsucht auch Kriterien-Labels; Titel-Treffer ranken höher | `src/pages/Suche.tsx`, `src/data/synonyme.ts` (neu) |
+| **Suche v2**: Token-Suche mit UND-Logik statt Exakt-Substring; Satzzeichen/Bindestriche normalisiert („kfz versicherung" findet „KFZ-Versicherung"); Synonym-Wörterbuch („GEZ"→Rundfunkbeitrag, „Auto"→KFZ …); Vergleichs-Suche durchsucht auch Kriterien-Labels; Titel-Treffer ranken höher | `src/pages/Suche.tsx`, `src/data/synonyme.ts`, `src/data/suchen.ts` |
 | **Panik-Satz entfernt** („Kein Grund zur Panik …") | `src/pages/TaskDetail.tsx` |
 | **Pfeil-Buttons entfernt** (unten in der Aufgabe); stattdessen nach „Erledigt" ein dezenter Textlink „Nächster Schritt: … →" zum nächsten offenen Schritt | `src/pages/TaskDetail.tsx` |
-| **Dashboard**: Fortschrittseite heißt jetzt „Dashboard" (Nav + `/dashboard`, `/fortschritt` bleibt Alias) und ist ein responsives Widget-Grid: dunkle Hero-Kachel mit Fortschritts-Ring, 4 Stat-Kacheln (Erledigt/Offen/Bereiche/Aktive Tage), Bereichs-Balken, Aktivitäts-Heatmap, nächste Schritte, Termine, zuletzt erledigt | `src/pages/Dashboard.tsx`, `src/components/Layout.tsx`, `src/components/ui/*` |
-| **Design-Fix**: fehlendes Farb-Token `--color-pine-soft` ergänzt (Versicherung-Badge hatte keinen Hintergrund) | `src/index.css` |
+| **Dashboard**: Fortschrittseite heißt jetzt „Dashboard" (Nav + `/dashboard`, `/fortschritt` bleibt Alias) und ist ein responsives Widget-Grid: dunkle Hero-Kachel mit Fortschritts-Ring, 4 Stat-Kacheln (Erledigt/Offen/Bereiche/Aktive Tage), Wallet- und Dokumente-Widget, Bereichs-Balken, Aktivitäts-Heatmap, nächste Schritte, Termine, zuletzt erledigt | `src/pages/Dashboard.tsx`, `src/components/Layout.tsx`, `src/components/ui/*` |
+| **Themenblöcke (§3)**: 7 Oberthemen mit Karten-Grid auf der Startseite (Mini-Fortschritt je Block) + Themenseite `/thema/:themaId` mit journey-übergreifender Aufgabenliste | `src/data/themen.ts`, `src/pages/Home.tsx`, `src/pages/Thema.tsx`, `useTaskListProgress` in `src/hooks/useProgress.ts` |
+| **Vergleich v2 (§4)**: kuratierte Anbieter-Angebote als Karten + vorbefüllte, nicht editierbare Tabellenspalten („Startklar-Angebot"), neues Modul `depot`, Favorit über kuratierte und eigene Angebote hinweg, Provisionstexte statt Neutralitäts-Claim | `src/data/anbieter.ts`, `src/data/vergleich.ts`, `src/pages/Vergleich.tsx`, `src/pages/VergleichDetail.tsx`, `src/hooks/useVergleich.ts` |
+| **Wallet & Checkout (§5)**: `/wallet` (Zahlungsmittel maskiert, Abschlüsse mit Status, Verlauf), 3-Schritt-Checkout `/vergleich/:kategorieId/abschluss/:angebotId` mit Vorbefüllung aus Profil/Wallet; nach Abschluss automatisch: Bestätigungs-Dokument, Termin-Vorschlag („alten Vertrag kündigen"), Aufgabe-erledigt-Vorschlag | `src/hooks/useWallet.ts`, `src/pages/Wallet.tsx`, `src/pages/Checkout.tsx` |
+| **Dokumente (§6)**: `/dokumente` (Themenordner-Grid, Upload mit Auto-Einsortierung per Schlüsselwort-Regeln, Suche) + `/dokumente/:themaId` (Unterordner, Herunterladen/Verschieben/Löschen, Quelle-Badges); Abschluss-Bestätigungen landen automatisch im richtigen Ordner | `src/hooks/useDokumente.ts`, `src/data/dokumentRegeln.ts`, `src/pages/Dokumente.tsx`, `src/pages/DokumenteThema.tsx` |
+| **Deep-Links (§7)**: `vergleichFuerTask` vervollständigt (inkl. `depot`), Chip-Komponente in Aufgabenlisten (Journey, Thema, Dashboard) und inline in der Schritt-Anleitung (`Task.vergleichAbSchritt`) | `src/components/VergleichChip.tsx`, `src/pages/JourneyOverview.tsx`, `src/data/journeys/*` |
+| **Fakten-Renderer (§B7)**: `mitFakten()` ersetzt `{PLATZHALTER}` in Aufgabentexten; ungeprüfte Werte erscheinen als „wird geprüft" statt als rohes Token | `src/data/fakten.ts`, `src/pages/TaskDetail.tsx`, `src/pages/JourneyOverview.tsx` |
+| **Navigation**: Start · Dashboard · Vergleich · Dokumente · Termine · Wallet · Suche | `src/components/Layout.tsx`, `src/App.tsx` |
+| **Design-Fix**: fehlendes Farb-Token `--color-pine-soft` ergänzt (Versicherung-Badge hatte keinen Hintergrund); Ring-Label nicht mehr mitrotiert | `src/index.css`, `src/components/ui/Ring.tsx` |
 
 ---
 
-## 10. Umsetzungs-Reihenfolge für die Code-Runde (Runde 3)
+## 10. Verbleibende Arbeit (Redaktion & spätere Runden)
 
-1. **Themen-Taxonomie** (`themen.ts`) + Startseiten-Blöcke + `/thema/:themaId` – Grundlage für Dokumente.
-2. **Vergleich v2**: `anbieter.ts` + Modul `depot` + Angebots-Karten + Textumstellung Provision.
-3. **Deep-Link-Chips** in Listen (kleinster Aufwand, großer Nutzen).
-4. **Dokumente**: Hook, Regeln, Seiten, Upload.
-5. **Wallet + Checkout**: Hook, Seiten, Abschluss-Automatik (Dokument/Termin/Task).
-6. **Dashboard-Widgets** Wallet + Dokumente.
-7. Redaktion: Anbieterdaten verifizieren, `fakten.ts`-Platzhalter füllen
-   (dazu gehört ein Substitutions-Renderer, der `{FRIST_STEUER}` & Co. in
-   Aufgabentexten durch echte Werte ersetzt – aktuell erscheinen die Tokens roh).
+- **Redaktion**: Anbieterdaten in `anbieter.ts` verifizieren (Preise/Konditionen),
+  `fakten.ts`-Platzhalter mit geprüften Werten füllen und `geprueft`-Datum setzen –
+  der Substitutions-Renderer zeigt sie dann automatisch an.
+- **Backend-Themen** (spätere Runde): echte Anbieter-/Zahlungsanbindung für den
+  Checkout, Institutionen-Zulieferung für Dokumente (`quelle: 'institution'`),
+  rechtliche Klärung (§ 34d GewO, ZAG) vor Live-Gang.
 
-Jeder Schritt ist unabhängig deploybar; keine Migration nötig (nur neue
-localforage-Stores `wallet`, `dokumente`; bestehende Schlüssel bleiben unberührt).
+Keine Migration nötig: nur neue localforage-Stores `wallet`, `dokumente`;
+bestehende Schlüssel bleiben unberührt.

@@ -1,6 +1,8 @@
-// Neutraler Anbieter-Vergleich: Startklar nennt keine Anbieter und bekommt
-// keine Provision. Die Kategorien geben nur die Kriterien vor, auf die es
-// ankommt – die Angebote trägst du selbst ein.
+// Anbieter-Vergleich mit transparentem Provisionsmodell: Kostenlos für
+// Nutzer:innen – schließt jemand über Startklar ab, zahlt der Anbieter eine
+// Provision (siehe KONZEPT.md §1). Kriterien, Tipps und Reihenfolge bleiben
+// redaktionell unabhängig. Kuratierte Angebote liegen in `anbieter.ts`,
+// eigene Angebote trägt man weiterhin selbst ein.
 
 export type Kriterium = {
   key: string
@@ -105,6 +107,23 @@ export const vergleichsKategorien: VergleichsKategorie[] = [
     ],
   },
   {
+    id: 'depot',
+    titel: 'Depot & ETF-Sparplan',
+    intro: 'Fürs langfristige Sparen. Neobroker machen den Einstieg günstig – wichtig sind niedrige Orderkosten und kostenlose Sparpläne.',
+    tipps: [
+      'Für den Start reicht ein breit gestreuter Welt-ETF im Sparplan – schon ab 1 € oder 25 € im Monat.',
+      'Achte auf 0-€-Sparpläne und niedrige Orderkosten, nicht auf Aktien-Gimmicks.',
+      'Zinsen aufs Verrechnungskonto sind ein Plus, aber kein Grund für ein schlechtes Depot.',
+    ],
+    kriterien: [
+      { key: 'orderkosten', label: 'Kosten pro Order', typ: 'euro' },
+      { key: 'sparplan', label: 'ETF-Sparplan-Kosten', typ: 'text' },
+      { key: 'zinsen', label: 'Zinsen auf Guthaben', typ: 'text' },
+      { key: 'mindestrate', label: 'Mindest-Sparrate', typ: 'euro' },
+      { key: 'notizen', label: 'Notizen', typ: 'text' },
+    ],
+  },
+  {
     id: 'kfz',
     titel: 'Kfz-Versicherung',
     intro: 'Pflicht fürs erste Auto. Als Fahranfänger:in zahlst du viel – mit ein paar Tricks wird es günstiger.',
@@ -150,6 +169,9 @@ export const vergleichFuerTask: Record<string, string[]> = {
   'erste-wohnung:hausrat': ['hausrat'],
   'finanzen:girokonto': ['girokonto'],
   'finanzen:haftpflicht': ['haftpflicht'],
+  'finanzen:depot-etf': ['depot'],
+  'finanzen:haushaltsbudget': ['girokonto'],
   'mobilitaet:kfz-versicherung': ['kfz'],
+  'mobilitaet:kfz-anmelden': ['kfz'],
   'start:vertraege': ['handy'],
 }

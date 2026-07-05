@@ -5,10 +5,13 @@ import { relevanteTasks, istRelevant } from '../data/visibility'
 import { useProfile } from '../hooks/useProfile'
 import { useAllProgress } from '../hooks/useProgress'
 import { useTermine } from '../hooks/useTermine'
+import { useWallet } from '../hooks/useWallet'
+import { useDokumente } from '../hooks/useDokumente'
 import Ring from '../components/ui/Ring'
 import Bar from '../components/ui/Bar'
 import StatCard from '../components/ui/StatCard'
 import Heatmap from '../components/ui/Heatmap'
+import VergleichChip from '../components/VergleichChip'
 import type { Task } from '../data/types'
 
 const heute = () => new Date().toISOString().slice(0, 10)
@@ -48,6 +51,8 @@ function Widget({
 export default function Dashboard() {
   const { profile, loading: profileLoading } = useProfile()
   const { termine } = useTermine()
+  const { abschluesse } = useWallet()
+  const { dokumente } = useDokumente()
 
   const journeyData = useMemo(() => {
     return journeys
@@ -204,6 +209,38 @@ export default function Dashboard() {
         <StatCard label="Bereiche" value={stats.numAreas} hint="für dich relevant" />
         <StatCard label="Aktive Tage" value={aktiveTage} hint="letzte 5 Wochen" />
 
+        {/* Wallet */}
+        <Widget title="Wallet" linkTo="/wallet" linkText="Öffnen">
+          <div className="flex flex-col gap-1">
+            <p className="font-serif text-4xl font-bold text-coral leading-none">{abschluesse.length}</p>
+            <p className="text-xs text-ink/50">
+              {abschluesse.length === 1 ? 'Abschluss' : 'Abschlüsse'} über Startklar
+            </p>
+            {abschluesse.length > 0 && (
+              <p className="mt-1 text-sm text-pine font-medium truncate">
+                {abschluesse[abschluesse.length - 1].anbieter} · {
+                  { eingereicht: 'Eingereicht', bestaetigt: 'Bestätigt', aktiv: 'Aktiv', gekuendigt: 'Gekündigt' }[
+                    abschluesse[abschluesse.length - 1].status
+                  ]
+                }
+              </p>
+            )}
+          </div>
+        </Widget>
+
+        {/* Dokumente */}
+        <Widget title="Dokumente" linkTo="/dokumente" linkText="Öffnen">
+          <div className="flex flex-col gap-1">
+            <p className="font-serif text-4xl font-bold text-coral leading-none">{dokumente.length}</p>
+            <p className="text-xs text-ink/50">automatisch sortiert</p>
+            {dokumente.length > 0 && (
+              <p className="mt-1 text-sm text-pine font-medium truncate">
+                zuletzt: {[...dokumente].sort((a, b) => (a.datum < b.datum ? 1 : -1))[0].titel}
+              </p>
+            )}
+          </div>
+        </Widget>
+
         {/* Bereichs-Fortschritt */}
         {stats.totalTasks > 0 && (
           <Widget title="Deine Bereiche" className="col-span-2">
@@ -237,21 +274,25 @@ export default function Dashboard() {
           <Widget title="Deine nächsten Schritte" className="col-span-2">
             <div className="flex flex-col gap-3">
               {nextTasks.map((nt, i) => (
-                <Link
+                <div
                   key={`${nt.journeyId}-${nt.task.id}`}
-                  to={`/journey/${nt.journeyId}/task/${nt.task.id}`}
                   className="flex items-start gap-3 rounded-field border border-pine-mist p-3 hover:border-coral transition group"
                 >
                   <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-coral text-cream font-display font-semibold text-xs">
                     {i + 1}
                   </span>
                   <div className="flex-1">
-                    <p className="font-display font-semibold text-pine group-hover:text-coral transition">
-                      {nt.task.title}
-                    </p>
-                    <p className="text-sm text-ink/60 mt-0.5">{nt.task.summary}</p>
+                    <Link to={`/journey/${nt.journeyId}/task/${nt.task.id}`} className="block">
+                      <p className="font-display font-semibold text-pine group-hover:text-coral transition">
+                        {nt.task.title}
+                      </p>
+                      <p className="text-sm text-ink/60 mt-0.5">{nt.task.summary}</p>
+                    </Link>
+                    <div className="mt-1.5 empty:hidden">
+                      <VergleichChip journeyId={nt.journeyId} taskId={nt.task.id} />
+                    </div>
                   </div>
-                </Link>
+                </div>
               ))}
             </div>
           </Widget>

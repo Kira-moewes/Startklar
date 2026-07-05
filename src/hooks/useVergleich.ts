@@ -12,19 +12,27 @@ const store = localforage.createInstance({ name: 'startklar', storeName: 'vergle
 
 export function useVergleich(kategorieId: string) {
   const [angebote, setAngebote] = useState<Angebot[]>([])
+  // Favorit unter den kuratierten Startklar-Angeboten (AnbieterAngebot.id);
+  // es gibt insgesamt nur einen Favoriten pro Kategorie – eigener ODER kuratierter.
+  const [kuratierterFavorit, setKuratierterFavorit] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  const favoritKey = `${kategorieId}#favorit`
 
   useEffect(() => {
     let active = true
     setLoading(true)
-    void store.getItem<Angebot[]>(kategorieId).then(list => {
+    void Promise.all([
+      store.getItem<Angebot[]>(kategorieId),
+      store.getItem<string>(favoritKey),
+    ]).then(([list, fav]) => {
       if (active) {
         setAngebote(list ?? [])
+        setKuratierterFavorit(fav ?? null)
         setLoading(false)
       }
     })
     return () => { active = false }
-  }, [kategorieId])
+  }, [kategorieId, favoritKey])
 
   const persist = useCallback((next: Angebot[]) => {
     setAngebote(next)
@@ -62,7 +70,24 @@ export function useVergleich(kategorieId: string) {
       void store.setItem(kategorieId, next)
       return next
     })
-  }, [kategorieId])
+    setKuratierterFavorit(null)
+    void store.removeItem(favoritKey)
+  }, [kategorieId, favoritKey])
+
+  // Favorit auf ein kuratiertes Angebot setzen (hebt eigenen Favoriten auf).
+  const toggleKuratierterFavorit = useCallback((angebotId: string) => {
+    setKuratierterFavorit(prev => {
+      const next = prev === angebotId ? null : angebotId
+      if (next) void store.setItem(favoritKey, next)
+      else void store.removeItem(favoritKey)
+      return next
+    })
+    setAngebote(prev => {
+      const next = prev.map(a => ({ ...a, favorit: false }))
+      void store.setItem(kategorieId, next)
+      return next
+    })
+  }, [kategorieId, favoritKey])
 
   const remove = useCallback((angebotId: string) => {
     setAngebote(prev => {
@@ -72,7 +97,18 @@ export function useVergleich(kategorieId: string) {
     })
   }, [kategorieId])
 
-  return { angebote, add, setWert, setAnbieter, toggleFavorit, remove, persist, loading }
+  return {
+    angebote,
+    kuratierterFavorit,
+    add,
+    setWert,
+    setAnbieter,
+    toggleFavorit,
+    toggleKuratierterFavorit,
+    remove,
+    persist,
+    loading,
+  }
 }
 
 // Zählt Kategorien mit mindestens einem eingetragenen Angebot (für Übersicht).

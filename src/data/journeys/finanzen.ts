@@ -16,7 +16,8 @@ export const finanzenJourney: Journey = {
       ],
       deadline: 'Kein fester Termin',
       consequence: 'Wenn du es nicht machst, funktioniert zwar vieles weiter, aber du hast später mehr Aufwand beim Umstellen — das lässt sich nachholen.',
-      category: 'finanzen'
+      category: 'finanzen',
+      vergleichAbSchritt: 1
     },
     {
       id: 'steuererklaerung',
