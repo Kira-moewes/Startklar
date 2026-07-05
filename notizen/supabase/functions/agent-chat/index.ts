@@ -1,10 +1,14 @@
-import { corsHeaders, handleOptions } from '../_shared/cors.ts'
-import { createAdminClient, getAuthenticatedUser } from '../_shared/supabaseClients.ts'
-import { embedText } from '../_shared/voyage.ts'
-import { CLAUDE_SONNET_MODEL } from '../_shared/anthropic.ts'
+// Brainstorming-Agent (Claude Sonnet) mit search_ideas- und render_mindmap-Tools.
+// Eigenständige Datei (keine Shared-Imports), damit sie direkt im
+// Supabase-Dashboard-Editor per Copy-Paste angelegt werden kann.
+import { createClient } from 'jsr:@supabase/supabase-js@2'
 
-const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages'
-const ANTHROPIC_VERSION = '2023-06-01'
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+}
+
+const CLAUDE_SONNET_MODEL = 'claude-sonnet-5'
 const MAX_TOOL_ITERATIONS = 4
 
 const SYSTEM_PROMPT = `Du bist ein kreativer Denkpartner in der persönlichen Ideen-App des Nutzers.
@@ -30,55 +34,47 @@ const TOOLS = [
     input_schema: {
       type: 'object',
       properties: {
-        seed_idea_ids: { type: 'array', items: { type: 'string' }, description: 'IDs der Ausgangs-Ideen' },
-        depth: { type: 'integer', description: 'Anzahl der Hops im Verknüpfungsgraphen, Standard 2' },
+        seed_idea_ids: { type: 'array', items: { type: 'string' } },
+        depth: { type: 'integer' },
       },
       required: ['seed_idea_ids'],
     },
   },
 ]
 
-interface ContentBlock {
-  type: string
-  [key: string]: unknown
+async function embedText(text: string): Promise<number[]> {
+  const apiKey = Deno.env.get('VOYAGE_API_KEY')
+  if (!apiKey) throw new Error('VOYAGE_API_KEY ist nicht gesetzt')
+  const res = await fetch('https://api.voyageai.com/v1/embeddings', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ input: [text.slice(0, 8000)], model: 'voyage-3-lite', input_type: 'query', output_dimension: 512 }),
+  })
+  if (!res.ok) throw new Error(`Voyage-Embedding fehlgeschlagen: ${res.status} ${await res.text()}`)
+  const json = await res.json()
+  return json.data[0].embedding as number[]
 }
 
 async function callClaude(messages: Array<{ role: string; content: unknown }>) {
   const apiKey = Deno.env.get('ANTHROPIC_API_KEY')
   if (!apiKey) throw new Error('ANTHROPIC_API_KEY ist nicht gesetzt')
-
-  const res = await fetch(ANTHROPIC_API_URL, {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
-    headers: {
-      'x-api-key': apiKey,
-      'anthropic-version': ANTHROPIC_VERSION,
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: CLAUDE_SONNET_MODEL,
-      max_tokens: 1536,
-      system: SYSTEM_PROMPT,
-      messages,
-      tools: TOOLS,
-    }),
+    headers: { 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
+    body: JSON.stringify({ model: CLAUDE_SONNET_MODEL, max_tokens: 1536, system: SYSTEM_PROMPT, messages, tools: TOOLS }),
   })
-
-  if (!res.ok) {
-    throw new Error(`Claude-Aufruf fehlgeschlagen: ${res.status} ${await res.text()}`)
-  }
-
+  if (!res.ok) throw new Error(`Claude-Aufruf fehlgeschlagen: ${res.status} ${await res.text()}`)
   return res.json()
 }
 
 async function executeTool(
-  admin: ReturnType<typeof createAdminClient>,
+  admin: ReturnType<typeof createClient>,
   userId: string,
   toolName: string,
   input: Record<string, unknown>,
 ): Promise<string> {
   if (toolName === 'search_ideas') {
-    const query = String(input.query ?? '')
-    const embedding = await embedText(query, 'query')
+    const embedding = await embedText(String(input.query ?? ''))
     const { data, error } = await admin.rpc('match_ideas', {
       p_user_id: userId,
       p_query_embedding: embedding,
@@ -91,23 +87,33 @@ async function executeTool(
       .map((i: { id: string; title: string; content_text: string | null }) => `- [${i.id}] "${i.title}": ${(i.content_text ?? '').slice(0, 200)}`)
       .join('\n')
   }
-
   if (toolName === 'render_mindmap') {
     const seedIds = (input.seed_idea_ids as string[]) ?? []
     const { data } = await admin.from('ideas').select('id, title').eq('user_id', userId).in('id', seedIds)
     const titles = (data ?? []).map((i: { title: string }) => i.title)
     return `Mindmap wird angezeigt für: ${titles.join(', ') || 'keine gültigen Ideen'}`
   }
-
   return `Unbekanntes Werkzeug: ${toolName}`
 }
 
 Deno.serve(async (req) => {
-  const preflight = handleOptions(req)
-  if (preflight) return preflight
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
 
   try {
-    const user = await getAuthenticatedUser(req)
+    const authHeader = req.headers.get('Authorization')
+    if (!authHeader) {
+      return new Response(JSON.stringify({ error: 'Nicht angemeldet' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
+
+    const userClient = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_ANON_KEY')!, {
+      global: { headers: { Authorization: authHeader } },
+    })
+    const {
+      data: { user },
+    } = await userClient.auth.getUser()
     if (!user) {
       return new Response(JSON.stringify({ error: 'Nicht angemeldet' }), {
         status: 401,
@@ -123,7 +129,7 @@ Deno.serve(async (req) => {
       })
     }
 
-    const admin = createAdminClient()
+    const admin = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
 
     let convId = conversationId as string | undefined
     if (convId) {
@@ -157,23 +163,15 @@ Deno.serve(async (req) => {
       .eq('conversation_id', convId)
       .order('created_at', { ascending: true })
 
-    const messages = (history ?? []).map((m: { role: string; content: unknown }) => ({
-      role: m.role,
-      content: m.content,
-    }))
+    const messages = (history ?? []).map((m: { role: string; content: unknown }) => ({ role: m.role, content: m.content }))
 
     let finalText = ''
     for (let iteration = 0; iteration < MAX_TOOL_ITERATIONS; iteration++) {
       const response = await callClaude(messages)
-      const blocks = response.content as ContentBlock[]
+      const blocks = response.content as Array<{ type: string; [key: string]: unknown }>
       const toolUses = blocks.filter((b) => b.type === 'tool_use')
 
-      await admin.from('agent_messages').insert({
-        conversation_id: convId,
-        role: 'assistant',
-        content: blocks,
-        referenced_idea_ids: null,
-      })
+      await admin.from('agent_messages').insert({ conversation_id: convId, role: 'assistant', content: blocks })
       messages.push({ role: 'assistant', content: blocks })
 
       if (toolUses.length === 0) {
@@ -191,11 +189,7 @@ Deno.serve(async (req) => {
         }),
       )
 
-      await admin.from('agent_messages').insert({
-        conversation_id: convId,
-        role: 'user',
-        content: toolResults,
-      })
+      await admin.from('agent_messages').insert({ conversation_id: convId, role: 'user', content: toolResults })
       messages.push({ role: 'user', content: toolResults })
     }
 

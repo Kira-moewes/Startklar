@@ -1,13 +1,17 @@
-// Nächtlicher Cron-Job (siehe supabase/functions/recompute-centroids/cron.md):
-// rekomputiert die Ordner-Zentroid-Embeddings aus den enthaltenen Ideen.
-import { corsHeaders, handleOptions } from '../_shared/cors.ts'
-import { createAdminClient } from '../_shared/supabaseClients.ts'
+// Nächtlicher Cron-Job: rekomputiert die Ordner-Zentroid-Embeddings.
+// Eigenständige Datei (keine Shared-Imports), damit sie direkt im
+// Supabase-Dashboard-Editor per Copy-Paste angelegt werden kann.
+import { createClient } from 'jsr:@supabase/supabase-js@2'
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+}
 
 Deno.serve(async (req) => {
-  const preflight = handleOptions(req)
-  if (preflight) return preflight
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
 
-  const admin = createAdminClient()
+  const admin = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
   const { error } = await admin.rpc('recompute_folder_centroids')
 
   if (error) {

@@ -1,13 +1,64 @@
-import { corsHeaders, handleOptions } from '../_shared/cors.ts'
-import { createAdminClient, getAuthenticatedUser } from '../_shared/supabaseClients.ts'
-import { embedText } from '../_shared/voyage.ts'
-import { callClaudeTool, CLAUDE_HAIKU_MODEL } from '../_shared/anthropic.ts'
+// Auto-Filing & Verknüpfung: Embedding (Voyage) -> Kandidaten -> Claude-Haiku-Entscheidung.
+// Eigenständige Datei (keine Shared-Imports), damit sie direkt im
+// Supabase-Dashboard-Editor per Copy-Paste angelegt werden kann.
+import { createClient } from 'jsr:@supabase/supabase-js@2'
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+}
+
+const CLAUDE_HAIKU_MODEL = 'claude-haiku-4-5-20251001'
 const FOLDER_AUTO_THRESHOLD = 0.7
 const FOLDER_REVIEW_THRESHOLD = 0.4
 const LINK_THRESHOLD = 0.55
+const RELATIONS = ['related', 'builds_on', 'contradicts', 'example_of', 'question_for']
 
-const RELATIONS = ['related', 'builds_on', 'contradicts', 'example_of', 'question_for'] as const
+async function embedText(text: string, inputType: 'document' | 'query'): Promise<number[]> {
+  const apiKey = Deno.env.get('VOYAGE_API_KEY')
+  if (!apiKey) throw new Error('VOYAGE_API_KEY ist nicht gesetzt')
+  const res = await fetch('https://api.voyageai.com/v1/embeddings', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      input: [text.slice(0, 8000)],
+      model: 'voyage-3-lite',
+      input_type: inputType,
+      output_dimension: 512,
+    }),
+  })
+  if (!res.ok) throw new Error(`Voyage-Embedding fehlgeschlagen: ${res.status} ${await res.text()}`)
+  const json = await res.json()
+  return json.data[0].embedding as number[]
+}
+
+async function callClaudeTool(
+  system: string,
+  userMessage: string,
+  tool: { name: string; description: string; input_schema: Record<string, unknown> },
+): Promise<Record<string, unknown>> {
+  const apiKey = Deno.env.get('ANTHROPIC_API_KEY')
+  if (!apiKey) throw new Error('ANTHROPIC_API_KEY ist nicht gesetzt')
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
+    body: JSON.stringify({
+      model: CLAUDE_HAIKU_MODEL,
+      max_tokens: 1024,
+      system,
+      messages: [{ role: 'user', content: userMessage }],
+      tools: [tool],
+      tool_choice: { type: 'tool', name: tool.name },
+    }),
+  })
+  if (!res.ok) throw new Error(`Claude-Aufruf fehlgeschlagen: ${res.status} ${await res.text()}`)
+  const json = await res.json()
+  const toolUse = (json.content as Array<{ type: string; name?: string; input?: unknown }>).find(
+    (b) => b.type === 'tool_use',
+  )
+  if (!toolUse) throw new Error('Claude hat keinen Tool-Aufruf zurückgegeben')
+  return toolUse.input as Record<string, unknown>
+}
 
 const SYSTEM_PROMPT = `Du bist ein Einsortierungs- und Verknüpfungsassistent für eine persönliche Ideen-App.
 Du bekommst den Text einer neuen Idee, eine Liste von Kandidaten-Ordnern und eine Liste von
@@ -16,7 +67,7 @@ passt (oder ob ein neuer Ordner sinnvoller wäre), und welche der Kandidaten-Ide
 verknüpft werden sollten. Sei zurückhaltend mit hoher Konfidenz — nur wenn der Ordner/die Verknüpfung
 inhaltlich wirklich passt.`
 
-const TOOL_SCHEMA = {
+const TOOL = {
   name: 'file_and_link_idea',
   description: 'Ordnet eine Idee einem Ordner zu und verknüpft sie mit verwandten Ideen.',
   input_schema: {
@@ -25,12 +76,9 @@ const TOOL_SCHEMA = {
       folder_decision: {
         type: 'object',
         properties: {
-          folder_id: { type: ['string', 'null'], description: 'ID des gewählten Kandidaten-Ordners oder null' },
-          new_folder_suggestion: {
-            type: ['string', 'null'],
-            description: 'Vorschlag für einen neuen Ordnernamen, falls kein Kandidat passt',
-          },
-          confidence: { type: 'number', description: '0..1' },
+          folder_id: { type: ['string', 'null'] },
+          new_folder_suggestion: { type: ['string', 'null'] },
+          confidence: { type: 'number' },
           reasoning: { type: 'string' },
         },
         required: ['confidence', 'reasoning'],
@@ -41,7 +89,7 @@ const TOOL_SCHEMA = {
           type: 'object',
           properties: {
             idea_id: { type: 'string' },
-            relation: { type: 'string', enum: RELATIONS as unknown as string[] },
+            relation: { type: 'string', enum: RELATIONS },
             confidence: { type: 'number' },
           },
           required: ['idea_id', 'relation', 'confidence'],
@@ -53,11 +101,23 @@ const TOOL_SCHEMA = {
 }
 
 Deno.serve(async (req) => {
-  const preflight = handleOptions(req)
-  if (preflight) return preflight
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
 
   try {
-    const user = await getAuthenticatedUser(req)
+    const authHeader = req.headers.get('Authorization')
+    if (!authHeader) {
+      return new Response(JSON.stringify({ error: 'Nicht angemeldet' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
+
+    const userClient = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_ANON_KEY')!, {
+      global: { headers: { Authorization: authHeader } },
+    })
+    const {
+      data: { user },
+    } = await userClient.auth.getUser()
     if (!user) {
       return new Response(JSON.stringify({ error: 'Nicht angemeldet' }), {
         status: 401,
@@ -73,7 +133,7 @@ Deno.serve(async (req) => {
       })
     }
 
-    const admin = createAdminClient()
+    const admin = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
 
     const { data: idea, error: ideaError } = await admin
       .from('ideas')
@@ -98,13 +158,12 @@ Deno.serve(async (req) => {
     const embedding = await embedText(text, 'document')
     await admin.from('ideas').update({ embedding }).eq('id', ideaId)
 
-    const { data: candidateFolders = [] } = await admin.rpc('match_folders', {
+    const { data: candidateFolders } = await admin.rpc('match_folders', {
       p_user_id: user.id,
       p_query_embedding: embedding,
       p_match_count: 5,
     })
-
-    const { data: candidateIdeas = [] } = await admin.rpc('match_ideas', {
+    const { data: candidateIdeas } = await admin.rpc('match_ideas', {
       p_user_id: user.id,
       p_query_embedding: embedding,
       p_exclude_id: ideaId,
@@ -127,13 +186,7 @@ ${(candidateIdeas ?? [])
   )
   .join('\n') || '(keine)'}`
 
-    const decision = await callClaudeTool({
-      model: CLAUDE_HAIKU_MODEL,
-      system: SYSTEM_PROMPT,
-      messages: [{ role: 'user', content: userMessage }],
-      tool: TOOL_SCHEMA,
-    })
-
+    const decision = await callClaudeTool(SYSTEM_PROMPT, userMessage, TOOL)
     const folderDecision = decision.folder_decision as {
       folder_id: string | null
       new_folder_suggestion: string | null
@@ -153,10 +206,6 @@ ${(candidateIdeas ?? [])
     } else if (folderDecision.folder_id && folderDecision.confidence >= FOLDER_REVIEW_THRESHOLD) {
       folderId = folderDecision.folder_id
       autoFiled = true
-      needsReview = true
-    } else {
-      folderId = null
-      autoFiled = false
       needsReview = true
     }
 
