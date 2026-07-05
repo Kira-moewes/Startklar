@@ -4,6 +4,7 @@ import { journeys } from '../data'
 import { vergleichsKategorien } from '../data/vergleich'
 import { istRelevant } from '../data/visibility'
 import { useProfile } from '../hooks/useProfile'
+import { normalisiere } from '../lib/retrieval'
 import CategoryBadge from '../components/CategoryBadge'
 import type { Task, TaskCategory } from '../data/types'
 
@@ -23,10 +24,6 @@ type Treffer = {
   journeyTitel: string
   task: Task
   relevant: boolean
-}
-
-function normalisiere(s: string) {
-  return s.toLowerCase().replaceAll('ä', 'ae').replaceAll('ö', 'oe').replaceAll('ü', 'ue').replaceAll('ß', 'ss')
 }
 
 export default function Suche() {
@@ -128,11 +125,11 @@ export default function Suche() {
             <Link
               key={k.id}
               to={`/vergleich/${k.id}`}
-              className="block rounded-card bg-pine p-5 text-cream hover:bg-forest transition"
+              className="block rounded-card bg-band p-5 text-paper hover:bg-tile transition"
             >
-              <p className="text-xs font-semibold uppercase tracking-widest text-cream/70">Anbieter-Vergleich</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-paper/70">Anbieter-Vergleich</p>
               <p className="mt-1 font-display text-lg font-semibold">{k.titel} vergleichen</p>
-              <p className="mt-1 text-sm text-cream/80">{k.intro}</p>
+              <p className="mt-1 text-sm text-paper/80">{k.intro}</p>
             </Link>
           ))}
 

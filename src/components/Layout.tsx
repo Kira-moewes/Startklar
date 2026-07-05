@@ -1,5 +1,6 @@
 import { Link, NavLink, Outlet } from 'react-router-dom'
 import { useProfile } from '../hooks/useProfile'
+import AgentButton from './agent/AgentButton'
 
 const navClass = ({ isActive }: { isActive: boolean }) =>
   `text-[15px] font-medium py-1 transition ${isActive ? 'text-olive' : 'text-pine hover:text-olive'}`
@@ -35,13 +36,14 @@ export default function Layout() {
       <main className="flex-1">
         <Outlet />
       </main>
-      <footer className="bg-pine text-cream/65 border-t border-cream/10">
+      <AgentButton />
+      <footer className="bg-band text-paper/65 border-t border-paper/10">
         <div className="mx-auto max-w-[1200px] px-7 py-6 flex flex-wrap gap-x-6 gap-y-2 items-center text-[13.5px]">
-          <span className="font-serif text-[17px] text-cream">Startklar</span>
+          <span className="font-serif text-[17px] text-paper">Startklar</span>
           <span>Keine Rechtsberatung. Angaben können sich ändern.</span>
           <span className="ml-auto flex gap-4.5">
-            <Link to="/impressum" className="underline underline-offset-3 hover:text-cream transition">Impressum</Link>
-            <Link to="/datenschutz" className="underline underline-offset-3 hover:text-cream transition">Datenschutz</Link>
+            <Link to="/impressum" className="underline underline-offset-3 hover:text-paper transition">Impressum</Link>
+            <Link to="/datenschutz" className="underline underline-offset-3 hover:text-paper transition">Datenschutz</Link>
           </span>
         </div>
       </footer>

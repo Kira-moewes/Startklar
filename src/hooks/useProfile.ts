@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
-import localforage from 'localforage'
 import type { Profile } from '../data/profile'
-
-const store = localforage.createInstance({ name: 'startklar', storeName: 'profil' })
+import { profilStore as store } from '../lib/stores'
 
 // Alle Hook-Instanzen teilen sich den Zustand: Speichert eine Instanz
 // (z. B. das Onboarding), erfahren es auch Layout & Co. sofort.

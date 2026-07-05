@@ -1,8 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import localforage from 'localforage'
-
-const store = localforage.createInstance({ name: 'startklar', storeName: 'progress' })
-const dateStore = localforage.createInstance({ name: 'startklar', storeName: 'progress-dates' })
+import { progressStore as store, progressDatesStore as dateStore } from '../lib/stores'
 const keyOf = (j: string, t: string) => `${j}:${t}`
 
 const heute = () => new Date().toISOString().slice(0, 10)

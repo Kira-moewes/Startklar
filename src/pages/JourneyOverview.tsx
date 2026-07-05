@@ -31,15 +31,15 @@ export default function JourneyOverview() {
 
       <section
         aria-label="Fortschritt"
-        className="mt-8 bg-pine text-cream rounded-[20px] px-7 py-6"
+        className="mt-8 bg-band text-paper rounded-[20px] px-7 py-6"
         style={{ animation: 'rise .6s cubic-bezier(.2,.7,.2,1) .1s both' }}
       >
         <div className="flex justify-between items-baseline gap-4">
           <p className="m-0 font-semibold text-base">{doneCount} von {total} erledigt</p>
           <p className="m-0 font-serif text-[26px]">{pct} %</p>
         </div>
-        <div className="mt-3.5 h-2.5 rounded-pill bg-cream/18 overflow-hidden" role="progressbar" aria-valuenow={doneCount} aria-valuemin={0} aria-valuemax={total}>
-          <div className="h-full rounded-pill bg-cream transition-all duration-600" style={{ width: `${pct}%` }} />
+        <div className="mt-3.5 h-2.5 rounded-pill bg-paper/18 overflow-hidden" role="progressbar" aria-valuenow={doneCount} aria-valuemin={0} aria-valuemax={total}>
+          <div className="h-full rounded-pill bg-paper transition-all duration-600" style={{ width: `${pct}%` }} />
         </div>
         {allDone && (
           <p className="mt-3.5 m-0 text-[15px] text-[#C9D3A0]">

@@ -87,26 +87,26 @@ export default function Home() {
       </section>
 
       {/* Dunkles Band: Marquee + Zahlen + Bereiche */}
-      <section className="bg-pine rounded-t-[56px] pt-18 pb-[90px] text-cream">
+      <section className="bg-band rounded-t-[56px] pt-18 pb-[90px] text-paper">
         <MarqueeTiles />
 
         {/* Zahlen */}
         <div className="mx-auto max-w-[1200px] px-7 grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4.5">
-          <div className="border border-cream/16 rounded-[20px] p-6.5">
+          <div className="border border-paper/16 rounded-[20px] p-6.5">
             <p className="m-0 font-serif text-[56px] leading-none">{statBereiche}</p>
-            <p className="mt-2.5 text-sm text-cream/65">Bereiche fürs echte Leben</p>
+            <p className="mt-2.5 text-sm text-paper/65">Bereiche fürs echte Leben</p>
           </div>
-          <div className="border border-cream/16 rounded-[20px] p-6.5">
+          <div className="border border-paper/16 rounded-[20px] p-6.5">
             <p className="m-0 font-serif text-[56px] leading-none">{statSchritte}</p>
-            <p className="mt-2.5 text-sm text-cream/65">Schritt-für-Schritt-Anleitungen</p>
+            <p className="mt-2.5 text-sm text-paper/65">Schritt-für-Schritt-Anleitungen</p>
           </div>
-          <div className="border border-cream/16 rounded-[20px] p-6.5">
+          <div className="border border-paper/16 rounded-[20px] p-6.5">
             <p className="m-0 font-serif text-[56px] leading-none">2<span className="text-[28px]"> Min</span></p>
-            <p className="mt-2.5 text-sm text-cream/65">bis dein Plan persönlich ist</p>
+            <p className="mt-2.5 text-sm text-paper/65">bis dein Plan persönlich ist</p>
           </div>
-          <div className="border border-cream/16 rounded-[20px] p-6.5">
+          <div className="border border-paper/16 rounded-[20px] p-6.5">
             <p className="m-0 font-serif text-[56px] leading-none">100<span className="text-[28px]"> %</span></p>
-            <p className="mt-2.5 text-sm text-cream/65">lokal — Daten bleiben bei dir</p>
+            <p className="mt-2.5 text-sm text-paper/65">lokal — Daten bleiben bei dir</p>
           </div>
         </div>
 
@@ -116,7 +116,7 @@ export default function Home() {
             <h2 className="m-0 font-serif font-normal text-[clamp(32px,4vw,48px)]">
               Deine <em className="text-olive-soft">Bereiche</em>
             </h2>
-            <p className="m-0 text-[15px] text-cream/60 max-w-[340px]">
+            <p className="m-0 text-[15px] text-paper/60 max-w-[340px]">
               Beantworte 7 Fragen und wir blenden alles aus, was für dich gerade nicht zählt.
             </p>
           </div>
@@ -125,7 +125,7 @@ export default function Home() {
               <Link
                 key={journey.id}
                 to={`/journey/${journey.id}`}
-                className="text-left bg-cream text-pine rounded-[22px] p-7 flex flex-col gap-2.5 transition duration-250 hover:-translate-y-1.5 hover:shadow-[0_18px_40px_rgba(0,0,0,.28)]"
+                className="text-left bg-cream text-pine border border-paper/10 rounded-[22px] p-7 flex flex-col gap-2.5 transition duration-250 hover:-translate-y-1.5 hover:shadow-[0_18px_40px_rgba(0,0,0,.28)]"
               >
                 <span className="text-[13px] font-semibold tracking-[.14em] text-olive">0{i + 1}</span>
                 <span className="font-serif text-[28px] font-medium leading-[1.15]">{journey.title}</span>
@@ -140,7 +140,7 @@ export default function Home() {
             ))}
           </div>
           {!loading && profile && sichtbar.length === 0 && (
-            <p className="mt-8 border border-cream/20 rounded-[22px] p-7 text-cream/85">
+            <p className="mt-8 border border-paper/20 rounded-[22px] p-7 text-paper/85">
               Gerade steht bei dir nichts an – stark! Ändert sich was, pass einfach dein Profil an.
             </p>
           )}
@@ -149,7 +149,7 @@ export default function Home() {
         {/* CTA */}
         <div className="mx-auto max-w-[1200px] mt-14 px-7">
           {!loading && !profile && (
-            <div className="bg-olive rounded-[26px] p-11 flex flex-wrap items-center justify-between gap-7">
+            <div className="bg-olive text-cream rounded-[26px] p-11 flex flex-wrap items-center justify-between gap-7">
               <div className="max-w-[560px]">
                 <h3 className="m-0 font-serif font-normal text-[32px]">Zeig uns kurz deine Situation</h3>
                 <p className="mt-2.5 text-base text-cream/85 leading-[1.55]">
@@ -162,9 +162,9 @@ export default function Home() {
             </div>
           )}
           {!loading && profile && (
-            <div className="border border-cream/20 rounded-[26px] px-9 py-7 flex flex-wrap items-center justify-between gap-5">
-              <p className="m-0 text-base text-cream/85">Dein Profil ist eingerichtet — die Bereiche oben sind auf dich zugeschnitten.</p>
-              <Link to="/profil" className="rounded-pill border-[1.5px] border-cream/40 text-cream px-5.5 py-2.75 text-sm font-semibold hover:border-cream transition">
+            <div className="border border-paper/20 rounded-[26px] px-9 py-7 flex flex-wrap items-center justify-between gap-5">
+              <p className="m-0 text-base text-paper/85">Dein Profil ist eingerichtet — die Bereiche oben sind auf dich zugeschnitten.</p>
+              <Link to="/profil" className="rounded-pill border-[1.5px] border-paper/40 text-paper px-5.5 py-2.75 text-sm font-semibold hover:border-paper transition">
                 Profil anpassen
               </Link>
             </div>

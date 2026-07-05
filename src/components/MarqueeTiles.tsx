@@ -7,10 +7,10 @@ function TileWohnung() {
     <Tile title="Erste Wohnung" subtitle="Mietvertrag bis Rundfunk">
       <div className="absolute top-[34px] right-[34px] size-16 rounded-full bg-olive" style={{ animation: 'drift 9s ease-in-out infinite' }} />
       <div
-        className="absolute top-[62px] left-[58px] w-[68px] h-[112px] border-[2.5px] border-cream rounded-t-lg rounded-b"
+        className="absolute top-[62px] left-[58px] w-[68px] h-[112px] border-[2.5px] border-paper rounded-t-lg rounded-b"
         style={{ transformOrigin: 'left center', animation: 'doorSwing 6s ease-in-out infinite' }}
       >
-        <div className="absolute right-2 top-[52px] size-[7px] rounded-full bg-cream" />
+        <div className="absolute right-2 top-[52px] size-[7px] rounded-full bg-paper" />
       </div>
     </Tile>
   )
@@ -20,11 +20,11 @@ function TileFinanzen() {
   return (
     <Tile title="Finanzen" subtitle="Konto, Steuer, Schufa">
       <div className="absolute top-[52px] left-[70px] w-[110px] h-[118px]">
-        <div className="absolute bottom-0 left-3.5 w-16 h-3.5 rounded-pill bg-olive-soft border-2 border-cream" />
-        <div className="absolute bottom-[13px] left-[18px] w-14 h-[13px] rounded-pill bg-olive border-2 border-cream" />
-        <div className="absolute bottom-[25px] left-[22px] w-12 h-3 rounded-pill bg-olive-soft border-2 border-cream" />
+        <div className="absolute bottom-0 left-3.5 w-16 h-3.5 rounded-pill bg-olive-soft border-2 border-paper" />
+        <div className="absolute bottom-[13px] left-[18px] w-14 h-[13px] rounded-pill bg-olive border-2 border-paper" />
+        <div className="absolute bottom-[25px] left-[22px] w-12 h-3 rounded-pill bg-olive-soft border-2 border-paper" />
         <div
-          className="absolute bottom-[38px] left-6 size-11 rounded-full bg-cream text-pine font-bold text-[22px] flex items-center justify-center"
+          className="absolute bottom-[38px] left-6 size-11 rounded-full bg-paper text-band font-bold text-[22px] flex items-center justify-center"
           style={{ animation: 'coinDrop 3s cubic-bezier(.3,.7,.3,1) infinite' }}
         >
           €
@@ -37,20 +37,20 @@ function TileFinanzen() {
 function TileMobilitaet() {
   return (
     <Tile title="Mobilität" subtitle="Führerschein & erstes Auto">
-      <div className="absolute top-32 left-[26px] right-[26px] border-t-[2.5px] border-dashed border-cream/40" />
+      <div className="absolute top-32 left-[26px] right-[26px] border-t-[2.5px] border-dashed border-paper/40" />
       <div className="absolute top-[89px] left-6" style={{ animation: 'carDrive 4.5s linear infinite' }}>
         <svg width="72" height="44" viewBox="0 0 72 44">
-          <path d="M8 28 L12 16 Q14 10 22 10 L42 10 Q48 10 52 16 L56 22 L64 24 Q67 25 67 28 L67 32 L5 32 L5 30 Q5 28 8 28 Z" fill="#FEFAE0" />
-          <rect x="18" y="14" width="12" height="8" rx="2" fill="#33471F" />
-          <rect x="34" y="14" width="12" height="8" rx="2" fill="#33471F" />
+          <path d="M8 28 L12 16 Q14 10 22 10 L42 10 Q48 10 52 16 L56 22 L64 24 Q67 25 67 28 L67 32 L5 32 L5 30 Q5 28 8 28 Z" fill="var(--color-paper)" />
+          <rect x="18" y="14" width="12" height="8" rx="2" fill="var(--color-tile)" />
+          <rect x="34" y="14" width="12" height="8" rx="2" fill="var(--color-tile)" />
           <g>
-            <circle cx="19" cy="32" r="6.5" fill="#33471F" stroke="#FEFAE0" strokeWidth="2.5" />
-            <line x1="19" y1="27.5" x2="19" y2="36.5" stroke="#FEFAE0" strokeWidth="1.5" />
+            <circle cx="19" cy="32" r="6.5" fill="var(--color-tile)" stroke="var(--color-paper)" strokeWidth="2.5" />
+            <line x1="19" y1="27.5" x2="19" y2="36.5" stroke="var(--color-paper)" strokeWidth="1.5" />
             <animateTransform attributeName="transform" type="rotate" from="0 19 32" to="360 19 32" dur="0.7s" repeatCount="indefinite" />
           </g>
           <g>
-            <circle cx="53" cy="32" r="6.5" fill="#33471F" stroke="#FEFAE0" strokeWidth="2.5" />
-            <line x1="53" y1="27.5" x2="53" y2="36.5" stroke="#FEFAE0" strokeWidth="1.5" />
+            <circle cx="53" cy="32" r="6.5" fill="var(--color-tile)" stroke="var(--color-paper)" strokeWidth="2.5" />
+            <line x1="53" y1="27.5" x2="53" y2="36.5" stroke="var(--color-paper)" strokeWidth="1.5" />
             <animateTransform attributeName="transform" type="rotate" from="0 53 32" to="360 53 32" dur="0.7s" repeatCount="indefinite" />
           </g>
         </svg>
@@ -62,10 +62,10 @@ function TileMobilitaet() {
 function TileVolljaehrig() {
   return (
     <Tile title="Volljährig & startklar" subtitle="Rechte, Ausweis, Gesundheit">
-      <p className="absolute top-11 inset-x-0 m-0 text-center font-serif italic text-[92px] font-light text-cream leading-none">18</p>
+      <p className="absolute top-11 inset-x-0 m-0 text-center font-serif italic text-[92px] font-light text-paper leading-none">18</p>
       <div className="absolute top-[46px] left-11 size-[9px] rounded-full bg-olive-soft" style={{ animation: 'blink 2.4s ease-in-out infinite' }} />
       <div className="absolute top-[120px] right-10 size-[7px] rounded-full bg-olive" style={{ animation: 'blink 2.4s ease-in-out .5s infinite' }} />
-      <div className="absolute top-[70px] right-[66px] size-[5px] rounded-full bg-cream" style={{ animation: 'blink 2.4s ease-in-out 1s infinite' }} />
+      <div className="absolute top-[70px] right-[66px] size-[5px] rounded-full bg-paper" style={{ animation: 'blink 2.4s ease-in-out 1s infinite' }} />
     </Tile>
   )
 }
@@ -73,9 +73,9 @@ function TileVolljaehrig() {
 function TileTermine() {
   return (
     <Tile title="Termine" subtitle="Fristen im Blick behalten">
-      <div className="absolute top-12 left-[74px] size-25 border-[2.5px] border-cream rounded-[14px]">
+      <div className="absolute top-12 left-[74px] size-25 border-[2.5px] border-paper rounded-[14px]">
         <div className="h-[26px] bg-olive rounded-t-[10px]" />
-        <div className="absolute bottom-[18px] right-[18px] size-3.5 rounded-full bg-cream" style={{ animation: 'pulse-dot 2.6s ease-in-out infinite' }} />
+        <div className="absolute bottom-[18px] right-[18px] size-3.5 rounded-full bg-paper" style={{ animation: 'pulse-dot 2.6s ease-in-out infinite' }} />
       </div>
     </Tile>
   )
@@ -86,8 +86,8 @@ function TileFortschritt() {
     <Tile title="Fortschritt" subtitle="Schritt für Schritt abhaken">
       <div className="absolute top-[46px] left-[72px] size-26" style={{ animation: 'sweep 7s linear infinite' }}>
         <svg width="104" height="104" viewBox="0 0 104 104">
-          <circle cx="52" cy="52" r="44" fill="none" stroke="rgba(254,250,224,.2)" strokeWidth="8" />
-          <circle cx="52" cy="52" r="44" fill="none" stroke="#FEFAE0" strokeWidth="8" strokeLinecap="round" strokeDasharray="200 277" />
+          <circle cx="52" cy="52" r="44" fill="none" stroke="color-mix(in srgb, var(--color-paper) 20%, transparent)" strokeWidth="8" />
+          <circle cx="52" cy="52" r="44" fill="none" stroke="var(--color-paper)" strokeWidth="8" strokeLinecap="round" strokeDasharray="200 277" />
         </svg>
       </div>
     </Tile>
@@ -96,10 +96,10 @@ function TileFortschritt() {
 
 function Tile({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) {
   return (
-    <div className="w-[250px] h-[320px] flex-none rounded-3xl bg-tile border border-cream/12 p-6 flex flex-col justify-end relative overflow-hidden">
+    <div className="w-[250px] h-[320px] flex-none rounded-3xl bg-tile border border-paper/12 p-6 flex flex-col justify-end relative overflow-hidden">
       {children}
       <p className="m-0 font-serif text-[23px] font-medium">{title}</p>
-      <p className="mt-1.5 m-0 text-[13px] text-cream/60">{subtitle}</p>
+      <p className="mt-1.5 m-0 text-[13px] text-paper/60">{subtitle}</p>
     </div>
   )
 }

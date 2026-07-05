@@ -138,19 +138,19 @@ export default function Dashboard() {
 
       {/* Kennzahlen */}
       <div className="mt-10 grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-4.5 items-stretch" style={{ animation: 'rise .6s cubic-bezier(.2,.7,.2,1) .1s both' }}>
-        <div className="bg-pine text-cream rounded-[22px] p-7 flex flex-col items-center justify-center gap-2">
+        <div className="bg-band text-paper rounded-[22px] p-7 flex flex-col items-center justify-center gap-2">
           <div className="relative size-[156px]">
             <svg width="156" height="156" viewBox="0 0 156 156" className="-rotate-90">
-              <circle cx="78" cy="78" r="66" fill="none" stroke="rgba(254,250,224,.15)" strokeWidth="12" />
+              <circle cx="78" cy="78" r="66" fill="none" stroke="var(--color-paper)" strokeOpacity="0.15" strokeWidth="12" />
               <circle
-                cx="78" cy="78" r="66" fill="none" stroke="#FEFAE0" strokeWidth="12" strokeLinecap="round"
+                cx="78" cy="78" r="66" fill="none" stroke="var(--color-paper)" strokeWidth="12" strokeLinecap="round"
                 strokeDasharray={RING_UMFANG}
                 strokeDashoffset={RING_UMFANG * (1 - animPct / 100)}
               />
             </svg>
             <p className="absolute inset-0 m-0 flex items-center justify-center font-serif text-[40px]">{animPct} %</p>
           </div>
-          <p className="m-0 text-sm text-cream/65">insgesamt geschafft</p>
+          <p className="m-0 text-sm text-paper/65">insgesamt geschafft</p>
         </div>
         <div className="flex flex-col gap-4.5">
           <div className="flex-1 bg-cream-card border border-pine/14 rounded-[22px] px-6.5 py-5.5">

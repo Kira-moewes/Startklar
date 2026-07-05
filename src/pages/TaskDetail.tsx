@@ -82,9 +82,9 @@ export default function TaskDetail() {
       </section>
 
       {(vergleichFuerTask[`${journey.id}:${task.id}`] ?? []).length > 0 && (
-        <section aria-label="Passender Vergleich" className="mt-5 bg-pine rounded-[20px] p-7 text-cream" style={{ animation: 'rise .6s cubic-bezier(.2,.7,.2,1) .3s both' }}>
+        <section aria-label="Passender Vergleich" className="mt-5 bg-band rounded-[20px] p-7 text-paper" style={{ animation: 'rise .6s cubic-bezier(.2,.7,.2,1) .3s both' }}>
           <h2 className="m-0 font-serif font-medium text-2xl">Anbieter vergleichen</h2>
-          <p className="mt-2 m-0 text-[15px] text-cream/85 leading-[1.55]">
+          <p className="mt-2 m-0 text-[15px] text-paper/85 leading-[1.55]">
             Zu diesem Schritt gibt es einen neutralen Vergleich — trag deine Angebote ein und behalte den Überblick.
           </p>
           <div className="mt-4.5 flex flex-wrap gap-3">
@@ -95,7 +95,7 @@ export default function TaskDetail() {
                 <Link
                   key={katId}
                   to={`/vergleich/${katId}`}
-                  className="rounded-pill bg-cream text-pine px-5.5 py-2.75 text-sm font-semibold hover:bg-olive-soft hover:text-cream transition"
+                  className="rounded-pill bg-paper text-band px-5.5 py-2.75 text-sm font-semibold hover:bg-olive-soft hover:text-on-akzent transition"
                 >
                   {kat.titel} →
                 </Link>
