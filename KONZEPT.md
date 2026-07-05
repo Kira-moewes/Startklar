@@ -448,6 +448,10 @@ Stat-Kacheln (Desktop) bzw. reihen sich mobil ein.
 - **Backend-Themen** (spätere Runde): echte Anbieter-/Zahlungsanbindung für den
   Checkout, Institutionen-Zulieferung für Dokumente (`quelle: 'institution'`),
   rechtliche Klärung (§ 34d GewO, ZAG) vor Live-Gang.
+- **Runde 3 (geplant)**: Provisions-Partner mit Affiliate-Netzwerken,
+  Slot-Modell (Partner + provisionsfreie Alternative), rechtssichere
+  Tippgeber-Links für Versicherungen, Transparenzseite und Lern-Modul –
+  vollständige Planung in `KONZEPT-PROVISIONEN.md`.
 
 Keine Migration nötig: nur neue localforage-Stores `wallet`, `dokumente`;
 bestehende Schlüssel bleiben unberührt.

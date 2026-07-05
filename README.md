@@ -41,7 +41,8 @@ Alle Nutzerdaten bleiben lokal auf dem Gerät (IndexedDB via localforage).
 
 Die vollständige Spezifikation für Runde 2 (Themenblöcke, Wallet & Checkout,
 Dokumentenablage, Vergleich mit konkreten Anbietern, Deep-Links) steht in
-`KONZEPT.md`.
+`KONZEPT.md`. Die Planung für Runde 3 (Provisions-Partner, Affiliate-Recht,
+Slot-Modell, Transparenzseite, Lern-Modul) steht in `KONZEPT-PROVISIONEN.md`.
 
 ## Entwicklung
 
