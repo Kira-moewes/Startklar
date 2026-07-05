@@ -1,0 +1,66 @@
+@import '@fontsource-variable/fraunces';
+@import '@fontsource-variable/inter';
+@import 'tailwindcss';
+
+@theme {
+  --color-paper: #faf9f6;
+  --color-paper-card: #ffffff;
+  --color-graphite: #2b2b31;
+  --color-graphite-soft: #5b5b66;
+  --color-mist: #e8e7e2;
+  --color-indigo: #3f4e9c;
+  --color-indigo-deep: #2e3a76;
+  --color-amber: #d98e3e;
+  --color-sage: #7c9473;
+
+  --font-display: 'Fraunces Variable', Georgia, serif;
+  --font-body: 'Inter Variable', system-ui, sans-serif;
+
+  --radius-card: 1rem;
+  --radius-field: 0.625rem;
+  --radius-pill: 9999px;
+}
+
+:root[data-theme='dark'] {
+  --color-paper: #1c1b22;
+  --color-paper-card: #26252d;
+  --color-graphite: #f0efea;
+  --color-graphite-soft: #b6b4c2;
+  --color-mist: #3a3944;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-paper);
+  color: var(--color-graphite);
+  -webkit-font-smoothing: antialiased;
+}
+
+.prose-tiptap .tiptap {
+  outline: none;
+}
+.prose-tiptap .tiptap p {
+  margin: 0 0 0.75em;
+}
+.prose-tiptap .tiptap h1,
+.prose-tiptap .tiptap h2,
+.prose-tiptap .tiptap h3 {
+  font-family: var(--font-display);
+  margin: 1em 0 0.4em;
+}
+.prose-tiptap .tiptap ul,
+.prose-tiptap .tiptap ol {
+  padding-left: 1.4em;
+  margin: 0 0 0.75em;
+}
+.prose-tiptap .tiptap blockquote {
+  border-left: 3px solid var(--color-mist);
+  padding-left: 1em;
+  color: var(--color-graphite-soft);
+  margin: 0 0 0.75em;
+}
+.prose-tiptap .tiptap code {
+  background: var(--color-mist);
+  border-radius: 0.25em;
+  padding: 0.1em 0.35em;
+}
