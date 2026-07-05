@@ -10,20 +10,27 @@ erhobenen Zeigefinger.
   Bereiche und Schritte angezeigt (`src/data/profile.ts`, `src/data/visibility.ts`).
 - **Bereiche & Aufgaben** – Journeys wie „Erste Wohnung", „Finanzen",
   „Mobilität" mit Schritt-für-Schritt-Anleitungen und Fristen (`src/data/journeys/`).
-- **Suche** – Volltextsuche über alle Schritte inkl. Kategorie-Filter und
-  Treffer in den Vergleichen (`/suche`).
-- **Anbieter-Vergleich** – neutrale Vergleichstabellen (Strom, Internet,
-  Haftpflicht, Hausrat, Girokonto, Kfz, Handy). Kriterien kommen von Startklar,
-  Angebote trägt man selbst ein, Favorit markierbar. Keine Werbung, keine
-  Provision (`/vergleich`).
-- **Fortschritt** – Gesamt-Ring, Fortschritt je Bereich, Aktivitäts-Heatmap
-  aus echten Erledigt-Daten, zuletzt erledigte und nächste Schritte
-  (`/fortschritt`).
+- **Suche** – tokenbasierte Volltextsuche (UND-Logik, Bindestrich-tolerant,
+  Synonyme wie „GEZ"→Rundfunkbeitrag in `src/data/synonyme.ts`) über alle
+  Schritte inkl. Kategorie-Filter und Treffer in den Vergleichen (`/suche`).
+- **Anbieter-Vergleich** – Vergleichstabellen (Strom, Internet, Haftpflicht,
+  Hausrat, Girokonto, Kfz, Handy). Kriterien kommen von Startklar, Angebote
+  trägt man selbst ein, Favorit markierbar (`/vergleich`). Runde 2 sieht
+  kuratierte Anbieter-Angebote mit transparentem Provisionsmodell vor –
+  siehe `KONZEPT.md`.
+- **Dashboard** – Widget-Grid mit Gesamtfortschritts-Ring, Stat-Kacheln,
+  Fortschritt je Bereich, Aktivitäts-Heatmap aus echten Erledigt-Daten,
+  Termin-Vorschau sowie nächsten und zuletzt erledigten Schritten
+  (`/dashboard`, Alias `/fortschritt`).
 - **Termine/Agenda** – Termine anlegen (auch direkt aus einer Aufgabe),
   Gruppierung in Überfällig/Heute/Nächste 7 Tage/Später, ICS-Export für den
   Kalender (`/termine`).
 
 Alle Nutzerdaten bleiben lokal auf dem Gerät (IndexedDB via localforage).
+
+Die vollständige Spezifikation für Runde 2 (Themenblöcke, Wallet & Checkout,
+Dokumentenablage, Vergleich mit konkreten Anbietern, Deep-Links) steht in
+`KONZEPT.md`.
 
 ## Entwicklung
 

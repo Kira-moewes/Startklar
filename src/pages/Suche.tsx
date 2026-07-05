@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { journeys } from '../data'
 import { vergleichsKategorien } from '../data/vergleich'
 import { istRelevant } from '../data/visibility'
+import { synonyme } from '../data/synonyme'
 import { useProfile } from '../hooks/useProfile'
 import CategoryBadge from '../components/CategoryBadge'
 import type { Task, TaskCategory } from '../data/types'
@@ -23,10 +24,33 @@ type Treffer = {
   journeyTitel: string
   task: Task
   relevant: boolean
+  imTitel: boolean
 }
 
+// Kleinschreibung, Umlaute vereinheitlichen, Satzzeichen/Bindestriche zu
+// Leerzeichen – so trifft „kfz versicherung" auch „KFZ-Versicherung".
 function normalisiere(s: string) {
-  return s.toLowerCase().replaceAll('ä', 'ae').replaceAll('ö', 'oe').replaceAll('ü', 'ue').replaceAll('ß', 'ss')
+  return s
+    .toLowerCase()
+    .replaceAll('ä', 'ae')
+    .replaceAll('ö', 'oe')
+    .replaceAll('ü', 'ue')
+    .replaceAll('ß', 'ss')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
+}
+
+function tokensAus(query: string) {
+  return normalisiere(query).split(' ').filter(Boolean)
+}
+
+// Jeder Suchtoken muss vorkommen (UND-Logik); pro Token genügt auch ein
+// Synonym-Treffer (z. B. „gez" findet „Rundfunkbeitrag").
+function passt(heuhaufen: string, tokens: string[]) {
+  return tokens.every(token => {
+    const varianten = [token, ...(synonyme[token] ?? [])]
+    return varianten.some(v => heuhaufen.includes(v))
+  })
 }
 
 export default function Suche() {
@@ -42,34 +66,42 @@ export default function Suche() {
   }, [])
 
   const treffer = useMemo<Treffer[]>(() => {
-    const q = normalisiere(query.trim())
+    const tokens = tokensAus(query)
     const ergebnisse: Treffer[] = []
     for (const journey of journeys) {
       for (const task of journey.tasks) {
         if (filter && task.category !== filter) continue
-        if (q.length > 0) {
+        let imTitel = false
+        if (tokens.length > 0) {
           const heuhaufen = normalisiere(
             [task.title, task.summary, task.deadline, task.consequence, ...task.steps].join(' ')
           )
-          if (!heuhaufen.includes(q)) continue
+          if (!passt(heuhaufen, tokens)) continue
+          imTitel = passt(normalisiere(task.title), tokens)
         }
         ergebnisse.push({
           journeyId: journey.id,
           journeyTitel: journey.title,
           task,
           relevant: istRelevant(profile, journey.id) && istRelevant(profile, journey.id, task.id),
+          imTitel,
         })
       }
     }
-    // Für dich relevante Treffer zuerst
-    return ergebnisse.sort((a, b) => Number(b.relevant) - Number(a.relevant))
+    // Für dich relevante Treffer zuerst, dann Titel-Treffer vor Text-Treffern
+    return ergebnisse.sort(
+      (a, b) => Number(b.relevant) - Number(a.relevant) || Number(b.imTitel) - Number(a.imTitel)
+    )
   }, [query, filter, profile])
 
   const vergleichsTreffer = useMemo(() => {
-    const q = normalisiere(query.trim())
-    if (q.length === 0) return []
+    const tokens = tokensAus(query)
+    if (tokens.length === 0) return []
     return vergleichsKategorien.filter(k =>
-      normalisiere([k.titel, k.intro, ...k.tipps].join(' ')).includes(q)
+      passt(
+        normalisiere([k.titel, k.intro, ...k.tipps, ...k.kriterien.map(kr => kr.label)].join(' ')),
+        tokens
+      )
     )
   }, [query])
 

@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { journeys } from '../data'
 import { faktum } from '../data/fakten'
 import { kategorie, vergleichFuerTask } from '../data/vergleich'
@@ -9,7 +9,6 @@ import CategoryBadge from '../components/CategoryBadge'
 
 export default function TaskDetail() {
   const { journeyId = '', taskId = '' } = useParams()
-  const navigate = useNavigate()
   const { profile } = useProfile()
   const journey = journeys.find(j => j.id === journeyId)
   const tasks = journey ? relevanteTasks(journey, profile) : []
@@ -21,8 +20,7 @@ export default function TaskDetail() {
   if (!task) return <p className="p-6">Aufgabe nicht gefunden. <Link to={`/journey/${journey.id}`} className="underline">Zur Übersicht</Link></p>
 
   const idx = tasks.findIndex(t => t.id === taskId)
-  const prev = tasks[idx - 1]
-  const next = tasks[idx + 1]
+  const naechsterOffener = tasks.slice(idx + 1).find(t => !done[t.id])
   const isDone = done[task.id] ?? false
   const factEntries = (task.faktenKeys ?? []).map(key => faktum(key)).filter(Boolean)
   const hasUnverified = factEntries.some(entry => entry?.geprueft === null)
@@ -59,7 +57,6 @@ export default function TaskDetail() {
         <h2 className="font-display text-xl font-semibold text-pine">Was, wenn nicht?</h2>
         <p className="mt-2"><span className="font-medium text-coral-deep">Frist:</span> {task.deadline}</p>
         <p className="mt-2 text-ink/90">{task.consequence}</p>
-        <p className="mt-3 text-sm text-ink/60">Kein Grund zur Panik – jetzt weißt du ja Bescheid.</p>
         {task.faktenKeys && task.faktenKeys.length > 0 && (
           <div className="mt-4 flex items-center gap-2 text-sm">
             {hasUnverified ? (
@@ -108,14 +105,17 @@ export default function TaskDetail() {
         </Link>
       </div>
 
-      <nav aria-label="Aufgaben-Navigation" className="flex justify-between gap-4">
-        {prev ? (
-          <button onClick={() => navigate(`/journey/${journey.id}/task/${prev.id}`)} className="min-h-12 rounded-pill border-2 border-pine px-5 font-display font-semibold text-pine">← {prev.title}</button>
-        ) : <span />}
-        {next && (
-          <button onClick={() => navigate(`/journey/${journey.id}/task/${next.id}`)} className="min-h-12 rounded-pill border-2 border-pine px-5 font-display font-semibold text-pine ml-auto">{next.title} →</button>
-        )}
-      </nav>
+      {isDone && naechsterOffener && (
+        <p className="text-sm text-ink/70">
+          Nächster Schritt:{' '}
+          <Link
+            to={`/journey/${journey.id}/task/${naechsterOffener.id}`}
+            className="font-medium text-pine underline underline-offset-2 hover:text-coral-deep"
+          >
+            {naechsterOffener.title} →
+          </Link>
+        </p>
+      )}
     </div>
   )
 }

@@ -11,7 +11,7 @@ export default function Layout() {
           <Link to="/" className="font-display text-2xl font-semibold text-pine">Startklar</Link>
           <nav className="flex flex-wrap gap-x-5 gap-y-1 text-sm" aria-label="Hauptnavigation">
             <NavLink to="/" end className={navClass}>Start</NavLink>
-            <NavLink to="/fortschritt" className={navClass}>Fortschritt</NavLink>
+            <NavLink to="/dashboard" className={navClass}>Dashboard</NavLink>
             <NavLink to="/termine" className={navClass}>Termine</NavLink>
             <NavLink to="/vergleich" className={navClass}>Vergleich</NavLink>
             <NavLink to="/suche" className={navClass} aria-label="Suche">

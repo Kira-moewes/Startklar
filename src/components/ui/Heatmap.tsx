@@ -34,22 +34,22 @@ export default function Heatmap({ data, caption, cols = 7 }: HeatmapProps) {
   return (
     <div>
       <div
-        className="grid gap-1.5 p-4 bg-cream-card rounded-card border border-pine-mist"
-        style={{ gridTemplateColumns: `repeat(${cols}, minmax(32px, 1fr))` }}
+        className="grid gap-1.5"
+        style={{ gridTemplateColumns: `repeat(${cols}, minmax(24px, 1fr))` }}
         role="img"
         aria-label={caption}
       >
         {data.map((value, i) => (
           <div
             key={i}
-            className="aspect-square rounded-lg transition-colors cursor-default min-h-8 min-w-8 sm:min-h-10 sm:min-w-10"
+            className="aspect-square rounded-lg transition-colors cursor-default min-h-6 min-w-6 sm:min-h-8 sm:min-w-8"
             style={{
               backgroundColor: isUniform
                 ? 'var(--color-pine-mist)'
                 : interpolateColor(value, min, max),
             }}
-            title={`Value: ${value}`}
-            aria-label={`Cell ${i + 1}: ${value}`}
+            title={`${value} erledigt`}
+            aria-label={`Tag ${i + 1}: ${value} erledigt`}
           />
         ))}
       </div>
