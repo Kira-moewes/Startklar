@@ -1,0 +1,10 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# SPA-Fallback: alle Routen an index.html, damit react-router auch bei
+# direktem Aufruf von Unterseiten (z. B. /termine, /vergleich/strom) greift.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

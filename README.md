@@ -36,7 +36,9 @@ npm run preview  # Build lokal testen
 ```
 
 Stack: React 19, TypeScript, Vite 8, Tailwind CSS 4, react-router 7,
-localforage, vite-plugin-pwa. Deployment via Vercel (`vercel.json`).
+localforage, vite-plugin-pwa. Deployment wahlweise via Vercel (`vercel.json`)
+oder Netlify (`netlify.toml`) – beide leiten alle Routen als SPA-Fallback auf
+`index.html`, damit react-router auch bei direktem Aufruf von Unterseiten greift.
 
 Hinweis: Inhalte sind keine Rechtsberatung; Beträge und Fristen stehen als
 `{PLATZHALTER}` in `src/data/fakten.ts`, bis sie redaktionell geprüft sind.
