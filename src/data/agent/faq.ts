@@ -129,4 +129,22 @@ export const faqEintraege: FaqEintrag[] = [
     text: 'Oben auf der Vergleichsseite (und beim Bedarfscheck-Ergebnis) gibt es „Drucken / PDF". Im Druckdialog deines Geräts wählst du „Als PDF sichern" – fertig.',
     route: '/vergleich',
   },
+  {
+    id: 'tarif-steckbrief',
+    titel: 'Was ist der Tarif-Steckbrief?',
+    text: 'Nach dem Fragebogen (Bedarfscheck) bekommst du deinen Tarif-Steckbrief: welche Deckung, Selbstbeteiligung und Bausteine DU brauchst. Druck ihn aus und nimm ihn mit ins Gespräch. Dazu siehst du, welche Anbieter aus unserem Katalog deine Ziele laut Richtwerten erfüllen – alphabetisch, ohne Empfehlung, ohne Provision.',
+    route: '/vergleich',
+  },
+  {
+    id: 'fragebogen-schritt-1',
+    titel: 'Fragebogen bei Versicherungs-Aufgaben',
+    text: 'Bei Versicherungs-Aufgaben (Haftpflicht, Hausrat, Kfz, Krankenkasse) ist der Fragebogen jetzt Schritt 1 auf der Aufgaben-Seite – ausfüllen dauert etwa 3 Minuten, danach zeigt der Schritt ein Häkchen und dein Ergebnis.',
+    route: '/vergleich',
+  },
+  {
+    id: 'eigene-farbe',
+    titel: 'App-Farbe frei wählen',
+    text: 'Im Profil unter Darstellung kannst du neben den Vorgaben mit dem Regenbogen-Kreis jede eigene Farbe wählen. Sie färbt Buttons, den Papierflieger, Fortschritt und Chips – die Schriftfarbe passt sich automatisch an, damit alles lesbar bleibt.',
+    route: '/profil',
+  },
 ]

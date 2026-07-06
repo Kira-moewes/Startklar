@@ -57,6 +57,23 @@ Runde 5 ([docs/konzept-r5.md](docs/konzept-r5.md)) baut den Vergleich weiter aus
 - **Drucken / PDF** – Vergleichstabelle und Bedarfscheck-Ergebnis lassen sich
   über den Druckdialog des Browsers als PDF sichern (ohne Zusatz-Bibliothek).
 
+## Konzept v6 (umgesetzt)
+
+Runde 6 ([docs/konzept-r6.md](docs/konzept-r6.md)):
+
+- **Fragebogen-First** – bei jeder Versicherungs-Aufgabe (Haftpflicht, Hausrat,
+  Kfz, neu: Krankenkasse) ist der Bedarfscheck jetzt sichtbarer Schritt 1 der
+  Anleitung, mit Häkchen nach dem Ausfüllen. Die Fragebögen wurden auf 5–7
+  Fragen erweitert und erzeugen einen druckbaren **Tarif-Steckbrief**
+  (Zielwerte + empfohlene Bausteine) sowie die alphabetische Liste der
+  Katalog-Anbieter, deren Richtwerte alle Zielwerte erfüllen – Information,
+  keine Empfehlung: gleichrangig, ohne Provision, Richtwerte ungeprüft.
+- **Echte Farbwahl** – neben den vier Vorgaben gibt es einen freien Farbwähler
+  (Profil → Darstellung); die App leitet Abstufungen und kontrastsichere
+  Schrift automatisch ab. Die Akzentfarbe prägt jetzt wirklich das Bild:
+  Papierflieger, Primär-Buttons, Fortschritt, Heatmap und Checkboxen folgen
+  ihr – hell wie dunkel, ohne Farb-Flash beim Laden.
+
 ## Deployment mit Netlify
 
 1. Repo bei [Netlify](https://app.netlify.com) verbinden („Import from Git") –
