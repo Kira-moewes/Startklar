@@ -1,26 +1,88 @@
-@import '@fontsource-variable/outfit';
-@import '@fontsource-variable/inter';
-@import '@fontsource-variable/fraunces';
+@import '@fontsource-variable/instrument-sans';
+@import '@fontsource/instrument-serif';
+@import '@fontsource/instrument-serif/400-italic.css';
 @import 'tailwindcss';
 
+/*
+ * Theming: Die Tailwind-Tokens verweisen auf rohe --t-*-Variablen.
+ * Hell/Dunkel ([data-theme]) und Akzentfarbe ([data-akzent]) ändern nur
+ * diese Rohwerte – alle bestehenden Utility-Klassen bleiben unverändert.
+ *
+ * Rollen:
+ *  - pine/ink + cream invertieren als Paar (Primär-Buttons funktionieren
+ *    dadurch automatisch in beiden Themes)
+ *  - band/tile + paper sind Flächen, die in BEIDEN Themes dunkel bleiben
+ *    (Home-Band, Footer, Fortschritts-Karten) mit konstant heller Schrift
+ *  - olive-Familie = wählbare Akzentfarbe (im Dunkeln aufgehellt),
+ *    on-akzent = Schrift auf Akzent-Füllungen
+ */
+:root {
+  /* Akzent-Grundwerte (hell) */
+  --a-base: #606C38;
+  --a-soft: #7C8A4E;
+  --a-deep: #4A5426;
+
+  --t-bg: #FEFAE0;
+  --t-card: #FFFDF0;
+  --t-fg: #283618;
+  --t-mist: #E2DFC6;
+  --t-band: #283618;
+  --t-band-card: #33471F;
+  --t-paper: #FEFAE0;
+  --t-akzent: var(--a-base);
+  --t-akzent-soft: var(--a-soft);
+  --t-akzent-deep: var(--a-deep);
+  --t-on-akzent: #FEFAE0;
+}
+
+:root[data-akzent='koralle'] { --a-base: #D95F41; --a-soft: #E8836A; --a-deep: #B24528; }
+:root[data-akzent='himmel']  { --a-base: #3E6F80; --a-soft: #5E8FA0; --a-deep: #2C5462; }
+:root[data-akzent='beere']   { --a-base: #8A4E6E; --a-soft: #A86C8C; --a-deep: #6C3852; }
+
+:root[data-theme='dunkel'] {
+  --t-bg: #161C10;
+  --t-card: #1F2715;
+  --t-fg: #E7E9D3;
+  --t-mist: #3A432B;
+  --t-band: #1D2513;
+  --t-band-card: #2A3620;
+  --t-paper: #F4F1DC;
+  /* Akzent im Dunkeln aufhellen, damit Text/Icons lesbar bleiben */
+  --t-akzent: color-mix(in oklab, var(--a-base), #F4F1DC 30%);
+  --t-akzent-soft: color-mix(in oklab, var(--a-soft), #F4F1DC 30%);
+  --t-akzent-deep: color-mix(in oklab, var(--a-base), #F4F1DC 45%);
+  --t-on-akzent: #161C10;
+}
+
+:root[data-schrift='s'] { font-size: 93.75%; }
+:root[data-schrift='l'] { font-size: 112.5%; }
+
 @theme {
-  --color-pine: #1B3931;
-  --color-forest: #283618;
-  --color-olive: #606C38;
-  --color-olive-soft: #7C8A4E;
-  --color-cream: #FBF4E2;
-  --color-cornsilk: #FEFAE0;
-  --color-cream-card: #FFFDF6;
-  --color-pine-mist: #E4EAE7;
-  --color-coral: #F47B5B;
-  --color-coral-deep: #D95F41;
-  --color-ink: #16302A;
-  --font-display: 'Outfit Variable', system-ui, sans-serif;
-  --font-serif: 'Fraunces Variable', Georgia, serif;
-  --font-body: 'Inter Variable', system-ui, sans-serif;
+  --color-pine: var(--t-fg);
+  --color-forest: var(--t-fg);
+  --color-ink: var(--t-fg);
+  --color-cream: var(--t-bg);
+  --color-cornsilk: var(--t-bg);
+  --color-cream-card: var(--t-card);
+  --color-pine-mist: var(--t-mist);
+  --color-band: var(--t-band);
+  --color-tile: var(--t-band-card);
+  --color-paper: var(--t-paper);
+  --color-olive: var(--t-akzent);
+  --color-olive-soft: var(--t-akzent-soft);
+  --color-olive-deep: var(--t-akzent-deep);
+  --color-pine-soft: var(--t-akzent-soft);
+  --color-on-akzent: var(--t-on-akzent);
+  --color-coral: var(--t-akzent);
+  --color-coral-deep: var(--t-akzent-deep);
+  --font-display: 'Instrument Sans Variable', system-ui, sans-serif;
+  --font-serif: 'Instrument Serif', Georgia, serif;
+  --font-body: 'Instrument Sans Variable', system-ui, sans-serif;
   --radius-card: 1.25rem;
   --radius-field: 0.875rem;
   --radius-pill: 9999px;
+
+  --animate-rise: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
 body {
@@ -28,4 +90,94 @@ body {
   background: var(--color-cream);
   color: var(--color-ink);
   -webkit-font-smoothing: antialiased;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Animationen aus dem Redesign */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(26px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes mq {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes drawPath {
+  from { stroke-dashoffset: 1200; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes flyIn {
+  0% { transform: translate(-52vw, 26vh) rotate(-24deg); opacity: 0; }
+  12% { opacity: 1; }
+  60% { transform: translate(6vw, -4vh) rotate(8deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+@keyframes glide {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-14px) rotate(3deg); }
+}
+@keyframes drift {
+  0% { transform: translate(0, 0); }
+  33% { transform: translate(12px, -10px); }
+  66% { transform: translate(-8px, 8px); }
+  100% { transform: translate(0, 0); }
+}
+@keyframes doorSwing {
+  0%, 100% { transform: perspective(500px) rotateY(0deg); }
+  50% { transform: perspective(500px) rotateY(-28deg); }
+}
+@keyframes coinDrop {
+  0% { transform: translateY(-110px); opacity: 0; }
+  22% { opacity: 1; }
+  48% { transform: translateY(0); }
+  62% { transform: translateY(-16px); }
+  74% { transform: translateY(0); }
+  84% { transform: translateY(-6px); }
+  92%, 100% { transform: translateY(0); opacity: 1; }
+}
+@keyframes carDrive {
+  0% { transform: translateX(-90px); opacity: 0; }
+  8% { opacity: 1; }
+  88% { opacity: 1; }
+  100% { transform: translateX(240px); opacity: 0; }
+}
+@keyframes blink {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+@keyframes sweep {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes panel-in {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Manueller Schalter „Weniger Animationen" in den Einstellungen */
+:root[data-motion='reduziert'] {
+  scroll-behavior: auto;
+}
+:root[data-motion='reduziert'] *,
+:root[data-motion='reduziert'] *::before,
+:root[data-motion='reduziert'] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
 }

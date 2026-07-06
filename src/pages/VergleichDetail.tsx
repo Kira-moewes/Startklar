@@ -29,7 +29,7 @@ export default function VergleichDetail() {
     <div className="mx-auto max-w-4xl px-6 py-10 flex flex-col gap-8">
       <div>
         <Link to="/vergleich" className="text-sm text-pine underline underline-offset-2">← Alle Vergleiche</Link>
-        <h1 className="mt-3 font-serif text-4xl font-bold text-pine">{kat.titel}</h1>
+        <h1 className="mt-3 font-serif text-5xl font-normal text-pine">{kat.titel}</h1>
         <p className="mt-2 text-lg text-ink/80">{kat.intro}</p>
       </div>
 

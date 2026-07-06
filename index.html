@@ -5,8 +5,20 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Startklar hilft beim Einstieg in erste eigene Schritte – einfach, verständlich und ohne Bürokratie." />
-    <meta name="theme-color" content="#1B3931" />
+    <meta name="theme-color" content="#283618" />
     <title>Startklar – Erwachsenwerden, aber machbar</title>
+    <script>
+      // Anzeige-Einstellungen vor dem ersten Paint anwenden (kein Farb-Flash).
+      try {
+        var e = JSON.parse(localStorage.getItem('startklar-anzeige') || '{}')
+        var dunkel = e.theme === 'dunkel' || ((e.theme || 'system') === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)
+        var r = document.documentElement
+        r.setAttribute('data-theme', dunkel ? 'dunkel' : 'hell')
+        r.setAttribute('data-akzent', e.akzent || 'olive')
+        r.setAttribute('data-schrift', e.schrift || 'm')
+        r.setAttribute('data-motion', e.wenigerAnimation ? 'reduziert' : 'normal')
+      } catch (err) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

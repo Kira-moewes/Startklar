@@ -1,0 +1,93 @@
+import { createContext, useCallback, useContext, useEffect, useState } from 'react'
+import { einstellungenStore } from '../lib/stores'
+
+export type Einstellungen = {
+  theme: 'hell' | 'dunkel' | 'system'
+  akzent: 'olive' | 'koralle' | 'himmel' | 'beere'
+  schrift: 's' | 'm' | 'l'
+  wenigerAnimation: boolean
+  kiModus: boolean
+  kiKontext: boolean
+}
+
+export const standardEinstellungen: Einstellungen = {
+  theme: 'system',
+  akzent: 'olive',
+  schrift: 'm',
+  wenigerAnimation: false,
+  kiModus: false,
+  kiKontext: false,
+}
+
+const SPIEGEL_KEY = 'startklar-anzeige'
+
+// Attribute auf <html> anwenden – dieselbe Logik läuft als Inline-Script
+// in index.html vor dem ersten Paint (Flash-Vermeidung).
+function anwenden(e: Einstellungen) {
+  const root = document.documentElement
+  const dunkel = e.theme === 'dunkel' ||
+    (e.theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+  root.setAttribute('data-theme', dunkel ? 'dunkel' : 'hell')
+  root.setAttribute('data-akzent', e.akzent)
+  root.setAttribute('data-schrift', e.schrift)
+  root.setAttribute('data-motion', e.wenigerAnimation ? 'reduziert' : 'normal')
+  try {
+    localStorage.setItem(SPIEGEL_KEY, JSON.stringify({
+      theme: e.theme, akzent: e.akzent, schrift: e.schrift, wenigerAnimation: e.wenigerAnimation,
+    }))
+  } catch { /* localStorage nicht verfügbar – Attribute reichen */ }
+}
+
+type SettingsContextValue = {
+  einstellungen: Einstellungen
+  setEinstellung: <K extends keyof Einstellungen>(key: K, wert: Einstellungen[K]) => void
+  loading: boolean
+}
+
+const SettingsContext = createContext<SettingsContextValue>({
+  einstellungen: standardEinstellungen,
+  setEinstellung: () => {},
+  loading: true,
+})
+
+export function SettingsProvider({ children }: { children: React.ReactNode }) {
+  const [einstellungen, setEinstellungen] = useState<Einstellungen>(standardEinstellungen)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    void einstellungenStore.getItem<Partial<Einstellungen>>('einstellungen').then(saved => {
+      const e = { ...standardEinstellungen, ...(saved ?? {}) }
+      setEinstellungen(e)
+      anwenden(e)
+      setLoading(false)
+    })
+  }, [])
+
+  // System-Modus folgt dem OS live
+  useEffect(() => {
+    if (einstellungen.theme !== 'system') return
+    const mq = window.matchMedia('(prefers-color-scheme: dark)')
+    const handler = () => anwenden(einstellungen)
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [einstellungen])
+
+  const setEinstellung = useCallback(<K extends keyof Einstellungen>(key: K, wert: Einstellungen[K]) => {
+    setEinstellungen(prev => {
+      const next = { ...prev, [key]: wert }
+      anwenden(next)
+      void einstellungenStore.setItem('einstellungen', next)
+      return next
+    })
+  }, [])
+
+  return (
+    <SettingsContext value={{ einstellungen, setEinstellung, loading }}>
+      {children}
+    </SettingsContext>
+  )
+}
+
+export function useSettings() {
+  return useContext(SettingsContext)
+}

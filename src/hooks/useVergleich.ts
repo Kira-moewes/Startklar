@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import localforage from 'localforage'
+import { vergleichStore } from '../lib/stores'
 
 export type Angebot = {
   id: string
@@ -8,7 +8,7 @@ export type Angebot = {
   favorit: boolean
 }
 
-const store = localforage.createInstance({ name: 'startklar', storeName: 'vergleich' })
+const store = vergleichStore
 
 export function useVergleich(kategorieId: string) {
   const [angebote, setAngebote] = useState<Angebot[]>([])

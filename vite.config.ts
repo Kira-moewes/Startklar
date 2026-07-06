@@ -15,8 +15,8 @@ export default defineConfig({
         short_name: 'Startklar',
         description: 'Erwachsenwerden – aber machbar.',
         lang: 'de',
-        theme_color: '#1B3931',
-        background_color: '#FBF4E2',
+        theme_color: '#283618',
+        background_color: '#FEFAE0',
         display: 'standalone',
         start_url: '/',
         icons: [

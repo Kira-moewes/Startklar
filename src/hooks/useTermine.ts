@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import localforage from 'localforage'
+import { termineStore } from '../lib/stores'
 
 export type Termin = {
   id: string
@@ -13,7 +13,7 @@ export type Termin = {
   erledigt: boolean
 }
 
-const store = localforage.createInstance({ name: 'startklar', storeName: 'termine' })
+const store = termineStore
 const KEY = 'liste'
 
 export function useTermine() {

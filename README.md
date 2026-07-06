@@ -4,6 +4,36 @@ Erwachsenwerden – aber machbar. Startklar begleitet junge Menschen bei den
 ersten Behörden-, Geld- und Wohnungs-To-dos: verständlich, neutral und ohne
 erhobenen Zeigefinger.
 
+## Konzept v3 (umgesetzt)
+
+Runde 3 ist geplant ([docs/konzept-r3.md](docs/konzept-r3.md)) und vollständig
+umgesetzt:
+
+- **Klaro, der Assistent** – schwebender Button auf jeder Seite. Antwortet
+  standardmäßig komplett lokal (Intents + Suche über alle Schritte, Vergleiche
+  und eine App-Hilfe-FAQ, kennt Profil/Fortschritt/Termine) und verlinkt immer
+  die passende Stelle in der App. Kann mit Bestätigung Aktionen ausführen
+  (Termin vorbereiten, Schritt abhaken, Navigation). Optionaler **KI-Modus**
+  (Opt-in in den Einstellungen): schickt die Frage an eine Serverless Function
+  (`netlify/functions/agent.mts` bzw. `api/agent.ts`), die die Claude-API
+  nutzt – mit Guardrails, Rate-Limit und lokalem Fallback.
+- **Profilseite** (`/profil`) – alle 7 Onboarding-Antworten einzeln änderbar,
+  mit Live-Vorschau, wie viele Schritte sich dadurch ändern.
+- **Einstellungen** – Hell/Dunkel/System, 4 Akzentfarben, Schriftgröße,
+  weniger Animationen, KI-Schalter sowie Datenexport/-import als JSON und
+  „Alles löschen" (Datenhoheit, alles bleibt lokal).
+
+## Deployment mit Netlify
+
+1. Repo bei [Netlify](https://app.netlify.com) verbinden („Import from Git") –
+   Build-Kommando und Publish-Verzeichnis kommen aus `netlify.toml`, jeder
+   Push deployt automatisch.
+2. Optional für den KI-Modus: In den Site-Settings die Umgebungsvariable
+   `ANTHROPIC_API_KEY` setzen. Ohne Key funktioniert die App vollständig –
+   Klaro antwortet dann ausschließlich lokal.
+
+Alternativ funktioniert Vercel unverändert (`vercel.json` + `api/agent.ts`).
+
 ## Module (Planungskonzept v2)
 
 - **Onboarding & Personalisierung** – 7 Fragen, danach werden nur relevante
