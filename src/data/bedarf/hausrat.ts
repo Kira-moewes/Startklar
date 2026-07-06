@@ -83,6 +83,32 @@ export const hausratCheck: BedarfsCheck = {
         { wert: 'nein', label: 'Nein' },
       ],
     },
+    {
+      key: 'lage',
+      titel: 'Wo liegt die Wohnung?',
+      optionen: [
+        { wert: 'eg', label: 'Erdgeschoss oder Souterrain' },
+        { wert: 'oben', label: 'Weiter oben' },
+        { wert: 'haus', label: 'Im Haus (mehrere Etagen)' },
+      ],
+    },
+    {
+      key: 'elementar',
+      titel: 'Kellerraum – oder eine Gegend mit Hochwasser-/Starkregenrisiko?',
+      optionen: [
+        { wert: 'ja', label: 'Ja' },
+        { wert: 'nein', label: 'Nein' },
+        { wert: 'unklar', label: 'Weiß ich nicht' },
+      ],
+    },
+    {
+      key: 'wertsachen',
+      titel: 'Hast du einzelne Sachen über 2.000 € (Schmuck, Kamera, Rechner)?',
+      optionen: [
+        { wert: 'ja', label: 'Ja' },
+        { wert: 'nein', label: 'Nein' },
+      ],
+    },
   ],
   auswerten: (antworten) => {
     if (antworten.wohnort === 'eltern') {
@@ -105,10 +131,21 @@ export const hausratCheck: BedarfsCheck = {
     }
 
     const hinweise: string[] = []
+    const bausteine: string[] = []
     if (antworten.wohnort === 'wg') {
       hinweise.push('In der WG braucht meist jede:r eine eigene Police fürs eigene Zimmer – klärt, wem was gehört.')
     }
     hinweise.push('Vereinbare einen Unterversicherungsverzicht (Stichwort m²-Pauschale).')
+    if (antworten.lage === 'eg') {
+      bausteine.push('Einfacher Fahrrad-/Diebstahl im EG prüfen')
+      hinweise.push('Erdgeschoss heißt höheres Einbruchrisiko – abschließbare Fenster/Gitter senken oft den Beitrag.')
+    }
+    if (antworten.elementar === 'ja' || antworten.elementar === 'unklar') {
+      bausteine.push('Elementarschäden (Starkregen, Rückstau, Hochwasser)')
+    }
+    if (antworten.wertsachen === 'ja') {
+      hinweise.push('Prüfe die Wertsachengrenze der Police (oft 20–40 % der Versicherungssumme) – teure Einzelstücke ggf. extra melden.')
+    }
     const zielwerte = [summeZiel(antworten.flaeche), sbZiel]
     if (antworten.fahrrad === 'ja_teuer') zielwerte.push(fahrradZiel)
 
@@ -118,6 +155,7 @@ export const hausratCheck: BedarfsCheck = {
         titel: 'Erst überschlagen',
         begruendung: 'Ob sich die Versicherung lohnt, hängt am Wert deiner Sachen – den solltest du kurz überschlagen.',
         zielwerte,
+        bausteine,
         hinweise: ['Geh im Kopf durch die Wohnung: Was hat mehr als 100 € gekostet? Das summiert sich schneller als gedacht.', ...hinweise],
       }
     }
@@ -127,6 +165,7 @@ export const hausratCheck: BedarfsCheck = {
       titel: 'Wichtig für dich',
       begruendung: 'Dein Hausrat ist mehr wert, als du locker ersetzen könntest.',
       zielwerte,
+      bausteine,
       hinweise,
     }
   },

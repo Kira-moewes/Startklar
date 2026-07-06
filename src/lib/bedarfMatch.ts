@@ -1,5 +1,6 @@
 import type { Angebot } from '../hooks/useVergleich'
 import type { BedarfsErgebnis } from '../data/bedarf/types'
+import { anbieterKatalog, type AnbieterRichtwerte } from '../data/anbieter'
 import { normalisiere } from './retrieval'
 
 // Alle Parser sind bewusst konservativ: Was nicht sicher lesbar ist, gibt null
@@ -32,6 +33,25 @@ export function enthaeltJa(text: string): boolean | null {
   if (/\b(nein|ohne|nicht|kein)\b/.test(l)) return false
   if (/\b(ja|inkl|inklusive|enthalten|eingeschlossen|dabei)\b/.test(l)) return true
   return null
+}
+
+export type AnbieterMatch = { eintrag: AnbieterRichtwerte; erfuellt: number; pruefbar: number }
+
+// Welche Katalog-Anbieter erfüllen laut ihren RICHTWERTEN alle prüfbaren
+// Zielwerte des Bedarfschecks? Reine Information, keine Empfehlung:
+// Es werden nur Voll-Erfüller zurückgegeben, in Katalog-Reihenfolge
+// (alphabetisch), ohne jede Reihung untereinander.
+export function passendeAnbieter(kategorieId: string, ergebnis: BedarfsErgebnis): { treffer: AnbieterMatch[]; pruefbar: number } {
+  const pruefbar = ergebnis.zielwerte.filter(z => z.pruefe && z.kriteriumKey)
+  if (pruefbar.length === 0) return { treffer: [], pruefbar: 0 }
+  const treffer = (anbieterKatalog[kategorieId] ?? [])
+    .map(eintrag => ({
+      eintrag,
+      pruefbar: pruefbar.length,
+      erfuellt: pruefbar.filter(z => z.pruefe!(eintrag.werte[z.kriteriumKey!] ?? '') === 'erfuellt').length,
+    }))
+    .filter(m => m.erfuellt === m.pruefbar)
+  return { treffer, pruefbar: pruefbar.length }
 }
 
 export type BestMatch = { angebotId: string; erfuellt: number; pruefbar: number }

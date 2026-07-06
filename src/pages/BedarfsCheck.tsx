@@ -3,7 +3,16 @@ import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { bedarfsCheck } from '../data/bedarf'
 import { useBedarf } from '../hooks/useBedarf'
 import { useProfile } from '../hooks/useProfile'
+import { useVergleich } from '../hooks/useVergleich'
+import { passendeAnbieter } from '../lib/bedarfMatch'
+import { normalisiere } from '../lib/retrieval'
 import FragenWizard from '../components/FragenWizard'
+
+// 'YYYY-MM' → 'MM/JJJJ'
+function standLabel(stand: string): string {
+  const [j, m] = stand.split('-')
+  return m ? `${m}/${j}` : stand
+}
 
 const stufeStil: Record<string, string> = {
   wichtig: 'border-coral bg-coral/10',
@@ -17,7 +26,17 @@ export default function BedarfsCheck() {
   const check = bedarfsCheck(kategorieId)
   const { profile } = useProfile()
   const { antworten, ergebnis, speichern, loading } = useBedarf(kategorieId)
+  const { angebote, addMitRichtwerten } = useVergleich(kategorieId)
   const [bearbeiten, setBearbeiten] = useState(false)
+
+  // Katalog-Anbieter, die laut Richtwerten alle prüfbaren Zielwerte erfüllen
+  // (nur Information, alphabetisch) – bereits übernommene ausblenden.
+  const anbieterInfo = useMemo(() => {
+    if (!ergebnis) return null
+    const { treffer, pruefbar } = passendeAnbieter(kategorieId, ergebnis)
+    const vorhandene = new Set(angebote.map(a => normalisiere(a.anbieter.trim())))
+    return { pruefbar, treffer: treffer.filter(t => !vorhandene.has(normalisiere(t.eintrag.name))) }
+  }, [ergebnis, kategorieId, angebote])
 
   const initial = useMemo(() => {
     const base: Record<string, string> = {}
@@ -72,17 +91,82 @@ export default function BedarfsCheck() {
         <p className="mt-2 text-ink/80">{ergebnis.begruendung}</p>
       </div>
 
-      {ergebnis.zielwerte.length > 0 && (
+      {(ergebnis.zielwerte.length > 0 || (ergebnis.bausteine?.length ?? 0) > 0) && (
         <section className="rounded-card border border-pine-mist bg-cream-card p-6">
-          <h3 className="font-display font-semibold text-pine">Worauf du bei den Angeboten achten solltest</h3>
-          <ul className="mt-3 space-y-2">
-            {ergebnis.zielwerte.map((z, i) => (
-              <li key={i} className="flex justify-between gap-4 text-sm">
-                <span className="text-ink/70">{z.label}</span>
-                <span className="font-medium text-pine text-right">{z.ziel}</span>
-              </li>
-            ))}
-          </ul>
+          <div className="flex items-center justify-between gap-4">
+            <h3 className="font-display font-semibold text-pine">Dein Tarif-Steckbrief</h3>
+            <button
+              onClick={() => window.print()}
+              className="no-print text-sm text-pine underline underline-offset-2 hover:text-coral-deep"
+            >
+              Drucken / PDF
+            </button>
+          </div>
+          <p className="mt-1 text-sm text-ink/60">Das solltest DU bei Angeboten verlangen – zum Mitnehmen ins Gespräch.</p>
+          {ergebnis.zielwerte.length > 0 && (
+            <ul className="mt-3 space-y-2">
+              {ergebnis.zielwerte.map((z, i) => (
+                <li key={i} className="flex justify-between gap-4 text-sm">
+                  <span className="text-ink/70">{z.label}</span>
+                  <span className="font-medium text-pine text-right">{z.ziel}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+          {(ergebnis.bausteine?.length ?? 0) > 0 && (
+            <>
+              <h4 className="mt-4 text-sm font-semibold text-olive uppercase tracking-[.12em]">Empfohlene Bausteine</h4>
+              <ul className="mt-2 space-y-1.5">
+                {ergebnis.bausteine!.map((b, i) => (
+                  <li key={i} className="flex gap-2.5 text-sm text-ink/80">
+                    <span className="text-olive font-bold shrink-0">+</span>
+                    <span>{b}</span>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </section>
+      )}
+
+      {anbieterInfo && anbieterInfo.pruefbar > 0 && (
+        <section className="rounded-card border border-pine-mist bg-cream-card p-6">
+          <h3 className="font-display font-semibold text-pine">
+            {anbieterInfo.treffer.length > 0
+              ? 'Diese Anbieter erfüllen deine Zielwerte'
+              : 'Kein Katalog-Anbieter erfüllt alle Zielwerte'}
+          </h3>
+          {anbieterInfo.treffer.length > 0 ? (
+            <>
+              <p className="mt-1 text-sm text-ink/60">
+                Laut unseren Richtwerten (Stand {standLabel(anbieterInfo.treffer[0].eintrag.stand)}, ungeprüft) –
+                antippen übernimmt den Anbieter in deinen Vergleich:
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {anbieterInfo.treffer.map(({ eintrag }) => (
+                  <button
+                    key={eintrag.name}
+                    type="button"
+                    onClick={() => {
+                      addMitRichtwerten(eintrag.name, eintrag.werte, eintrag.stand)
+                      navigate(`/vergleich/${kategorieId}`)
+                    }}
+                    className="rounded-pill border border-pine-mist bg-cream px-4 py-2 text-sm font-display font-semibold text-pine hover:border-coral hover:text-coral-deep transition"
+                  >
+                    + {eintrag.name}
+                  </button>
+                ))}
+              </div>
+            </>
+          ) : (
+            <p className="mt-1 text-sm text-ink/70">
+              Unsere Richtwerte sind grob – das heißt nicht, dass es kein passendes Angebot gibt.
+              Vergleiche selbst und verlange die Werte aus deinem Steckbrief.
+            </p>
+          )}
+          <p className="mt-4 text-xs text-ink/50">
+            Alphabetische Auflistung, keine Empfehlung, keine Provision – Richtwerte ersetzen kein echtes Angebot.
+          </p>
         </section>
       )}
 

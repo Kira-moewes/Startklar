@@ -74,15 +74,55 @@ export const haftpflichtCheck: BedarfsCheck = {
         { wert: 'nichts', label: 'Nichts davon' },
       ],
     },
+    {
+      key: 'haushalt',
+      titel: 'Wohnst du mit Partner:in zusammen?',
+      optionen: [
+        { wert: 'ja', label: 'Ja' },
+        { wert: 'nein', label: 'Nein' },
+      ],
+    },
+    {
+      key: 'ausland',
+      titel: 'Planst du längere Zeit im Ausland (Auslandssemester, Work & Travel)?',
+      optionen: [
+        { wert: 'ja', label: 'Ja' },
+        { wert: 'vielleicht', label: 'Vielleicht' },
+        { wert: 'nein', label: 'Nein' },
+      ],
+    },
+    {
+      key: 'tiere',
+      titel: 'Hast du einen Hund oder ein Pferd?',
+      hinweis: 'Katzen und Kleintiere sind über die Privathaftpflicht abgedeckt.',
+      optionen: [
+        { wert: 'hund', label: 'Hund' },
+        { wert: 'pferd', label: 'Pferd' },
+        { wert: 'nein', label: 'Nein' },
+      ],
+    },
   ],
   auswerten: (antworten, profil) => {
     const nochBeiEltern = ['schueler', 'azubi', 'student', 'fsj']
     const hinweise: string[] = []
+    const bausteine: string[] = []
     if (antworten.risiko === 'leihen' || antworten.risiko === 'beides') {
-      hinweise.push('Achte darauf, dass geliehene und gemietete Sachen mitversichert sind.')
+      bausteine.push('Geliehene und gemietete Sachen mitversichert')
     }
     if (antworten.risiko === 'schluessel' || antworten.risiko === 'beides') {
-      hinweise.push('Schlüsselverlust sollte eingeschlossen sein – gerade in der WG.')
+      bausteine.push('Schlüsselverlust eingeschlossen')
+    }
+    if (antworten.haushalt === 'ja') {
+      bausteine.push('Partner:in mitversicherbar (Paar-Tarif prüfen – oft kaum teurer)')
+    }
+    if (antworten.ausland === 'ja' || antworten.ausland === 'vielleicht') {
+      bausteine.push('Weltweiter Schutz für mindestens 1 Jahr Auslandsaufenthalt')
+    }
+    if (antworten.tiere === 'hund') {
+      hinweise.push('Für den Hund brauchst du eine EIGENE Tierhalterhaftpflicht (je nach Bundesland Pflicht) – die Privathaftpflicht deckt ihn nicht.')
+    }
+    if (antworten.tiere === 'pferd') {
+      hinweise.push('Fürs Pferd brauchst du eine EIGENE Tierhalterhaftpflicht – die Privathaftpflicht deckt es nicht.')
     }
 
     if (antworten.mitversichert === 'ja' && profil?.status && nochBeiEltern.includes(profil.status)) {
@@ -91,7 +131,7 @@ export const haftpflichtCheck: BedarfsCheck = {
         titel: 'Vermutlich schon abgedeckt',
         begruendung: 'Du bist vermutlich noch über die Haftpflicht deiner Eltern mitversichert.',
         zielwerte: [],
-        hinweise: ['Das endet meist mit der ersten Berufstätigkeit oder dem Ende der Erstausbildung – mach den Check dann neu.'],
+        hinweise: ['Das endet meist mit der ersten Berufstätigkeit oder dem Ende der Erstausbildung – mach den Check dann neu.', ...hinweise],
       }
     }
 
@@ -103,6 +143,7 @@ export const haftpflichtCheck: BedarfsCheck = {
         titel: 'Erst klären',
         begruendung: 'Frag zuerst deine Eltern – die Antwort spart dir womöglich den ganzen Beitrag.',
         zielwerte,
+        bausteine,
         hinweise,
       }
     }
@@ -112,6 +153,7 @@ export const haftpflichtCheck: BedarfsCheck = {
       titel: 'Wichtig für dich',
       begruendung: 'Die wichtigste freiwillige Versicherung überhaupt – ein Personenschaden kann sonst dein Leben lang kosten.',
       zielwerte,
+      bausteine,
       hinweise,
     }
   },
