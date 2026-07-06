@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { journeys } from '../data'
 import { fragen, type Profile } from '../data/profile'
@@ -6,6 +6,7 @@ import { istRelevant, relevanteTasks } from '../data/visibility'
 import { useProfile } from '../hooks/useProfile'
 import { useSettings, type Einstellungen } from '../hooks/useSettings'
 import { exportiereAlles, importiereAlles, loescheAlles } from '../lib/datenExport'
+import { luminanz } from '../lib/farben'
 import { agentChatStore } from '../lib/stores'
 
 function sichtbareSchritte(profile: Profile | null): number {
@@ -77,7 +78,20 @@ export default function Profil() {
   const [zeigeKiHinweis, setZeigeKiHinweis] = useState(false)
   const [loeschStufe, setLoeschStufe] = useState(0)
   const [datenStatus, setDatenStatus] = useState<string | null>(null)
+  const [speicher, setSpeicher] = useState<string | null>(null)
   const importRef = useRef<HTMLInputElement>(null)
+
+  // Speichernutzung (v. a. für abgelegte Unterlagen relevant); API fehlt in
+  // manchen Browsern – dann bleibt die Zeile einfach weg.
+  useEffect(() => {
+    if (!navigator.storage?.estimate) return
+    void navigator.storage.estimate().then(({ usage, quota }) => {
+      if (!usage) return
+      const mb = (usage / (1024 * 1024)).toFixed(1).replace('.', ',')
+      const gb = quota ? ` von ~${Math.round(quota / (1024 * 1024 * 1024))} GB verfügbar` : ''
+      setSpeicher(`${mb} MB belegt${gb}`)
+    })
+  }, [datenStatus])
 
   const antworte = async (feld: keyof Profile, wert: string) => {
     const vorher = sichtbareSchritte(profile)
@@ -186,7 +200,7 @@ export default function Profil() {
               </OptionPill>
             ))}
           </Zeile>
-          <Zeile label="Akzentfarbe">
+          <Zeile label="Akzentfarbe" hinweis="Vorgaben antippen – oder mit dem Regenbogen-Kreis jede eigene Farbe wählen.">
             {akzente.map(a => (
               <button
                 key={a.wert}
@@ -198,6 +212,42 @@ export default function Profil() {
                 style={{ background: a.farbe }}
               />
             ))}
+            <label
+              title="Eigene Farbe wählen"
+              className={`relative size-9 rounded-full border-2 cursor-pointer transition overflow-hidden ${
+                einstellungen.akzent === 'eigene' ? 'border-pine scale-110' : 'border-pine/20 hover:border-pine/50'
+              }`}
+              style={{
+                background: einstellungen.akzent === 'eigene'
+                  ? einstellungen.akzentHex
+                  : 'conic-gradient(#e5484d, #ffb224, #6bc46d, #3e63dd, #b658c4, #e5484d)',
+              }}
+            >
+              <input
+                type="color"
+                value={einstellungen.akzentHex}
+                aria-label="Eigene Akzentfarbe wählen"
+                onChange={e => {
+                  setEinstellung('akzentHex', e.target.value)
+                  setEinstellung('akzent', 'eigene')
+                }}
+                className="absolute inset-0 opacity-0 cursor-pointer"
+              />
+            </label>
+          </Zeile>
+          {einstellungen.akzent === 'eigene' && luminanz(einstellungen.akzentHex) > 0.75 && (
+            <p className="m-0 text-[13px] text-coral-deep">
+              Sehr helle Farbe – Schrift und Kontrast leiden. Etwas kräftiger wählen wirkt besser.
+            </p>
+          )}
+          <Zeile label="Vorschau" hinweis="So wirkt deine Farbe in der App.">
+            <span className="flex items-center gap-3">
+              <span className="rounded-pill bg-olive text-on-akzent px-4 py-2 text-sm font-display font-semibold">Button</span>
+              <span className="rounded-pill bg-pine-mist text-olive px-3 py-1 text-xs font-display font-semibold">Chip</span>
+              <span className="h-2 w-24 rounded-pill bg-pine-mist overflow-hidden inline-block">
+                <span className="block h-full w-2/3 rounded-pill bg-olive" />
+              </span>
+            </span>
           </Zeile>
           <Zeile label="Schriftgröße">
             {(['s', 'm', 'l'] as const).map(s => (
@@ -252,7 +302,7 @@ export default function Profil() {
         </Gruppe>
 
         <Gruppe titel="Deine Daten">
-          <Zeile label="Sicherung" hinweis="Lädt alle deine Daten (Profil, Fortschritt, Termine, Vergleiche, Einstellungen) als JSON-Datei herunter.">
+          <Zeile label="Sicherung" hinweis="Lädt alle deine Daten (Profil, Fortschritt, Termine, Vergleiche, Bedarfschecks, Unterlagen, Einstellungen) als JSON-Datei herunter.">
             <button onClick={() => void exportiereAlles()} className="rounded-pill bg-pine text-cream px-4.5 py-2 text-sm font-semibold hover:bg-olive transition">
               Daten exportieren
             </button>
@@ -286,6 +336,11 @@ export default function Profil() {
               </span>
             )}
           </Zeile>
+          {speicher && (
+            <Zeile label="Speicher" hinweis="Belegter Platz auf diesem Gerät – Unterlagen (PDFs, Fotos) zählen hier am meisten.">
+              <span className="text-sm text-pine/70">{speicher}</span>
+            </Zeile>
+          )}
           {datenStatus && <p role="status" className="m-0 text-sm font-semibold text-olive">{datenStatus}</p>}
         </Gruppe>
 

@@ -8,6 +8,7 @@ export const progressDatesStore = localforage.createInstance({ name: 'startklar'
 export const termineStore = localforage.createInstance({ name: 'startklar', storeName: 'termine' })
 export const vergleichStore = localforage.createInstance({ name: 'startklar', storeName: 'vergleich' })
 export const bedarfStore = localforage.createInstance({ name: 'startklar', storeName: 'bedarf' })
+export const dokumenteStore = localforage.createInstance({ name: 'startklar', storeName: 'dokumente' })
 export const einstellungenStore = localforage.createInstance({ name: 'startklar', storeName: 'einstellungen' })
 export const agentChatStore = localforage.createInstance({ name: 'startklar', storeName: 'agent-chat' })
 
@@ -19,6 +20,7 @@ export const alleStores: Record<string, LocalForage> = {
   'termine': termineStore,
   'vergleich': vergleichStore,
   'bedarf': bedarfStore,
+  'dokumente': dokumenteStore,
   'einstellungen': einstellungenStore,
   'agent-chat': agentChatStore,
 }

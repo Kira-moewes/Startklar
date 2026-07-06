@@ -6,6 +6,10 @@ import { relevanteTasks } from '../data/visibility'
 import { useProfile } from '../hooks/useProfile'
 import { useProgress } from '../hooks/useProgress'
 import CategoryBadge from '../components/CategoryBadge'
+import DokumenteSection from '../components/DokumenteSection'
+import { dokumentKeyTask } from '../data/dokumente'
+import { hatBedarfsCheck } from '../data/bedarf'
+import { useBedarf } from '../hooks/useBedarf'
 
 export default function TaskDetail() {
   const { journeyId = '', taskId = '' } = useParams()
@@ -15,6 +19,9 @@ export default function TaskDetail() {
   const tasks = journey ? relevanteTasks(journey, profile) : []
   const taskIds = tasks.map(t => t.id)
   const { done, toggle } = useProgress(journeyId, taskIds)
+  // Versicherungs-Tasks: verknüpfte Vergleichskategorie mit Bedarfscheck (sonst '').
+  const checkKatId = (vergleichFuerTask[`${journeyId}:${taskId}`] ?? []).find(hatBedarfsCheck) ?? ''
+  const { antworten: checkAntworten, ergebnis: checkErgebnis } = useBedarf(checkKatId)
 
   if (!journey) return <p className="p-6">Nicht gefunden. <Link to="/" className="underline">Zur Startseite</Link></p>
   const task = journey.tasks.find(t => t.id === taskId)
@@ -52,9 +59,31 @@ export default function TaskDetail() {
       >
         <h2 className="m-0 font-serif font-medium text-2xl text-pine">So gehst du vor</h2>
         <ol className="mt-5 m-0 p-0 list-none flex flex-col gap-4.5">
+          {checkKatId && (
+            <li className="flex gap-4 items-start" style={{ animation: 'rise .5s cubic-bezier(.2,.7,.2,1) 0s both' }}>
+              <span className={`flex-none size-8 rounded-full text-sm font-semibold flex items-center justify-center ${
+                checkAntworten ? 'bg-olive text-on-akzent' : 'bg-pine text-cream'
+              }`}>
+                {checkAntworten ? '✓' : 1}
+              </span>
+              <div className="mt-[3px] flex-1">
+                <p className="m-0 text-[15.5px] leading-[1.55] text-pine/85">
+                  {checkAntworten && checkErgebnis
+                    ? <>Fragebogen ausgefüllt – dein Ergebnis: <strong>{checkErgebnis.titel}</strong>.</>
+                    : 'Fragebogen ausfüllen – zeigt dir, was DU wirklich brauchst (≈ 3 Minuten).'}
+                </p>
+                <Link
+                  to={`/vergleich/${checkKatId}/check`}
+                  className="mt-1.5 inline-block rounded-pill border-[1.5px] border-olive px-4 py-1.5 text-sm font-semibold text-olive hover:bg-olive hover:text-on-akzent transition"
+                >
+                  {checkAntworten ? 'Ergebnis ansehen' : 'Fragebogen starten'}
+                </Link>
+              </div>
+            </li>
+          )}
           {task.steps.map((step, i) => (
-            <li key={i} className="flex gap-4 items-start" style={{ animation: `rise .5s cubic-bezier(.2,.7,.2,1) ${i * 0.08}s both` }}>
-              <span className="flex-none size-8 rounded-full bg-pine text-cream text-sm font-semibold flex items-center justify-center">{i + 1}</span>
+            <li key={i} className="flex gap-4 items-start" style={{ animation: `rise .5s cubic-bezier(.2,.7,.2,1) ${(i + (checkKatId ? 1 : 0)) * 0.08}s both` }}>
+              <span className="flex-none size-8 rounded-full bg-pine text-cream text-sm font-semibold flex items-center justify-center">{i + (checkKatId ? 2 : 1)}</span>
               <p className="m-0 mt-[3px] text-[15.5px] leading-[1.55] text-pine/85">{step}</p>
             </li>
           ))}
@@ -105,10 +134,14 @@ export default function TaskDetail() {
         </section>
       )}
 
+      <div className="mt-5">
+        <DokumenteSection bezugKey={dokumentKeyTask(journey.id, task.id)} />
+      </div>
+
       <div className="mt-7 flex flex-col sm:flex-row gap-3">
         <button
           onClick={() => toggle(task.id)}
-          className={`flex-1 min-h-14 rounded-pill px-8 text-[17px] font-semibold text-cream transition hover:scale-[1.02] ${isDone ? 'bg-olive' : 'bg-pine'}`}
+          className={`flex-1 min-h-14 rounded-pill px-8 text-[17px] font-semibold text-on-akzent transition hover:scale-[1.02] ${isDone ? 'bg-pine text-cream' : 'bg-olive'}`}
         >
           {isDone ? '✓ Erledigt — rückgängig machen' : 'Als erledigt markieren'}
         </button>

@@ -1,9 +1,11 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react'
 import { einstellungenStore } from '../lib/stores'
+import { ableitungen } from '../lib/farben'
 
 export type Einstellungen = {
   theme: 'hell' | 'dunkel' | 'system'
-  akzent: 'olive' | 'koralle' | 'himmel' | 'beere'
+  akzent: 'olive' | 'koralle' | 'himmel' | 'beere' | 'eigene'
+  akzentHex: string
   schrift: 's' | 'm' | 'l'
   wenigerAnimation: boolean
   kiModus: boolean
@@ -13,6 +15,7 @@ export type Einstellungen = {
 export const standardEinstellungen: Einstellungen = {
   theme: 'system',
   akzent: 'olive',
+  akzentHex: '#606C38',
   schrift: 'm',
   wenigerAnimation: false,
   kiModus: false,
@@ -31,9 +34,23 @@ function anwenden(e: Einstellungen) {
   root.setAttribute('data-akzent', e.akzent)
   root.setAttribute('data-schrift', e.schrift)
   root.setAttribute('data-motion', e.wenigerAnimation ? 'reduziert' : 'normal')
+  // Eigene Farbe: abgeleitete Stufen als Inline-Variablen (gewinnen gegen
+  // die Preset-Selektoren); bei Presets wieder entfernen.
+  let eigene: [string, string, string, string] | null = null
+  if (e.akzent === 'eigene') {
+    const a = ableitungen(e.akzentHex)
+    eigene = [a.base, a.soft, a.deep, a.onAkzent]
+    root.style.setProperty('--a-base', a.base)
+    root.style.setProperty('--a-soft', a.soft)
+    root.style.setProperty('--a-deep', a.deep)
+    root.style.setProperty('--t-on-akzent', a.onAkzent)
+  } else {
+    for (const p of ['--a-base', '--a-soft', '--a-deep', '--t-on-akzent']) root.style.removeProperty(p)
+  }
   try {
     localStorage.setItem(SPIEGEL_KEY, JSON.stringify({
       theme: e.theme, akzent: e.akzent, schrift: e.schrift, wenigerAnimation: e.wenigerAnimation,
+      eigene,
     }))
   } catch { /* localStorage nicht verfügbar – Attribute reichen */ }
 }

@@ -23,6 +23,9 @@ export type BedarfsErgebnis = {
   titel: string
   begruendung: string
   zielwerte: Zielwert[]
+  // Empfohlene Tarif-Bausteine ohne Kriterium-Bezug (Teil des Steckbriefs),
+  // z. B. 'Elementarschäden' oder 'Weltweiter Schutz ≥ 1 Jahr'.
+  bausteine?: string[]
   hinweise: string[]
 }
 

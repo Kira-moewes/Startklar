@@ -17,6 +17,12 @@
         r.setAttribute('data-akzent', e.akzent || 'olive')
         r.setAttribute('data-schrift', e.schrift || 'm')
         r.setAttribute('data-motion', e.wenigerAnimation ? 'reduziert' : 'normal')
+        if (e.akzent === 'eigene' && e.eigene) {
+          r.style.setProperty('--a-base', e.eigene[0])
+          r.style.setProperty('--a-soft', e.eigene[1])
+          r.style.setProperty('--a-deep', e.eigene[2])
+          r.style.setProperty('--t-on-akzent', e.eigene[3])
+        }
       } catch (err) {}
     </script>
   </head>

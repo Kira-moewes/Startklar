@@ -154,7 +154,7 @@ export default function Termine() {
             />
           </label>
           <div className="flex gap-3">
-            <button type="submit" className="rounded-pill bg-pine px-6 py-3 font-display font-semibold text-cream hover:bg-forest transition">
+            <button type="submit" className="rounded-pill bg-olive px-6 py-3 font-display font-semibold text-on-akzent hover:bg-olive-deep transition">
               Speichern
             </button>
             <button
@@ -194,7 +194,7 @@ export default function Termine() {
                   checked={t.erledigt}
                   onChange={() => update(t.id, { erledigt: !t.erledigt })}
                   aria-label={`${t.titel} als erledigt markieren`}
-                  className="mt-1 size-6 shrink-0 accent-[#F47B5B] rounded"
+                  className="mt-1 size-6 shrink-0 accent-olive rounded"
                 />
                 <div className="flex-1 min-w-0">
                   <p className="font-display font-semibold text-pine">{t.titel}</p>
@@ -232,7 +232,7 @@ export default function Termine() {
                 checked
                 onChange={() => update(t.id, { erledigt: false })}
                 aria-label={`${t.titel} wieder öffnen`}
-                className="size-6 shrink-0 accent-[#F47B5B] rounded"
+                className="size-6 shrink-0 accent-olive rounded"
               />
               <p className="flex-1 font-display text-ink/50 line-through">{t.titel}</p>
               <button onClick={() => remove(t.id)} className="text-sm text-ink/40 underline underline-offset-2 hover:text-coral-deep">

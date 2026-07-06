@@ -181,3 +181,25 @@ html {
   animation-iteration-count: 1 !important;
   transition-duration: 0.01ms !important;
 }
+
+/* Druck / „Als PDF speichern": nur der Inhalt, hell auf weiß. */
+@media print {
+  header,
+  footer,
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #fff !important;
+    color: #1a1a1a !important;
+  }
+  /* Eingabefelder drucken wie Text (Vergleichstabelle) */
+  input {
+    border-color: transparent !important;
+    background: transparent !important;
+    padding-left: 0 !important;
+  }
+  a {
+    text-decoration: none;
+  }
+}

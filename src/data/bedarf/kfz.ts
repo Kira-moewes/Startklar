@@ -72,6 +72,32 @@ export const kfzCheck: BedarfsCheck = {
         { wert: '300plus', label: '300 € oder mehr' },
       ],
     },
+    {
+      key: 'fahrer',
+      titel: 'Wer fährt das Auto?',
+      optionen: [
+        { wert: 'nur_ich', label: 'Nur ich' },
+        { wert: 'mehrere', label: 'Auch Eltern / Partner:in' },
+      ],
+    },
+    {
+      key: 'km',
+      titel: 'Wie viel fährst du ungefähr im Jahr?',
+      optionen: [
+        { wert: 'wenig', label: 'Unter 6.000 km' },
+        { wert: 'mittel', label: '6.000–12.000 km' },
+        { wert: 'viel', label: 'Mehr' },
+      ],
+    },
+    {
+      key: 'stellplatz',
+      titel: 'Wo steht das Auto nachts?',
+      optionen: [
+        { wert: 'garage', label: 'Garage' },
+        { wert: 'stellplatz', label: 'Fester Stellplatz' },
+        { wert: 'strasse', label: 'An der Straße' },
+      ],
+    },
   ],
   auswerten: (antworten) => {
     const zielwerte = [schutzZiel(antworten.alter), sbZiel(antworten.puffer)]
@@ -79,8 +105,17 @@ export const kfzCheck: BedarfsCheck = {
       zielwerte.push({ kriteriumKey: 'sf-klasse', label: 'Einstufung', ziel: 'Übernahme/Zweitwagen-Einstufung aktiv ansprechen' })
     }
 
+    const bausteine: string[] = []
+    if (antworten.fahrer === 'mehrere') {
+      bausteine.push('Fahrerkreis „weitere Fahrer" korrekt angeben – falsche Angabe kann teuren Regress bedeuten')
+    }
+    if (antworten.km === 'wenig') {
+      bausteine.push('Kilometer-genauer Tarif (Wenigfahrer sparen deutlich)')
+    }
+
     const hinweise: string[] = []
     if (antworten.sf === 'unklar') hinweise.push('Ein Anruf bei deinen Eltern kann hunderte Euro im Jahr sparen.')
+    if (antworten.stellplatz === 'garage') hinweise.push('Garage senkt den Beitrag – unbedingt im Antrag angeben.')
     hinweise.push('Beiträge sind extrem individuell (Alter, Region, SF-Klasse) – hol dir echte Angebote, Richtwerte gibt es hier bewusst nicht.')
     if (antworten.situation === 'geplant') hinweise.push('Versicherung VOR dem Kauf klären – die eVB-Nummer brauchst du schon fürs Anmelden.')
 
@@ -89,6 +124,7 @@ export const kfzCheck: BedarfsCheck = {
       titel: 'Pflicht – ohne läuft nichts',
       begruendung: 'Ohne Kfz-Haftpflicht bekommst du kein Kennzeichen.',
       zielwerte,
+      bausteine,
       hinweise,
     }
   },

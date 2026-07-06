@@ -125,6 +125,23 @@ export const vergleichsKategorien: VergleichsKategorie[] = [
     ],
   },
   {
+    id: 'krankenkasse',
+    titel: 'Krankenkasse',
+    intro: 'Alle gesetzlichen Kassen bieten ~95 % gleiche Leistungen – Unterschiede stecken im Zusatzbeitrag und in den Extras.',
+    tipps: [
+      'Der Zusatzbeitrag ist der wichtigste Preisunterschied – er wird direkt vom Gehalt abgezogen.',
+      'Extras vergleichen: Zahnreinigung, Bonusprogramme, digitale Services – je nachdem, was DU nutzt.',
+      'Der Wechsel ist einfach: neue Kasse beantragen, die kümmert sich um die Kündigung.',
+    ],
+    kriterien: [
+      { key: 'zusatzbeitrag', label: 'Zusatzbeitrag', typ: 'text', hinweis: 'in %', richtung: 'niedriger-besser' },
+      { key: 'zahnreinigung', label: 'Zahnreinigung bezuschusst?', typ: 'text' },
+      { key: 'bonusprogramm', label: 'Bonusprogramm', typ: 'text' },
+      { key: 'digital', label: 'App / Online-Service', typ: 'text' },
+      { key: 'notizen', label: 'Notizen', typ: 'text' },
+    ],
+  },
+  {
     id: 'handy',
     titel: 'Handytarif',
     intro: 'Läuft dein Vertrag noch über deine Eltern? Der Wechsel in einen eigenen Tarif ist ein guter Anlass zum Vergleichen.',
@@ -155,4 +172,6 @@ export const vergleichFuerTask: Record<string, string[]> = {
   'finanzen:haftpflicht': ['haftpflicht'],
   'mobilitaet:kfz-versicherung': ['kfz'],
   'start:vertraege': ['handy'],
+  'start:krankenkasse-check': ['krankenkasse'],
+  'start:krankenkassen-wechsel': ['krankenkasse'],
 }
