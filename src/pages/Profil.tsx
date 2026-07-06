@@ -6,6 +6,7 @@ import { istRelevant, relevanteTasks } from '../data/visibility'
 import { useProfile } from '../hooks/useProfile'
 import { useSettings, type Einstellungen } from '../hooks/useSettings'
 import { exportiereAlles, importiereAlles, loescheAlles } from '../lib/datenExport'
+import { luminanz } from '../lib/farben'
 import { agentChatStore } from '../lib/stores'
 
 function sichtbareSchritte(profile: Profile | null): number {
@@ -199,7 +200,7 @@ export default function Profil() {
               </OptionPill>
             ))}
           </Zeile>
-          <Zeile label="Akzentfarbe">
+          <Zeile label="Akzentfarbe" hinweis="Vorgaben antippen – oder mit dem Regenbogen-Kreis jede eigene Farbe wählen.">
             {akzente.map(a => (
               <button
                 key={a.wert}
@@ -211,6 +212,42 @@ export default function Profil() {
                 style={{ background: a.farbe }}
               />
             ))}
+            <label
+              title="Eigene Farbe wählen"
+              className={`relative size-9 rounded-full border-2 cursor-pointer transition overflow-hidden ${
+                einstellungen.akzent === 'eigene' ? 'border-pine scale-110' : 'border-pine/20 hover:border-pine/50'
+              }`}
+              style={{
+                background: einstellungen.akzent === 'eigene'
+                  ? einstellungen.akzentHex
+                  : 'conic-gradient(#e5484d, #ffb224, #6bc46d, #3e63dd, #b658c4, #e5484d)',
+              }}
+            >
+              <input
+                type="color"
+                value={einstellungen.akzentHex}
+                aria-label="Eigene Akzentfarbe wählen"
+                onChange={e => {
+                  setEinstellung('akzentHex', e.target.value)
+                  setEinstellung('akzent', 'eigene')
+                }}
+                className="absolute inset-0 opacity-0 cursor-pointer"
+              />
+            </label>
+          </Zeile>
+          {einstellungen.akzent === 'eigene' && luminanz(einstellungen.akzentHex) > 0.75 && (
+            <p className="m-0 text-[13px] text-coral-deep">
+              Sehr helle Farbe – Schrift und Kontrast leiden. Etwas kräftiger wählen wirkt besser.
+            </p>
+          )}
+          <Zeile label="Vorschau" hinweis="So wirkt deine Farbe in der App.">
+            <span className="flex items-center gap-3">
+              <span className="rounded-pill bg-olive text-on-akzent px-4 py-2 text-sm font-display font-semibold">Button</span>
+              <span className="rounded-pill bg-pine-mist text-olive px-3 py-1 text-xs font-display font-semibold">Chip</span>
+              <span className="h-2 w-24 rounded-pill bg-pine-mist overflow-hidden inline-block">
+                <span className="block h-full w-2/3 rounded-pill bg-olive" />
+              </span>
+            </span>
           </Zeile>
           <Zeile label="Schriftgröße">
             {(['s', 'm', 'l'] as const).map(s => (
