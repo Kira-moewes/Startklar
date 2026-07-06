@@ -2,7 +2,11 @@ import { useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { kategorie } from '../data/vergleich'
 import { findeAnbieter, hatKatalog, type AnbieterRichtwerte } from '../data/anbieter'
+import { hatBedarfsCheck } from '../data/bedarf'
+import type { Zielwert } from '../data/bedarf/types'
 import { useVergleich } from '../hooks/useVergleich'
+import { useBedarf } from '../hooks/useBedarf'
+import { besteWahl } from '../lib/bedarfMatch'
 
 // 'YYYY-MM' → 'MM/JJJJ' für die Anzeige.
 function standLabel(stand: string): string {
@@ -32,12 +36,23 @@ export default function VergleichDetail() {
   const [zuletztBefuellt, setZuletztBefuellt] = useState<{ name: string; stand: string } | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
+  const { ergebnis } = useBedarf(kategorieId)
+
   const vorschlaege = useMemo(
     () => (offen ? findeAnbieter(kategorieId, neuerName) : []),
     [offen, kategorieId, neuerName],
   )
 
   const veraltet = angebote.some(a => a.richtwertStand && istVeraltet(a.richtwertStand))
+
+  // Zielwerte des Bedarfschecks, nach Kriterium-Key für Referenzspalte & Ampel.
+  const zielMap = useMemo(() => {
+    const m: Record<string, Zielwert> = {}
+    for (const z of ergebnis?.zielwerte ?? []) if (z.kriteriumKey) m[z.kriteriumKey] = z
+    return m
+  }, [ergebnis])
+
+  const best = ergebnis ? besteWahl(angebote, ergebnis) : null
 
   if (!kat) {
     return (
@@ -112,6 +127,36 @@ export default function VergleichDetail() {
           ))}
         </ul>
       </section>
+
+      {hatBedarfsCheck(kategorieId) && !ergebnis && (
+        <section className="rounded-card border-2 border-coral/40 bg-coral/5 p-6 flex flex-col sm:flex-row sm:items-center gap-4">
+          <div className="flex-1">
+            <h2 className="font-display text-lg font-semibold text-pine">Bevor du vergleichst</h2>
+            <p className="mt-1 text-ink/80">Ein paar kurze Fragen zeigen dir, ob und wie viel {kat.titel} du brauchst.</p>
+          </div>
+          <Link
+            to={`/vergleich/${kategorieId}/check`}
+            className="rounded-pill bg-coral px-6 py-3 font-display font-semibold text-white hover:bg-coral-deep transition shrink-0 text-center"
+          >
+            Bedarf checken
+          </Link>
+        </section>
+      )}
+
+      {ergebnis && (
+        <section className="rounded-card border border-pine-mist bg-cream-card p-6">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-[13px] font-semibold tracking-[.16em] uppercase text-olive">Dein Bedarf</p>
+              <h2 className="mt-1 font-serif text-2xl text-pine">{ergebnis.titel}</h2>
+              <p className="mt-1 text-ink/80">{ergebnis.begruendung}</p>
+            </div>
+            <Link to={`/vergleich/${kategorieId}/check`} className="text-sm text-pine underline underline-offset-2 shrink-0">
+              Antworten ändern
+            </Link>
+          </div>
+        </section>
+      )}
 
       <div>
         <form onSubmit={onSubmit} className="flex gap-3">
@@ -194,8 +239,16 @@ export default function VergleichDetail() {
             <thead>
               <tr>
                 <th className="text-left align-bottom p-3 text-sm font-medium text-ink/60 w-40">Kriterium</th>
+                {ergebnis && (
+                  <th className="text-left align-bottom p-3 text-sm font-semibold text-olive w-36 bg-pine-mist/30 rounded-t-card">Dein Bedarf</th>
+                )}
                 {angebote.map(a => (
                   <th key={a.id} className={`align-bottom p-3 rounded-t-card ${a.favorit ? 'bg-pine text-cream' : 'bg-cream-card'}`}>
+                    {best?.angebotId === a.id && (
+                      <div className="mb-2 rounded-pill bg-olive px-2 py-1 text-[11px] leading-tight font-display font-semibold text-cream text-center">
+                        Passt am besten ({best.erfuellt}/{best.pruefbar} Zielen)
+                      </div>
+                    )}
                     <input
                       value={a.anbieter}
                       onChange={e => setAnbieter(a.id, e.target.value)}
@@ -224,8 +277,17 @@ export default function VergleichDetail() {
                     <span className="font-medium text-pine">{krit.label}</span>
                     {krit.hinweis && <span className="block text-xs text-ink/50">{krit.hinweis}</span>}
                   </td>
+                  {ergebnis && (
+                    <td className="p-3 text-sm align-top bg-pine-mist/30">
+                      {zielMap[krit.key]
+                        ? <span className="font-medium text-pine">{zielMap[krit.key].ziel}</span>
+                        : <span className="text-ink/30">–</span>}
+                    </td>
+                  )}
                   {angebote.map(a => {
                     const istRichtwert = !!a.richtwert?.[krit.key]
+                    const ziel = zielMap[krit.key]
+                    const status = ziel?.pruefe ? ziel.pruefe(a.werte[krit.key] ?? '') : undefined
                     return (
                       <td key={a.id} className={`p-2 align-top ${a.favorit ? 'bg-pine/5' : ''} ${ri % 2 === 0 ? 'bg-pine-mist/30' : ''}`}>
                         <div className="relative">
@@ -240,9 +302,15 @@ export default function VergleichDetail() {
                             aria-description={istRichtwert && a.richtwertStand ? `Richtwert, Stand ${standLabel(a.richtwertStand)} – bitte beim Anbieter bestätigen` : undefined}
                             title={istRichtwert && a.richtwertStand ? `Richtwert, Stand ${standLabel(a.richtwertStand)} – bitte beim Anbieter bestätigen` : undefined}
                             className={`w-full rounded-field border bg-cream-card py-2 text-sm focus:outline-2 focus:outline-coral ${
-                              istRichtwert ? 'border-dashed border-coral/60 pl-7 pr-3' : 'border-pine-mist px-3'
-                            }`}
+                              istRichtwert ? 'border-dashed border-coral/60 pl-7' : 'border-pine-mist pl-3'
+                            } ${status === 'erfuellt' || status === 'nicht-erfuellt' ? 'pr-8' : 'pr-3'}`}
                           />
+                          {status === 'erfuellt' && (
+                            <span className="absolute right-2 top-1/2 -translate-y-1/2 text-olive font-bold pointer-events-none" title="erfüllt deinen Bedarf">✓</span>
+                          )}
+                          {status === 'nicht-erfuellt' && (
+                            <span className="absolute right-2 top-1/2 -translate-y-1/2 text-coral-deep font-bold pointer-events-none" title="unter deinem Zielwert">⚠</span>
+                          )}
                         </div>
                       </td>
                     )
@@ -251,6 +319,7 @@ export default function VergleichDetail() {
               ))}
               <tr>
                 <td />
+                {ergebnis && <td />}
                 {angebote.map(a => (
                   <td key={a.id} className="p-2 text-center">
                     <button
@@ -265,6 +334,14 @@ export default function VergleichDetail() {
             </tbody>
           </table>
         </div>
+      )}
+
+      {best && (
+        <p className="text-sm text-ink/60">
+          „Passt am besten" bezieht sich nur auf deine eingetragenen Angebote und deinen
+          Bedarfscheck – das ist keine Markt- oder Anbieterempfehlung. Deine Favoriten-Wahl
+          bleibt davon unberührt.
+        </p>
       )}
 
       <p className="text-sm text-ink/60">
