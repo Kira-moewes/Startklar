@@ -45,6 +45,17 @@ export const anbieterKatalog: Record<string, AnbieterRichtwerte[]> = {
     u({ beitrag: '45–75 €', summe: '650 €/m²', selbstbeteiligung: '0 €', fahrrad: 'gegen Aufpreis' }, 'HUK24', ['huk 24', 'huk']),
     u({ beitrag: '55–90 €', summe: '650 €/m²', selbstbeteiligung: '0–150 €', fahrrad: 'gegen Aufpreis' }, 'VHV'),
   ],
+  // Gesetzliche Krankenkassen: Zusatzbeiträge ändern sich jährlich → stand beachten.
+  krankenkasse: [
+    u({ zusatzbeitrag: '1,5–3,0 % (regional)', zahnreinigung: 'je nach Region', bonusprogramm: 'ja', digital: 'App + online' }, 'AOK', ['aok']),
+    u({ zusatzbeitrag: '3,2–3,4 %', zahnreinigung: 'Zuschuss über Bonusprogramm', bonusprogramm: 'ja', digital: 'App + online' }, 'Barmer'),
+    u({ zusatzbeitrag: '2,7–2,9 %', zahnreinigung: 'Zuschuss ja', bonusprogramm: 'ja', digital: 'App + online' }, 'DAK-Gesundheit', ['dak']),
+    u({ zusatzbeitrag: '1,6–1,9 %', zahnreinigung: 'Zuschuss ja', bonusprogramm: 'ja', digital: 'online' }, 'hkk'),
+    u({ zusatzbeitrag: '3,3–3,5 %', zahnreinigung: 'Zuschuss ja', bonusprogramm: 'ja', digital: 'App + online' }, 'IKK classic', ['ikk']),
+    u({ zusatzbeitrag: '3,2–3,4 %', zahnreinigung: 'Zuschuss ja', bonusprogramm: 'ja', digital: 'App + online' }, 'KKH'),
+    u({ zusatzbeitrag: '2,5–2,7 %', zahnreinigung: 'Zuschuss ja', bonusprogramm: 'ja', digital: 'App + online' }, 'SBK'),
+    u({ zusatzbeitrag: '2,4–2,5 %', zahnreinigung: 'Zuschuss über Bonusprogramm', bonusprogramm: 'ja', digital: 'stark (App, Online-Geschäftsstelle)' }, 'Techniker Krankenkasse', ['tk', 'techniker']),
+  ],
   // Kfz bewusst OHNE beitrag – der ist zu individuell (Alter, Region, SF-Klasse).
   kfz: [
     u({ schutz: 'Haftpflicht / Teilkasko / Vollkasko', selbstbeteiligung: 'TK 150 € / VK 300 €', 'sf-klasse': 'Übernahme/Zweitwagen möglich' }, 'Allianz'),
