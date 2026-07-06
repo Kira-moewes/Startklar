@@ -1,8 +1,9 @@
 # Startklar – Konzept Runde 3: Provisions-Partner & Monetarisierung (vollständige Planung)
 
-> Stand: Juli 2026. Code-fertige Spezifikation: Nach diesem Dokument muss nur
-> noch programmiert werden (plus die unter §8 gelisteten organisatorischen
-> To-dos, die nur Kira erledigen kann: Gewerbeanmeldung, Netzwerk-Accounts).
+> Stand: Juli 2026. **Status: umgesetzt** – alle Code-Punkte aus §5/§6 sind in
+> diesem Branch implementiert. Offen sind nur die organisatorischen To-dos aus
+> §8 (Gewerbeanmeldung, Netzwerk-Accounts, echte Affiliate-Deeplinks – Marker
+> im Code: `PROGRAMM-NOCH-NICHT-FREIGESCHALTET` in `src/data/anbieter.ts`).
 > Provisionsangaben sind recherchierte Richtwerte (Quellen in §9) – die exakten
 > Sätze stehen erst nach Freischaltung im jeweiligen Netzwerk fest.
 

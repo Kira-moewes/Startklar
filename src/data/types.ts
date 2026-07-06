@@ -12,6 +12,8 @@ export interface Task {
   // Zeigt ab diesem Schritt (1-basiert) den Vergleichs-Chip direkt in der
   // Anleitung – für Schritte wie „Vergleiche zwei bis drei Tarife …".
   vergleichAbSchritt?: number
+  // IDs passender Lern-Artikel (src/data/lernen.ts) → „Zum Weiterlesen"-Karte.
+  lernArtikel?: string[]
 }
 
 export interface Journey {

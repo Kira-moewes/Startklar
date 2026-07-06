@@ -124,6 +124,56 @@ export const vergleichsKategorien: VergleichsKategorie[] = [
     ],
   },
   {
+    id: 'steuer',
+    titel: 'Steuer-Software',
+    intro: 'Die erste Steuererklärung ist mit einer App in unter einer Stunde erledigt – und bringt im Schnitt mehrere hundert Euro zurück.',
+    tipps: [
+      'Apps wie Taxfix führen dich mit Fragen durch – gut, wenn du noch nie eine Erklärung gemacht hast.',
+      'ELSTER ist komplett kostenlos, aber ohne Führung – für einfache Fälle trotzdem machbar.',
+      'Bezahlt wird meist erst bei Abgabe – die Erstattungs-Schätzung vorher ist kostenlos.',
+    ],
+    kriterien: [
+      { key: 'preis', label: 'Preis pro Erklärung', typ: 'euro' },
+      { key: 'modus', label: 'Bedienung', typ: 'text' },
+      { key: 'foto', label: 'Belege abfotografieren?', typ: 'text' },
+      { key: 'schaetzung', label: 'Erstattungs-Schätzung vorab?', typ: 'text' },
+      { key: 'notizen', label: 'Notizen', typ: 'text' },
+    ],
+  },
+  {
+    id: 'schufa',
+    titel: 'SCHUFA & Bonität',
+    intro: 'Vor der Wohnungssuche brauchst du oft eine Bonitätsauskunft – und deinen Score zu kennen kostet nichts.',
+    tipps: [
+      'Die vollständige Datenkopie nach Art. 15 DSGVO ist gesetzlich kostenlos – lass dir nichts anderes verkaufen.',
+      'Kostenpflichtige SCHUFA-Abos brauchst du als Berufseinsteiger:in praktisch nie.',
+      'Prüfe die Daten auf Fehler – falsche Einträge kannst du korrigieren lassen.',
+    ],
+    kriterien: [
+      { key: 'kosten', label: 'Kosten', typ: 'euro' },
+      { key: 'umfang', label: 'Umfang der Auskunft', typ: 'text' },
+      { key: 'aktualisierung', label: 'Aktualisierung', typ: 'text' },
+      { key: 'dauer', label: 'Wie schnell?', typ: 'text' },
+      { key: 'notizen', label: 'Notizen', typ: 'text' },
+    ],
+  },
+  {
+    id: 'altersvorsorge',
+    titel: 'Altersvorsorge',
+    intro: 'Kein Produkt-Druck: Erst verstehen (siehe Lernen), dann vergleichen. Zeit ist beim Vorsorgen dein größter Vorteil.',
+    tipps: [
+      'Hol dir zuerst die kostenlose Renteninformation – sie zeigt, wo du stehst.',
+      'Niedrige Kosten schlagen langfristig fast jedes Versprechen – achte auf die Kostenquote.',
+      'Schließe nichts ab, was du nicht erklären kannst. Im Zweifel: unabhängige Beratung (Verbraucherzentrale).',
+    ],
+    kriterien: [
+      { key: 'kostenquote', label: 'Kostenquote', typ: 'text' },
+      { key: 'flexibilitaet', label: 'Flexibilität (Pause/Ausstieg)', typ: 'text' },
+      { key: 'foerderung', label: 'Staatliche Förderung', typ: 'text' },
+      { key: 'notizen', label: 'Notizen', typ: 'text' },
+    ],
+  },
+  {
     id: 'kfz',
     titel: 'Kfz-Versicherung',
     intro: 'Pflicht fürs erste Auto. Als Fahranfänger:in zahlst du viel – mit ein paar Tricks wird es günstiger.',
@@ -171,7 +221,35 @@ export const vergleichFuerTask: Record<string, string[]> = {
   'finanzen:haftpflicht': ['haftpflicht'],
   'finanzen:depot-etf': ['depot'],
   'finanzen:haushaltsbudget': ['girokonto'],
+  'finanzen:steuererklaerung': ['steuer'],
+  'finanzen:schufa': ['schufa'],
+  'finanzen:altersvorsorge': ['altersvorsorge'],
   'mobilitaet:kfz-versicherung': ['kfz'],
   'mobilitaet:kfz-anmelden': ['kfz'],
   'start:vertraege': ['handy'],
+}
+
+// „Dazu passt"-Querverweise auf Themenseiten (KONZEPT-PROVISIONEN.md §5.7).
+export const vergleichFuerThema: Record<string, string[]> = {
+  wohnen: ['strom', 'internet', 'hausrat'],
+  finanzen: ['girokonto', 'depot', 'steuer', 'schufa'],
+  versicherungen: ['haftpflicht', 'hausrat', 'kfz'],
+  mobilitaet: ['kfz'],
+  arbeit: ['steuer'],
+}
+
+// Erste Aufgabe, die zu einer Vergleichskategorie gehört (für den
+// „Aufgabe erledigt?"-Vorschlag nach einem bestätigten Abschluss).
+export function aufgabeFuerKategorie(
+  kategorieId: string,
+  journeys: Array<{ id: string; tasks: Array<{ id: string; title: string }> }>
+): { journeyId: string; taskId: string; titel: string } | null {
+  for (const [key, kats] of Object.entries(vergleichFuerTask)) {
+    if (!kats.includes(kategorieId)) continue
+    const [journeyId, taskId] = key.split(':')
+    const journey = journeys.find(j => j.id === journeyId)
+    const task = journey?.tasks.find(t => t.id === taskId)
+    if (task) return { journeyId, taskId, titel: task.title }
+  }
+  return null
 }

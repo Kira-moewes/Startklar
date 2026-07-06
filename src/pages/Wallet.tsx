@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom'
 import { kategorie } from '../data/vergleich'
 import { ablageFuerKategorie } from '../data/anbieter'
 import { useWallet, maskiereIban, type AbschlussStatus, type ZahlungsmittelTyp } from '../hooks/useWallet'
+import NachfrageKarte from '../components/NachfrageKarte'
 
 const statusLabel: Record<AbschlussStatus, { text: string; cls: string }> = {
-  eingereicht: { text: 'Eingereicht', cls: 'bg-pine-mist text-pine' },
-  bestaetigt: { text: 'Bestätigt', cls: 'bg-olive-soft text-white' },
+  angeklickt: { text: 'Offen: abgeschlossen?', cls: 'bg-pine-mist text-pine' },
+  selbst_bestaetigt: { text: 'Bestätigt', cls: 'bg-olive-soft text-white' },
   aktiv: { text: 'Aktiv', cls: 'bg-pine text-cream' },
   gekuendigt: { text: 'Gekündigt', cls: 'bg-cream border border-pine-mist text-ink/60' },
 }
@@ -139,15 +140,17 @@ export default function Wallet() {
         )}
       </section>
 
+      <NachfrageKarte />
+
       <section aria-label="Abschlüsse" className="flex flex-col gap-4">
         <h2 className="font-display text-xl font-semibold text-pine">Deine Abschlüsse</h2>
-        {abschluesse.length === 0 && !loading && (
+        {abschluesse.filter(a => a.status !== 'angeklickt').length === 0 && !loading && (
           <p className="rounded-card border-2 border-pine-mist bg-cream p-5 text-ink/80">
             Noch keine Abschlüsse. Stöbere im <Link to="/vergleich" className="underline">Vergleich</Link> –
             Angebote mit „Über Startklar abschließen" wickelst du direkt hier ab.
           </p>
         )}
-        {[...abschluesse].reverse().map(a => {
+        {[...abschluesse].filter(a => a.status !== 'angeklickt').reverse().map(a => {
           const kat = kategorie(a.kategorieId)
           const ablage = ablageFuerKategorie[a.kategorieId]
           const status = statusLabel[a.status]
@@ -157,7 +160,7 @@ export default function Wallet() {
                 <p className="flex-1 min-w-40 font-display text-lg font-semibold text-pine">{a.anbieter}</p>
                 <span className={`rounded-pill px-3 py-1 text-xs font-display font-semibold ${status.cls}`}>{status.text}</span>
               </div>
-              <p className="text-sm text-ink/70">{kat?.titel ?? a.kategorieId} · abgeschlossen am {formatDatum(a.datum)}</p>
+              <p className="text-sm text-ink/70">{kat?.titel ?? a.kategorieId} · {formatDatum(a.datum)}</p>
               {a.dokumentId && ablage && (
                 <Link to={`/dokumente/${ablage.themaId}`} className="text-sm text-pine underline underline-offset-2 hover:text-coral-deep self-start">
                   📄 Bestätigung in den Dokumenten ansehen

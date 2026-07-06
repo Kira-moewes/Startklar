@@ -34,7 +34,7 @@ export default function Termine() {
   const [params, setParams] = useSearchParams()
   const [zeigeForm, setZeigeForm] = useState(params.get('neu') === '1')
   const [titel, setTitel] = useState(params.get('titel') ?? '')
-  const [datum, setDatum] = useState(heute())
+  const [datum, setDatum] = useState(params.get('datum') ?? heute())
   const [uhrzeit, setUhrzeit] = useState('')
   const [ort, setOrt] = useState('')
   const [notiz, setNotiz] = useState('')

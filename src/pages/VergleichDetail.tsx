@@ -1,8 +1,11 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { kategorie } from '../data/vergleich'
-import { angeboteFuerKategorie, PROVISIONSHINWEIS } from '../data/anbieter'
+import { angeboteFuerKategorie, partnerUrl, PROVISIONSHINWEIS, type AnbieterAngebot } from '../data/anbieter'
 import { useVergleich } from '../hooks/useVergleich'
+import { useProfile } from '../hooks/useProfile'
+import { useWallet } from '../hooks/useWallet'
+import NachfrageKarte from '../components/NachfrageKarte'
 
 export default function VergleichDetail() {
   const { kategorieId = '' } = useParams()
@@ -12,7 +15,53 @@ export default function VergleichDetail() {
     angebote, kuratierterFavorit, add, setWert, setAnbieter,
     toggleFavorit, toggleKuratierterFavorit, remove, loading,
   } = useVergleich(kategorieId)
+  const { profile } = useProfile()
+  const { addVormerkung } = useWallet()
   const [neuerName, setNeuerName] = useState('')
+  const minderjaehrig = profile?.volljaehrig === 'nein'
+
+  const angebotsButton = (a: AnbieterAngebot) => {
+    if (a.abschluss === 'partnerlink') {
+      if (a.ab18 && minderjaehrig) {
+        return (
+          <p className="rounded-field bg-pine-mist/50 px-4 py-2.5 text-center text-sm text-ink/70">
+            Ab 18 – schau dir solange die Kriterien an.
+          </p>
+        )
+      }
+      return (
+        <a
+          href={partnerUrl(a, kategorieId)}
+          target="_blank"
+          rel="sponsored noopener"
+          onClick={() => addVormerkung({ angebotId: a.id, kategorieId, anbieter: a.anbieter })}
+          className="rounded-pill bg-coral px-5 py-2.5 text-center font-display font-semibold text-white hover:bg-coral-deep transition"
+        >
+          Zum Partner-Angebot ↗
+        </a>
+      )
+    }
+    if (a.abschluss === 'app') {
+      return (
+        <Link
+          to={`/vergleich/${kategorieId}/abschluss/${a.id}`}
+          className="rounded-pill bg-coral px-5 py-2.5 text-center font-display font-semibold text-white hover:bg-coral-deep transition"
+        >
+          Über Startklar abschließen
+        </Link>
+      )
+    }
+    return (
+      <a
+        href={a.url}
+        target="_blank"
+        rel="noopener"
+        className="rounded-pill border-2 border-pine px-5 py-2.5 text-center font-display font-semibold text-pine hover:bg-pine-mist/50 transition"
+      >
+        Zum Anbieter →
+      </a>
+    )
+  }
 
   if (!kat) {
     return (
@@ -50,20 +99,45 @@ export default function VergleichDetail() {
         </ul>
       </section>
 
+      <NachfrageKarte kategorieId={kategorieId} />
+
       {kuratiert.length > 0 && (
         <section aria-label="Angebote für dich" className="flex flex-col gap-4">
-          <h2 className="font-display text-xl font-semibold text-pine">Angebote für dich</h2>
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <h2 className="font-display text-xl font-semibold text-pine">Angebote für dich</h2>
+            <details className="relative text-sm">
+              <summary className="cursor-pointer text-pine underline underline-offset-2 hover:text-coral-deep list-none">
+                ⓘ Wie verdient Startklar Geld?
+              </summary>
+              <div className="mt-2 rounded-card border border-pine-mist bg-cream-card p-4 text-ink/80 sm:absolute sm:right-0 sm:z-10 sm:w-80">
+                Angebote mit „Anzeige · Partner-Link" bringen Startklar eine Provision,
+                wenn du darüber abschließt – für dich kostet das nichts. Jede Kategorie
+                enthält außerdem eine Empfehlung ganz ohne Provision. Kriterien und
+                Tipps bleiben redaktionell unabhängig.{' '}
+                <Link to="/transparenz" className="underline underline-offset-2 text-pine">Mehr auf der Transparenzseite</Link>
+              </div>
+            </details>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {kuratiert.map(a => (
               <div key={a.id} className="rounded-card bg-cream-card border border-pine-mist p-5 flex flex-col gap-3">
-                <div className="flex items-center justify-between gap-2">
-                  <p className="font-display text-lg font-semibold text-pine">
-                    <span aria-hidden="true">{a.logoEmoji}</span> {a.anbieter}
-                  </p>
-                  <span className="text-xs text-ink/50 rounded-pill border border-pine-mist px-2 py-0.5 whitespace-nowrap">
+                <div className="flex flex-wrap items-center gap-2">
+                  {a.monetarisierung === 'partner' ? (
+                    <span className="rounded-pill bg-coral px-2.5 py-0.5 text-xs font-display font-semibold text-white">
+                      Anzeige · Partner-Link
+                    </span>
+                  ) : (
+                    <span className="rounded-pill bg-pine px-2.5 py-0.5 text-xs font-display font-semibold text-cream">
+                      Ohne Provision empfohlen
+                    </span>
+                  )}
+                  <span className="ml-auto text-xs text-ink/50 rounded-pill border border-pine-mist px-2 py-0.5 whitespace-nowrap">
                     Stand {a.standDaten}
                   </span>
                 </div>
+                <p className="font-display text-lg font-semibold text-pine">
+                  <span aria-hidden="true">{a.logoEmoji}</span> {a.anbieter}
+                </p>
                 <p className="font-serif text-2xl font-bold text-coral leading-tight">{a.preisAb}</p>
                 <ul className="text-sm text-ink/80 space-y-1">
                   {a.kurzFeatures.map((f, i) => (
@@ -72,23 +146,7 @@ export default function VergleichDetail() {
                 </ul>
                 {a.zielgruppe && <p className="text-xs text-ink/60">{a.zielgruppe}</p>}
                 <div className="mt-auto flex flex-col gap-2">
-                  {a.abschluss === 'app' ? (
-                    <Link
-                      to={`/vergleich/${kat.id}/abschluss/${a.id}`}
-                      className="rounded-pill bg-coral px-5 py-2.5 text-center font-display font-semibold text-white hover:bg-coral-deep transition"
-                    >
-                      Über Startklar abschließen
-                    </Link>
-                  ) : (
-                    <a
-                      href={a.url}
-                      target="_blank"
-                      rel="sponsored noopener"
-                      className="rounded-pill border-2 border-pine px-5 py-2.5 text-center font-display font-semibold text-pine hover:bg-pine-mist/50 transition"
-                    >
-                      Zum Anbieter →
-                    </a>
-                  )}
+                  {angebotsButton(a)}
                   <button
                     onClick={() => toggleKuratierterFavorit(a.id)}
                     aria-pressed={kuratierterFavorit === a.id}
@@ -102,7 +160,7 @@ export default function VergleichDetail() {
               </div>
             ))}
           </div>
-          <p className="text-sm text-ink/60">{PROVISIONSHINWEIS} Auswahl und Kriterien bleiben redaktionell unabhängig.</p>
+          <p className="text-sm text-ink/60">{PROVISIONSHINWEIS} Auswahl und Kriterien bleiben redaktionell unabhängig – Reihenfolge nie nach Provision.</p>
         </section>
       )}
 

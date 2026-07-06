@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { journeys } from '../data'
-import { kategorie, vergleichFuerTask } from '../data/vergleich'
+import { kategorie, aufgabeFuerKategorie } from '../data/vergleich'
 import { anbieterAngebot, ablageFuerKategorie, PROVISIONSHINWEIS } from '../data/anbieter'
 import { useWallet, maskiereIban } from '../hooks/useWallet'
 import { dokumentAblegen } from '../hooks/useDokumente'
@@ -38,16 +38,7 @@ export default function Checkout() {
   }, [loading, checkoutDaten, zahlungsmittel])
 
   // Aufgabe, die zu diesem Vergleichsmodul gehört (für den Erledigt-Vorschlag).
-  const verknuepfteAufgabe = useMemo(() => {
-    for (const [key, kats] of Object.entries(vergleichFuerTask)) {
-      if (!kats.includes(kategorieId)) continue
-      const [journeyId, taskId] = key.split(':')
-      const journey = journeys.find(j => j.id === journeyId)
-      const task = journey?.tasks.find(t => t.id === taskId)
-      if (task) return { journeyId, taskId, titel: task.title }
-    }
-    return null
-  }, [kategorieId])
+  const verknuepfteAufgabe = useMemo(() => aufgabeFuerKategorie(kategorieId, journeys), [kategorieId])
   const progressItems = useMemo(
     () => (verknuepfteAufgabe ? [{ journeyId: verknuepfteAufgabe.journeyId, taskId: verknuepfteAufgabe.taskId }] : []),
     [verknuepfteAufgabe]
@@ -60,6 +51,21 @@ export default function Checkout() {
       <p className="p-6">
         Dieses Angebot gibt es nicht. <Link to="/vergleich" className="underline">Zum Vergleich</Link>
       </p>
+    )
+  }
+
+  // Nur echte API-Partner ('app') laufen über den In-App-Checkout. Partner-
+  // und Direkt-Links werden beim Anbieter abgeschlossen (§ 34d GewO Tippgeber).
+  if (angebot.abschluss !== 'app') {
+    return (
+      <div className="mx-auto max-w-3xl px-6 py-12">
+        <p className="rounded-card bg-cream-card border border-pine-mist p-6 text-ink/80">
+          Dieses Angebot schließt du direkt beim Anbieter bzw. Partner-Portal ab.{' '}
+          <Link to={`/vergleich/${kat.id}`} className="underline underline-offset-2 text-pine">
+            Zurück zum Vergleich
+          </Link>
+        </p>
+      </div>
     )
   }
 

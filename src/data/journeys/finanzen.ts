@@ -44,7 +44,8 @@ export const finanzenJourney: Journey = {
       ],
       deadline: 'Kurz nach der ersten Auszahlung',
       consequence: 'Wenn du nichts prüfst, bleibt das Einkommen gleich — du hast aber weniger Klarheit. Eine kurze Nachfrage beim Arbeitgeber klärt meist schnell alles.',
-      category: 'arbeit'
+      category: 'arbeit',
+      lernArtikel: ['lohnabrechnung-lesen', 'brutto-netto-steuerklasse']
     },
     {
       id: 'haftpflicht',
@@ -71,7 +72,8 @@ export const finanzenJourney: Journey = {
       deadline: 'Kein fester Termin',
       consequence: 'Wenn du es ignorierst, können Fehler später Mühe machen — meist lassen sich solche Probleme aber mit dem Anbieter oder der Schufa klären.',
       category: 'finanzen',
-      faktenKeys: ['ANZAHL_SCHUFA_KOSTENLOS']
+      faktenKeys: ['ANZAHL_SCHUFA_KOSTENLOS'],
+      lernArtikel: ['schufa-verstehen']
     },
     {
       id: 'depot-etf',
@@ -84,7 +86,8 @@ export const finanzenJourney: Journey = {
       ],
       deadline: 'Informativ',
       consequence: 'Wenn du das nicht liest, änderst du nichts an deinem Geld — das ist in Ordnung; bei Interesse kannst du dich später gezielt informieren.',
-      category: 'finanzen'
+      category: 'finanzen',
+      lernArtikel: ['etf-in-3-minuten']
     },
     {
       id: 'altersvorsorge',

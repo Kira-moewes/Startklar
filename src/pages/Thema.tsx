@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { thema, tasksFuerThema } from '../data/themen'
+import { kategorie, vergleichFuerThema } from '../data/vergleich'
 import { useProfile } from '../hooks/useProfile'
 import { useTaskListProgress } from '../hooks/useProgress'
 import CategoryBadge from '../components/CategoryBadge'
@@ -51,6 +52,25 @@ export default function Thema() {
           <p className="mt-4 text-pine font-medium">Alles erledigt – stark! 🎉</p>
         )}
       </section>
+
+      {(vergleichFuerThema[t.id] ?? []).length > 0 && (
+        <section aria-label="Dazu passt" className="flex flex-wrap items-center gap-2">
+          <span className="text-sm font-display font-semibold text-pine">Dazu passt:</span>
+          {(vergleichFuerThema[t.id] ?? []).map(katId => {
+            const kat = kategorie(katId)
+            if (!kat) return null
+            return (
+              <Link
+                key={katId}
+                to={`/vergleich/${katId}`}
+                className="rounded-pill bg-pine-mist px-3 py-1 text-sm font-display font-semibold text-pine hover:bg-coral hover:text-white transition"
+              >
+                {kat.titel} →
+              </Link>
+            )
+          })}
+        </section>
+      )}
 
       {total === 0 && (
         <p className="rounded-card bg-cream-card border border-pine-mist p-6 text-ink/80">

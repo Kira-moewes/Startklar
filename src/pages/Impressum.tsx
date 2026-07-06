@@ -1,5 +1,6 @@
 const absaetze: string[] = [
   '[Impressum-Text folgt – von Kira, via eRecht24]',
+  'Hinweis zur Finanzierung: Startklar arbeitet mit Affiliate-Partnerprogrammen (u. a. Awin, financeAds, Tarifcheck). Als „Anzeige · Partner-Link" gekennzeichnete Angebote sind Werbung; bei einem Abschluss erhält Startklar eine Provision vom Anbieter. Details: siehe Transparenzseite. [Nach Gewerbeanmeldung ergänzen: Betreiberin, Anschrift, Verantwortliche i. S. d. § 18 Abs. 2 MStV]',
 ]
 
 export default function Impressum() {

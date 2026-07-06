@@ -12,6 +12,9 @@ import Bar from '../components/ui/Bar'
 import StatCard from '../components/ui/StatCard'
 import Heatmap from '../components/ui/Heatmap'
 import VergleichChip from '../components/VergleichChip'
+import NachfrageKarte from '../components/NachfrageKarte'
+import { anbieterAngebot } from '../data/anbieter'
+import { lernArtikel } from '../data/lernen'
 import type { Task } from '../data/types'
 
 const heute = () => new Date().toISOString().slice(0, 10)
@@ -171,6 +174,12 @@ export default function Dashboard() {
   }
 
   const offen = stats.totalTasks - stats.totalDone
+  const bestaetigteAbschluesse = abschluesse.filter(a => a.status !== 'angeklickt')
+  const boniSumme = bestaetigteAbschluesse.reduce(
+    (sum, a) => sum + (anbieterAngebot(a.angebotId)?.bonusFuerNutzer ?? 0),
+    0
+  )
+  const tagesArtikel = lernArtikel[new Date().getDate() % lernArtikel.length]
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-12 flex flex-col gap-8">
@@ -180,6 +189,8 @@ export default function Dashboard() {
           {stats.totalDone === 0 ? 'Dein Überblick. Wir zeigen dir, wo du anfängst.' : 'Dein Überblick. Du packst das.'}
         </p>
       </div>
+
+      <NachfrageKarte />
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
         {/* Hero: Gesamtfortschritt */}
@@ -212,18 +223,21 @@ export default function Dashboard() {
         {/* Wallet */}
         <Widget title="Wallet" linkTo="/wallet" linkText="Öffnen">
           <div className="flex flex-col gap-1">
-            <p className="font-serif text-4xl font-bold text-coral leading-none">{abschluesse.length}</p>
+            <p className="font-serif text-4xl font-bold text-coral leading-none">{bestaetigteAbschluesse.length}</p>
             <p className="text-xs text-ink/50">
-              {abschluesse.length === 1 ? 'Abschluss' : 'Abschlüsse'} über Startklar
+              {bestaetigteAbschluesse.length === 1 ? 'Abschluss' : 'Abschlüsse'} über Startklar
             </p>
-            {abschluesse.length > 0 && (
+            {bestaetigteAbschluesse.length > 0 && (
               <p className="mt-1 text-sm text-pine font-medium truncate">
-                {abschluesse[abschluesse.length - 1].anbieter} · {
-                  { eingereicht: 'Eingereicht', bestaetigt: 'Bestätigt', aktiv: 'Aktiv', gekuendigt: 'Gekündigt' }[
-                    abschluesse[abschluesse.length - 1].status
+                {bestaetigteAbschluesse[bestaetigteAbschluesse.length - 1].anbieter} · {
+                  { angeklickt: 'Offen', selbst_bestaetigt: 'Bestätigt', aktiv: 'Aktiv', gekuendigt: 'Gekündigt' }[
+                    bestaetigteAbschluesse[bestaetigteAbschluesse.length - 1].status
                   ]
                 }
               </p>
+            )}
+            {boniSumme > 0 && (
+              <p className="mt-1 text-sm text-pine font-medium">💶 Boni mitgenommen: bis zu {boniSumme} €</p>
             )}
           </div>
         </Widget>
@@ -324,6 +338,17 @@ export default function Dashboard() {
               </p>
             )
           )}
+        </Widget>
+
+        {/* Wusstest du? (Lern-Teaser, rotiert täglich) */}
+        <Widget title="Wusstest du?" linkTo="/lernen" linkText="Alle Artikel" className="col-span-2">
+          <Link to={`/lernen/${tagesArtikel.id}`} className="group">
+            <p className="font-display text-lg font-semibold text-pine group-hover:text-coral transition">
+              📖 {tagesArtikel.titel}
+            </p>
+            <p className="mt-1 text-sm text-ink/70">{tagesArtikel.teaser}</p>
+            <p className="mt-2 text-xs text-ink/50">{tagesArtikel.minuten} Min. · ohne Werbung</p>
+          </Link>
         </Widget>
 
         {/* Zuletzt erledigt */}

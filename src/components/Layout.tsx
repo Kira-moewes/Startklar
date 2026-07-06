@@ -16,6 +16,7 @@ export default function Layout() {
             <NavLink to="/dokumente" className={navClass}>Dokumente</NavLink>
             <NavLink to="/termine" className={navClass}>Termine</NavLink>
             <NavLink to="/wallet" className={navClass}>Wallet</NavLink>
+            <NavLink to="/lernen" className={navClass}>Lernen</NavLink>
             <NavLink to="/suche" className={navClass} aria-label="Suche">
               <span aria-hidden="true">🔍</span> Suche
             </NavLink>
@@ -28,6 +29,7 @@ export default function Layout() {
       <footer className="border-t border-pine-mist bg-cream-card">
         <div className="mx-auto max-w-3xl px-6 py-5 text-sm text-ink/70 flex flex-wrap gap-x-6 gap-y-2 items-center">
           <span>Keine Rechtsberatung. Angaben können sich ändern.</span>
+          <Link to="/transparenz" className="underline underline-offset-2 hover:text-coral-deep">Transparenz</Link>
           <Link to="/impressum" className="underline underline-offset-2 hover:text-coral-deep">Impressum</Link>
           <Link to="/datenschutz" className="underline underline-offset-2 hover:text-coral-deep">Datenschutz</Link>
         </div>

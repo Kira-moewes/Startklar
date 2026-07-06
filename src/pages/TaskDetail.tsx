@@ -7,6 +7,7 @@ import { useProfile } from '../hooks/useProfile'
 import { useProgress } from '../hooks/useProgress'
 import CategoryBadge from '../components/CategoryBadge'
 import VergleichChip from '../components/VergleichChip'
+import { artikel } from '../data/lernen'
 
 export default function TaskDetail() {
   const { journeyId = '', taskId = '' } = useParams()
@@ -91,6 +92,24 @@ export default function TaskDetail() {
                   className="rounded-pill bg-coral px-5 py-2.5 font-display font-semibold text-white hover:bg-coral-deep transition"
                 >
                   {kat.titel} →
+                </Link>
+              )
+            })}
+          </div>
+        </section>
+      )}
+
+      {(task.lernArtikel ?? []).length > 0 && (
+        <section aria-label="Zum Weiterlesen" className="rounded-card bg-cream-card border border-pine-mist p-6">
+          <h2 className="font-display text-xl font-semibold text-pine">Zum Weiterlesen</h2>
+          <div className="mt-3 flex flex-col gap-3">
+            {(task.lernArtikel ?? []).map(id => {
+              const a = artikel(id)
+              if (!a) return null
+              return (
+                <Link key={id} to={`/lernen/${a.id}`} className="rounded-field border border-pine-mist p-3 hover:border-coral transition">
+                  <p className="font-display font-semibold text-pine">📖 {a.titel}</p>
+                  <p className="text-sm text-ink/70">{a.teaser} · {a.minuten} Min.</p>
                 </Link>
               )
             })}

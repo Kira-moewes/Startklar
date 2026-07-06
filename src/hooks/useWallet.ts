@@ -10,7 +10,9 @@ export type Zahlungsmittel = {
   details: Record<string, string> // nur maskierte Werte
 }
 
-export type AbschlussStatus = 'eingereicht' | 'bestaetigt' | 'aktiv' | 'gekuendigt'
+// 'angeklickt' = Vormerkung nach Klick auf einen Partner-Link (noch offen),
+// 'selbst_bestaetigt' = Nutzer:in hat den Abschluss bestätigt.
+export type AbschlussStatus = 'angeklickt' | 'selbst_bestaetigt' | 'aktiv' | 'gekuendigt'
 
 export type Abschluss = {
   id: string
@@ -21,6 +23,23 @@ export type Abschluss = {
   status: AbschlussStatus
   zahlungsmittelId?: string
   dokumentId?: string
+}
+
+// Verlustfreie Lese-Migration der Runde-2-Status ('eingereicht'/'bestaetigt');
+// Vormerkungen verfallen still nach 30 Tagen (KONZEPT-PROVISIONEN.md §5.3/5.4).
+function migriere(list: Abschluss[]): Abschluss[] {
+  const grenze = new Date()
+  grenze.setDate(grenze.getDate() - 30)
+  const aeltesteVormerkung = grenze.toISOString().slice(0, 10)
+  return list
+    .map(a => {
+      const status = String(a.status)
+      if (status === 'eingereicht' || status === 'bestaetigt') {
+        return { ...a, status: 'selbst_bestaetigt' as const }
+      }
+      return a
+    })
+    .filter(a => a.status !== 'angeklickt' || a.datum >= aeltesteVormerkung)
 }
 
 export type WalletEreignis = {
@@ -67,7 +86,7 @@ export function useWallet() {
     ]).then(([z, a, v, d]) => {
       if (!active) return
       setZahlungsmittel(z ?? [])
-      setAbschluesse(a ?? [])
+      setAbschluesse(migriere(a ?? []))
       setVerlauf(v ?? [])
       setCheckoutDaten(d ?? {})
       setLoading(false)
@@ -93,24 +112,53 @@ export function useWallet() {
     })
   }, [])
 
-  const addAbschluss = useCallback((a: Omit<Abschluss, 'id' | 'datum' | 'status'>) => {
-    const neu: Abschluss = { ...a, id: crypto.randomUUID(), datum: heute(), status: 'eingereicht' }
-    setAbschluesse(prev => {
-      const next = [...prev, neu]
-      void store.setItem(K_ABSCHLUESSE, next)
-      return next
-    })
-    const ereignis: WalletEreignis = {
-      id: crypto.randomUUID(),
-      datum: heute(),
-      text: `Abschluss eingereicht: ${a.anbieter}`,
-    }
+  const logEreignis = useCallback((text: string) => {
+    const ereignis: WalletEreignis = { id: crypto.randomUUID(), datum: heute(), text }
     setVerlauf(prev => {
       const next = [ereignis, ...prev]
       void store.setItem(K_VERLAUF, next)
       return next
     })
+  }, [])
+
+  const addAbschluss = useCallback((a: Omit<Abschluss, 'id' | 'datum' | 'status'>) => {
+    const neu: Abschluss = { ...a, id: crypto.randomUUID(), datum: heute(), status: 'selbst_bestaetigt' }
+    setAbschluesse(prev => {
+      const next = [...prev, neu]
+      void store.setItem(K_ABSCHLUESSE, next)
+      return next
+    })
+    logEreignis(`Abschluss bestätigt: ${a.anbieter}`)
     return neu
+  }, [logEreignis])
+
+  // Vormerkung nach Klick auf einen Partner-Link. Pro Angebot nur eine offene.
+  const addVormerkung = useCallback((a: { angebotId: string; kategorieId: string; anbieter: string }) => {
+    setAbschluesse(prev => {
+      if (prev.some(x => x.angebotId === a.angebotId && x.status === 'angeklickt')) return prev
+      const neu: Abschluss = { ...a, id: crypto.randomUUID(), datum: heute(), status: 'angeklickt' }
+      const next = [...prev, neu]
+      void store.setItem(K_ABSCHLUESSE, next)
+      return next
+    })
+  }, [])
+
+  const bestaetigeAbschluss = useCallback((id: string) => {
+    setAbschluesse(prev => {
+      const eintrag = prev.find(a => a.id === id)
+      const next = prev.map(a => (a.id === id ? { ...a, status: 'selbst_bestaetigt' as const, datum: heute() } : a))
+      void store.setItem(K_ABSCHLUESSE, next)
+      if (eintrag) logEreignis(`Abschluss bestätigt: ${eintrag.anbieter}`)
+      return next
+    })
+  }, [logEreignis])
+
+  const verwerfeVormerkung = useCallback((id: string) => {
+    setAbschluesse(prev => {
+      const next = prev.filter(a => a.id !== id)
+      void store.setItem(K_ABSCHLUESSE, next)
+      return next
+    })
   }, [])
 
   const speichereCheckoutDaten = useCallback((d: CheckoutDaten) => {
@@ -126,6 +174,9 @@ export function useWallet() {
     addZahlungsmittel,
     removeZahlungsmittel,
     addAbschluss,
+    addVormerkung,
+    bestaetigeAbschluss,
+    verwerfeVormerkung,
     speichereCheckoutDaten,
     loading,
   }

@@ -16,6 +16,9 @@ import Thema from './pages/Thema'
 import Dokumente from './pages/Dokumente'
 import DokumenteThema from './pages/DokumenteThema'
 import Wallet from './pages/Wallet'
+import Transparenz from './pages/Transparenz'
+import Lernen from './pages/Lernen'
+import LernArtikelSeite from './pages/LernArtikel'
 
 export default function App() {
   return (
@@ -34,6 +37,9 @@ export default function App() {
           <Route path="/dokumente" element={<Dokumente />} />
           <Route path="/dokumente/:themaId" element={<DokumenteThema />} />
           <Route path="/wallet" element={<Wallet />} />
+          <Route path="/transparenz" element={<Transparenz />} />
+          <Route path="/lernen" element={<Lernen />} />
+          <Route path="/lernen/:artikelId" element={<LernArtikelSeite />} />
           <Route path="/journey/:journeyId" element={<JourneyOverview />} />
           <Route path="/journey/:journeyId/task/:taskId" element={<TaskDetail />} />
           <Route path="/onboarding" element={<Onboarding />} />
