@@ -119,7 +119,7 @@ export default function Dashboard() {
           <p className="text-pine/80 mb-5">
             Du hast noch keine Angaben gemacht. Lass uns mit einer Frage starten – dann zeigen wir dir nur, was für dich zählt.
           </p>
-          <Link to="/onboarding" className="inline-block rounded-pill bg-pine px-7 py-3.5 font-semibold text-cream hover:bg-olive transition">
+          <Link to="/onboarding" className="inline-block rounded-pill bg-olive px-7 py-3.5 font-semibold text-on-akzent hover:bg-olive-deep transition">
             Los geht's
           </Link>
         </div>
@@ -163,7 +163,7 @@ export default function Dashboard() {
           </div>
         </div>
         <div className="flex flex-col gap-4.5">
-          <div className="flex-1 bg-olive text-cream rounded-[22px] px-6.5 py-5.5">
+          <div className="flex-1 bg-olive text-on-akzent rounded-[22px] px-6.5 py-5.5">
             <p className="m-0 font-serif text-[42px] leading-none">{animErledigt}</p>
             <p className="mt-2 m-0 text-sm text-cream/75">erledigt</p>
           </div>
@@ -248,7 +248,7 @@ export default function Dashboard() {
           <div className="mt-5 flex flex-col gap-3">
             {zuletztErledigt.map(z => (
               <div key={`${z.journeyId}-${z.task.id}`} className="rounded-[18px] bg-cream-card border border-pine/14 px-5.5 py-4 flex items-center gap-3.5">
-                <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-olive text-cream text-xs font-bold">✓</span>
+                <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-olive text-on-akzent text-xs font-bold">✓</span>
                 <p className="m-0 flex-1 font-serif text-[19px] font-medium text-pine">{z.task.title}</p>
                 <p className="m-0 text-sm text-pine/50">{formatDatum(z.datum)}</p>
               </div>
@@ -271,7 +271,7 @@ export default function Dashboard() {
                   className="flex gap-4 items-start bg-cream-card border border-pine/14 rounded-[18px] px-5.5 py-4.5 hover:border-olive hover:translate-x-1 transition"
                   style={{ animation: `rise .55s cubic-bezier(.2,.7,.2,1) ${i * 0.08}s both` }}
                 >
-                  <span className="flex-none size-7 rounded-full bg-olive text-cream text-[13px] font-bold flex items-center justify-center">{i + 1}</span>
+                  <span className="flex-none size-7 rounded-full bg-olive text-on-akzent text-[13px] font-bold flex items-center justify-center">{i + 1}</span>
                   <span className="flex-1 min-w-0">
                     <span className="block font-serif text-[19px] font-medium text-pine">{nt.task.title}</span>
                     <span className="block mt-1 text-sm text-pine/65">{journey?.title ?? nt.task.summary}</span>

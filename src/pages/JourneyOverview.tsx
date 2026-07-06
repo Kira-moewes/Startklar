@@ -42,7 +42,7 @@ export default function JourneyOverview() {
           <div className="h-full rounded-pill bg-paper transition-all duration-600" style={{ width: `${pct}%` }} />
         </div>
         {allDone && (
-          <p className="mt-3.5 m-0 text-[15px] text-[#C9D3A0]">
+          <p className="mt-3.5 m-0 text-[15px] text-olive-soft">
             Alles erledigt — stark! Du hast die wichtigsten Schritte hinter dir.
           </p>
         )}

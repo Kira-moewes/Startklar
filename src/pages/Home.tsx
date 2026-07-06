@@ -41,7 +41,7 @@ export default function Home() {
           <svg viewBox="0 0 1100 420" aria-hidden="true" className="absolute top-1/2 left-1/2 w-[1100px] h-[420px] -mt-[210px] -ml-[550px] pointer-events-none overflow-visible">
             <path
               d="M -40 360 C 220 420, 380 180, 560 190 S 900 120, 1060 60"
-              fill="none" stroke="rgba(96,108,56,.45)" strokeWidth="2" strokeDasharray="7 9"
+              fill="none" stroke="color-mix(in srgb, var(--t-akzent) 45%, transparent)" strokeWidth="2" strokeDasharray="7 9"
               style={{ animation: 'drawPath 2.6s cubic-bezier(.4,0,.2,1) both' }}
             />
           </svg>
@@ -76,7 +76,7 @@ export default function Home() {
             </p>
           </div>
           <div className="flex flex-wrap gap-3.5">
-            <Link to="/onboarding" className="rounded-pill bg-pine text-cream px-7.5 py-4 text-[15px] font-semibold hover:bg-olive transition">
+            <Link to="/onboarding" className="rounded-pill bg-olive text-on-akzent px-7.5 py-4 text-[15px] font-semibold hover:bg-olive-deep transition">
               In 2 Minuten loslegen
             </Link>
             <Link to="/fortschritt" className="rounded-pill border-[1.5px] border-pine/30 text-pine px-7.5 py-4 text-[15px] font-semibold hover:border-pine transition">

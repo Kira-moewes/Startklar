@@ -141,7 +141,7 @@ export default function TaskDetail() {
       <div className="mt-7 flex flex-col sm:flex-row gap-3">
         <button
           onClick={() => toggle(task.id)}
-          className={`flex-1 min-h-14 rounded-pill px-8 text-[17px] font-semibold text-cream transition hover:scale-[1.02] ${isDone ? 'bg-olive' : 'bg-pine'}`}
+          className={`flex-1 min-h-14 rounded-pill px-8 text-[17px] font-semibold text-on-akzent transition hover:scale-[1.02] ${isDone ? 'bg-pine text-cream' : 'bg-olive'}`}
         >
           {isDone ? '✓ Erledigt — rückgängig machen' : 'Als erledigt markieren'}
         </button>
