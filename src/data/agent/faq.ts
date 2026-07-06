@@ -42,7 +42,25 @@ export const faqEintraege: FaqEintrag[] = [
   {
     id: 'vergleich-eintragen',
     titel: 'Eigenes Angebot im Vergleich eintragen',
-    text: 'Öffne im Vergleich eine Kategorie (z. B. Strom oder Haftpflicht), trag den Anbieternamen ein und fülle die Kriterien aus. Startklar empfiehlt keine Anbieter – du vergleichst selbst, neutral und ohne Werbung.',
+    text: 'Öffne im Vergleich eine Kategorie (z. B. Strom oder Haftpflicht) und trag den Anbieternamen ein. Bei bekannten Anbietern schlage ich dir welche vor und fülle Richtwerte vor – du kannst jeden Wert überschreiben. Startklar bewertet keine Anbieter, du vergleichst selbst, neutral und ohne Werbung.',
+    route: '/vergleich',
+  },
+  {
+    id: 'bedarf-check',
+    titel: 'Brauche ich diese Versicherung? (Bedarfscheck)',
+    text: 'Bei Haftpflicht, Hausrat und Kfz gibt es einen kurzen Bedarfscheck: ein paar Fragen zeigen dir, ob und wie viel Versicherung du brauchst und welche Zielwerte (z. B. Deckungssumme) für dich sinnvoll sind. Du findest ihn über „Bedarf checken" auf der jeweiligen Vergleichsseite.',
+    route: '/vergleich',
+  },
+  {
+    id: 'richtwerte-herkunft',
+    titel: 'Woher kommen die vorausgefüllten Werte im Vergleich?',
+    text: 'Die vorausgefüllten Werte sind unverbindliche Richtwerte (markiert mit ≈) aus einer gepflegten Liste bekannter Anbieter – grobe Orientierung, keine Angebote. Sie können veraltet sein, prüf sie beim Anbieter und überschreib sie mit deinen echten Zahlen.',
+    route: '/vergleich',
+  },
+  {
+    id: 'best-match',
+    titel: 'Was bedeutet „Passt am besten zu deinem Bedarf"?',
+    text: 'Wenn du den Bedarfscheck gemacht und mehrere Angebote eingetragen hast, markiere ich das Angebot, das deine Zielwerte am besten erfüllt. Das bezieht sich nur auf deine eigenen Eingaben – es ist keine Markt- oder Anbieterempfehlung, und deine Favoriten-Wahl bleibt davon unberührt.',
     route: '/vergleich',
   },
   {

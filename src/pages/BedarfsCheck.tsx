@@ -19,12 +19,9 @@ export default function BedarfsCheck() {
   const { antworten, ergebnis, speichern, loading } = useBedarf(kategorieId)
   const [bearbeiten, setBearbeiten] = useState(false)
 
-  // Keinen Check für diese Kategorie → zurück zur Vergleichsseite.
-  if (!check) return <Navigate to={`/vergleich/${kategorieId}`} replace />
-
   const initial = useMemo(() => {
     const base: Record<string, string> = {}
-    for (const f of check.fragen) {
+    for (const f of check?.fragen ?? []) {
       const gespeichert = antworten?.[f.key]
       if (gespeichert !== undefined) {
         base[f.key] = gespeichert
@@ -35,6 +32,9 @@ export default function BedarfsCheck() {
     }
     return base
   }, [check, antworten, profile])
+
+  // Keinen Check für diese Kategorie → zurück zur Vergleichsseite.
+  if (!check) return <Navigate to={`/vergleich/${kategorieId}`} replace />
 
   if (loading) return <div className="mx-auto max-w-[660px] px-7 py-16 text-pine/60">Lädt …</div>
 

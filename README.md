@@ -23,6 +23,26 @@ umgesetzt:
   weniger Animationen, KI-Schalter sowie Datenexport/-import als JSON und
   „Alles löschen" (Datenhoheit, alles bleibt lokal).
 
+## Konzept v4 (umgesetzt)
+
+Runde 4 ist geplant ([docs/konzept-r4.md](docs/konzept-r4.md)) und umgesetzt –
+zwei Erweiterungen des Vergleichs:
+
+- **Anbieter-Autofill** – im Vergleich reicht der Anbietername: Bei bekannten
+  Anbietern (Erstbestand für Haftpflicht, Hausrat, Kfz) schlägt die App welche
+  vor und füllt die Kriterien mit **Richtwerten** aus einem kuratierten lokalen
+  Katalog vor. Richtwerte sind mit ≈ markiert, editierbar und tragen ein
+  Stand-Datum; nach 12 Monaten warnt die App. Grenze der Neutralität neu
+  gezogen: Startklar **nennt** Anbieter (sachliche Info, keine Provision, keine
+  Links), **bewertet** sie aber nicht.
+- **Bedarfscheck je Versicherung** – vor dem Vergleich beantwortest du 3–4
+  kurze Fragen (Wizard, bekannte Profil-Antworten sind vorausgewählt). Daraus
+  ergibt sich, ob und wie viel du brauchst (Stufe + Zielwerte). In der
+  Vergleichstabelle erscheinen die Zielwerte als Referenzspalte „Dein Bedarf",
+  eine Ampel prüft die Angebote dagegen, und das am besten passende **eigene**
+  Angebot wird markiert – ausdrücklich nur unter deinen Eingaben, kein
+  Marktranking. Alles bleibt lokal; Export/Import erfasst den Check automatisch.
+
 ## Deployment mit Netlify
 
 1. Repo bei [Netlify](https://app.netlify.com) verbinden („Import from Git") –
