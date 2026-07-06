@@ -44,7 +44,7 @@ export default function BedarfsCheck() {
     return (
       <div>
         <div className="mx-auto max-w-[660px] px-7 pt-10">
-          <Link to={`/vergleich/${kategorieId}`} className="text-sm text-pine underline underline-offset-2">← Zum Vergleich</Link>
+          <Link to={`/vergleich/${kategorieId}`} className="no-print text-sm text-pine underline underline-offset-2">← Zum Vergleich</Link>
           <h1 className="mt-3 font-serif text-4xl font-normal text-pine">{check.titel}</h1>
           <p className="mt-2 text-ink/80">{check.intro}</p>
         </div>
@@ -62,7 +62,7 @@ export default function BedarfsCheck() {
   return (
     <div className="mx-auto max-w-[660px] w-full px-7 pt-10 pb-24 flex flex-col gap-6">
       <div>
-        <Link to={`/vergleich/${kategorieId}`} className="text-sm text-pine underline underline-offset-2">← Zum Vergleich</Link>
+        <Link to={`/vergleich/${kategorieId}`} className="no-print text-sm text-pine underline underline-offset-2">← Zum Vergleich</Link>
         <h1 className="mt-3 font-serif text-4xl font-normal text-pine">{check.titel}</h1>
       </div>
 
@@ -97,7 +97,7 @@ export default function BedarfsCheck() {
         </ul>
       )}
 
-      <div className="flex flex-wrap gap-3 pt-2">
+      <div className="no-print flex flex-wrap gap-3 pt-2">
         <Link
           to={`/vergleich/${kategorieId}`}
           className="rounded-pill bg-coral px-6 py-3 font-display font-semibold text-white hover:bg-coral-deep transition"
@@ -109,6 +109,12 @@ export default function BedarfsCheck() {
           className="rounded-pill border-[1.5px] border-pine/30 px-6 py-3 font-display font-semibold text-pine hover:border-pine transition"
         >
           Antworten ändern
+        </button>
+        <button
+          onClick={() => window.print()}
+          className="rounded-pill border-[1.5px] border-pine/30 px-6 py-3 font-display font-semibold text-pine hover:border-pine transition"
+        >
+          Drucken / PDF
         </button>
       </div>
     </div>

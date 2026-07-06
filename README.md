@@ -43,6 +43,20 @@ zwei Erweiterungen des Vergleichs:
   Angebot wird markiert – ausdrücklich nur unter deinen Eingaben, kein
   Marktranking. Alles bleibt lokal; Export/Import erfasst den Check automatisch.
 
+## Konzept v5 (umgesetzt)
+
+Runde 5 ([docs/konzept-r5.md](docs/konzept-r5.md)) baut den Vergleich weiter aus:
+
+- **Anbieter-Chips** – die bekannten Anbieter stehen direkt als „+ Anbieter"-
+  Buttons auf der Vergleichsseite: ein Tipp, und die Spalte ist mit
+  Richtwerten vorbefüllt. Kein Tippen nötig.
+- **Deine Unterlagen** – auf jeder Aufgaben-Seite und in jedem Vergleich
+  lassen sich Dokumente (PDF oder Foto, max. 4 MB) lokal ablegen, ansehen und
+  löschen. Sie bleiben auf dem Gerät und wandern mit in den Daten-Export;
+  das Profil zeigt die Speichernutzung.
+- **Drucken / PDF** – Vergleichstabelle und Bedarfscheck-Ergebnis lassen sich
+  über den Druckdialog des Browsers als PDF sichern (ohne Zusatz-Bibliothek).
+
 ## Deployment mit Netlify
 
 1. Repo bei [Netlify](https://app.netlify.com) verbinden („Import from Git") –

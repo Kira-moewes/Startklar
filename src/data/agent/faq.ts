@@ -111,4 +111,22 @@ export const faqEintraege: FaqEintrag[] = [
     text: 'Unter Fortschritt siehst du deinen Gesamtfortschritt als Ring, den Stand je Bereich, deine Aktivität der letzten Wochen und die nächsten Schritte.',
     route: '/fortschritt',
   },
+  {
+    id: 'anbieter-antippen',
+    titel: 'Anbieter ohne Tippen hinzufügen',
+    text: 'Bei Haftpflicht, Hausrat und Kfz stehen bekannte Anbieter als Buttons unter dem Eingabefeld – einmal antippen, und die Spalte wird mit unverbindlichen Richtwerten (≈) vorbefüllt. Alles bleibt editierbar.',
+    route: '/vergleich',
+  },
+  {
+    id: 'unterlagen-ablegen',
+    titel: 'Unterlagen (PDF/Foto) ablegen',
+    text: 'Auf jeder Aufgaben-Seite und in jedem Vergleich gibt es „Deine Unterlagen": Dort legst du z. B. deine Police oder ein Foto des Vertrags ab. Maximal 4 MB pro Datei – alles bleibt auf deinem Gerät und ist im Daten-Export enthalten.',
+    route: '/vergleich',
+  },
+  {
+    id: 'vergleich-drucken',
+    titel: 'Vergleich oder Bedarfscheck als PDF speichern',
+    text: 'Oben auf der Vergleichsseite (und beim Bedarfscheck-Ergebnis) gibt es „Drucken / PDF". Im Druckdialog deines Geräts wählst du „Als PDF sichern" – fertig.',
+    route: '/vergleich',
+  },
 ]

@@ -120,8 +120,19 @@ export default function VergleichDetail() {
   return (
     <div className="mx-auto max-w-4xl px-6 py-10 flex flex-col gap-8">
       <div>
-        <Link to="/vergleich" className="text-sm text-pine underline underline-offset-2">← Alle Vergleiche</Link>
-        <h1 className="mt-3 font-serif text-5xl font-normal text-pine">{kat.titel}</h1>
+        <Link to="/vergleich" className="no-print text-sm text-pine underline underline-offset-2">← Alle Vergleiche</Link>
+        <div className="mt-3 flex items-start justify-between gap-4">
+          <h1 className="font-serif text-5xl font-normal text-pine">{kat.titel}</h1>
+          {angebote.length > 0 && (
+            <button
+              type="button"
+              onClick={() => window.print()}
+              className="no-print shrink-0 rounded-pill border-[1.5px] border-pine/30 px-4 py-2 text-sm font-display font-semibold text-pine hover:border-pine transition"
+            >
+              Drucken / PDF
+            </button>
+          )}
+        </div>
         <p className="mt-2 text-lg text-ink/80">{kat.intro}</p>
       </div>
 
@@ -138,7 +149,7 @@ export default function VergleichDetail() {
       </section>
 
       {hatBedarfsCheck(kategorieId) && !ergebnis && (
-        <section className="rounded-card border-2 border-coral/40 bg-coral/5 p-6 flex flex-col sm:flex-row sm:items-center gap-4">
+        <section className="no-print rounded-card border-2 border-coral/40 bg-coral/5 p-6 flex flex-col sm:flex-row sm:items-center gap-4">
           <div className="flex-1">
             <h2 className="font-display text-lg font-semibold text-pine">Bevor du vergleichst</h2>
             <p className="mt-1 text-ink/80">Ein paar kurze Fragen zeigen dir, ob und wie viel {kat.titel} du brauchst.</p>
@@ -167,7 +178,7 @@ export default function VergleichDetail() {
         </section>
       )}
 
-      <div>
+      <div className="no-print">
         <form onSubmit={onSubmit} className="flex gap-3">
           <div className="relative flex-1">
             <input
@@ -289,7 +300,7 @@ export default function VergleichDetail() {
                     <button
                       onClick={() => toggleFavorit(a.id)}
                       aria-pressed={a.favorit}
-                      className={`mt-2 w-full rounded-pill px-2 py-1 text-xs font-display font-semibold transition ${
+                      className={`no-print mt-2 w-full rounded-pill px-2 py-1 text-xs font-display font-semibold transition ${
                         a.favorit ? 'bg-coral text-white' : 'bg-pine-mist text-pine hover:bg-coral hover:text-white'
                       }`}
                     >
@@ -346,7 +357,7 @@ export default function VergleichDetail() {
                   })}
                 </tr>
               ))}
-              <tr>
+              <tr className="no-print">
                 <td />
                 {ergebnis && <td />}
                 {angebote.map(a => (
