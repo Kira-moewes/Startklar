@@ -6,6 +6,8 @@ import { relevanteTasks } from '../data/visibility'
 import { useProfile } from '../hooks/useProfile'
 import { useProgress } from '../hooks/useProgress'
 import CategoryBadge from '../components/CategoryBadge'
+import DokumenteSection from '../components/DokumenteSection'
+import { dokumentKeyTask } from '../data/dokumente'
 
 export default function TaskDetail() {
   const { journeyId = '', taskId = '' } = useParams()
@@ -104,6 +106,10 @@ export default function TaskDetail() {
           </div>
         </section>
       )}
+
+      <div className="mt-5">
+        <DokumenteSection bezugKey={dokumentKeyTask(journey.id, task.id)} />
+      </div>
 
       <div className="mt-7 flex flex-col sm:flex-row gap-3">
         <button

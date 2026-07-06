@@ -1,12 +1,15 @@
 import { useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { kategorie } from '../data/vergleich'
-import { findeAnbieter, hatKatalog, type AnbieterRichtwerte } from '../data/anbieter'
+import { anbieterKatalog, findeAnbieter, hatKatalog, type AnbieterRichtwerte } from '../data/anbieter'
+import { normalisiere } from '../lib/retrieval'
 import { hatBedarfsCheck } from '../data/bedarf'
 import type { Zielwert } from '../data/bedarf/types'
 import { useVergleich } from '../hooks/useVergleich'
 import { useBedarf } from '../hooks/useBedarf'
 import { besteWahl } from '../lib/bedarfMatch'
+import DokumenteSection from '../components/DokumenteSection'
+import { dokumentKeyVergleich } from '../data/dokumente'
 
 // 'YYYY-MM' → 'MM/JJJJ' für die Anzeige.
 function standLabel(stand: string): string {
@@ -53,6 +56,12 @@ export default function VergleichDetail() {
   }, [ergebnis])
 
   const best = ergebnis ? besteWahl(angebote, ergebnis) : null
+
+  // Katalog-Anbieter, die noch nicht in der Tabelle stehen – als Antipp-Chips.
+  const chipVorschlaege = useMemo(() => {
+    const vorhandene = new Set(angebote.map(a => normalisiere(a.anbieter.trim())))
+    return (anbieterKatalog[kategorieId] ?? []).filter(e => !vorhandene.has(normalisiere(e.name)))
+  }, [angebote, kategorieId])
 
   if (!kat) {
     return (
@@ -216,6 +225,26 @@ export default function VergleichDetail() {
             Diesen Anbieter kennen wir noch nicht – trag die Werte einfach aus deinem Angebot ein.
           </p>
         )}
+
+        {chipVorschlaege.length > 0 && (
+          <div className="mt-4">
+            <p className="text-sm text-ink/60">
+              Bekannte Anbieter zum Antippen <span className="text-ink/40">(füllt unverbindliche Richtwerte ein)</span>:
+            </p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {chipVorschlaege.map(e => (
+                <button
+                  key={e.name}
+                  type="button"
+                  onClick={() => uebernehmen(e)}
+                  className="rounded-pill border border-pine-mist bg-cream-card px-4 py-2 text-sm font-display font-semibold text-pine hover:border-coral hover:text-coral-deep transition"
+                >
+                  + {e.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {!loading && angebote.length === 0 && (
@@ -335,6 +364,8 @@ export default function VergleichDetail() {
           </table>
         </div>
       )}
+
+      <DokumenteSection bezugKey={dokumentKeyVergleich(kategorieId)} />
 
       {best && (
         <p className="text-sm text-ink/60">

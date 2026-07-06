@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { journeys } from '../data'
 import { fragen, type Profile } from '../data/profile'
@@ -77,7 +77,20 @@ export default function Profil() {
   const [zeigeKiHinweis, setZeigeKiHinweis] = useState(false)
   const [loeschStufe, setLoeschStufe] = useState(0)
   const [datenStatus, setDatenStatus] = useState<string | null>(null)
+  const [speicher, setSpeicher] = useState<string | null>(null)
   const importRef = useRef<HTMLInputElement>(null)
+
+  // Speichernutzung (v. a. für abgelegte Unterlagen relevant); API fehlt in
+  // manchen Browsern – dann bleibt die Zeile einfach weg.
+  useEffect(() => {
+    if (!navigator.storage?.estimate) return
+    void navigator.storage.estimate().then(({ usage, quota }) => {
+      if (!usage) return
+      const mb = (usage / (1024 * 1024)).toFixed(1).replace('.', ',')
+      const gb = quota ? ` von ~${Math.round(quota / (1024 * 1024 * 1024))} GB verfügbar` : ''
+      setSpeicher(`${mb} MB belegt${gb}`)
+    })
+  }, [datenStatus])
 
   const antworte = async (feld: keyof Profile, wert: string) => {
     const vorher = sichtbareSchritte(profile)
@@ -252,7 +265,7 @@ export default function Profil() {
         </Gruppe>
 
         <Gruppe titel="Deine Daten">
-          <Zeile label="Sicherung" hinweis="Lädt alle deine Daten (Profil, Fortschritt, Termine, Vergleiche, Einstellungen) als JSON-Datei herunter.">
+          <Zeile label="Sicherung" hinweis="Lädt alle deine Daten (Profil, Fortschritt, Termine, Vergleiche, Bedarfschecks, Unterlagen, Einstellungen) als JSON-Datei herunter.">
             <button onClick={() => void exportiereAlles()} className="rounded-pill bg-pine text-cream px-4.5 py-2 text-sm font-semibold hover:bg-olive transition">
               Daten exportieren
             </button>
@@ -286,6 +299,11 @@ export default function Profil() {
               </span>
             )}
           </Zeile>
+          {speicher && (
+            <Zeile label="Speicher" hinweis="Belegter Platz auf diesem Gerät – Unterlagen (PDFs, Fotos) zählen hier am meisten.">
+              <span className="text-sm text-pine/70">{speicher}</span>
+            </Zeile>
+          )}
           {datenStatus && <p role="status" className="m-0 text-sm font-semibold text-olive">{datenStatus}</p>}
         </Gruppe>
 
