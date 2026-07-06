@@ -1,12 +1,15 @@
-// Neutraler Anbieter-Vergleich: Startklar nennt keine Anbieter und bekommt
-// keine Provision. Die Kategorien geben nur die Kriterien vor, auf die es
-// ankommt – die Angebote trägst du selbst ein.
+// Neutraler Anbieter-Vergleich: Startklar nennt bekannte Anbieter mit
+// unverbindlichen Richtwerten als Starthilfe, bewertet und verlinkt sie aber
+// nicht und erhält keine Provision. Verglichen wird nur, was du selbst
+// einträgst oder übernimmst.
 
 export type Kriterium = {
   key: string
   label: string
   hinweis?: string
   typ: 'text' | 'euro'
+  // Für Bedarfs-Ampel & Best-Match: in welche Richtung ist ein Wert "besser"?
+  richtung?: 'niedriger-besser' | 'hoeher-besser'
 }
 
 export type VergleichsKategorie = {
@@ -63,9 +66,9 @@ export const vergleichsKategorien: VergleichsKategorie[] = [
       '„Ausfalldeckung" zahlt, wenn jemand ohne Versicherung DIR einen Schaden zufügt.',
     ],
     kriterien: [
-      { key: 'beitrag', label: 'Beitrag / Jahr', typ: 'euro' },
-      { key: 'deckung', label: 'Deckungssumme', typ: 'text' },
-      { key: 'selbstbeteiligung', label: 'Selbstbeteiligung', typ: 'euro' },
+      { key: 'beitrag', label: 'Beitrag / Jahr', typ: 'euro', richtung: 'niedriger-besser' },
+      { key: 'deckung', label: 'Deckungssumme', typ: 'text', richtung: 'hoeher-besser' },
+      { key: 'selbstbeteiligung', label: 'Selbstbeteiligung', typ: 'euro', richtung: 'niedriger-besser' },
       { key: 'ausfalldeckung', label: 'Ausfalldeckung?', typ: 'text' },
       { key: 'notizen', label: 'Notizen', typ: 'text' },
     ],
@@ -80,9 +83,9 @@ export const vergleichsKategorien: VergleichsKategorie[] = [
       'Fahrraddiebstahl ist oft nur gegen Aufpreis mitversichert.',
     ],
     kriterien: [
-      { key: 'beitrag', label: 'Beitrag / Jahr', typ: 'euro' },
-      { key: 'summe', label: 'Versicherungssumme', typ: 'text' },
-      { key: 'selbstbeteiligung', label: 'Selbstbeteiligung', typ: 'euro' },
+      { key: 'beitrag', label: 'Beitrag / Jahr', typ: 'euro', richtung: 'niedriger-besser' },
+      { key: 'summe', label: 'Versicherungssumme', typ: 'text', richtung: 'hoeher-besser' },
+      { key: 'selbstbeteiligung', label: 'Selbstbeteiligung', typ: 'euro', richtung: 'niedriger-besser' },
       { key: 'fahrrad', label: 'Fahrrad mitversichert?', typ: 'text' },
       { key: 'notizen', label: 'Notizen', typ: 'text' },
     ],
@@ -114,9 +117,9 @@ export const vergleichsKategorien: VergleichsKategorie[] = [
       'Werkstattbindung und jährliche Zahlweise drücken den Preis.',
     ],
     kriterien: [
-      { key: 'beitrag', label: 'Beitrag / Jahr', typ: 'euro' },
+      { key: 'beitrag', label: 'Beitrag / Jahr', typ: 'euro', richtung: 'niedriger-besser' },
       { key: 'schutz', label: 'Haftpflicht / Teilkasko / Vollkasko', typ: 'text' },
-      { key: 'selbstbeteiligung', label: 'Selbstbeteiligung', typ: 'euro' },
+      { key: 'selbstbeteiligung', label: 'Selbstbeteiligung', typ: 'euro', richtung: 'niedriger-besser' },
       { key: 'sf-klasse', label: 'Einstufung (SF-Klasse)', typ: 'text' },
       { key: 'notizen', label: 'Notizen', typ: 'text' },
     ],

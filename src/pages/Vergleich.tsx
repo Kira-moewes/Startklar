@@ -1,9 +1,12 @@
 import { Link } from 'react-router-dom'
 import { vergleichsKategorien } from '../data/vergleich'
 import { useVergleichsUebersicht } from '../hooks/useVergleich'
+import { hatBedarfsCheck } from '../data/bedarf'
+import { useBedarfUebersicht } from '../hooks/useBedarf'
 
 export default function Vergleich() {
   const anzahl = useVergleichsUebersicht(vergleichsKategorien.map(k => k.id))
+  const bedarf = useBedarfUebersicht(vergleichsKategorien.map(k => k.id))
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-12 flex flex-col gap-10">
@@ -22,7 +25,16 @@ export default function Vergleich() {
             to={`/vergleich/${k.id}`}
             className="block rounded-card bg-cream-card border border-pine-mist p-6 hover:border-coral transition"
           >
-            <h2 className="font-serif text-2xl font-medium text-pine">{k.titel}</h2>
+            <div className="flex items-start justify-between gap-3">
+              <h2 className="font-serif text-2xl font-medium text-pine">{k.titel}</h2>
+              {hatBedarfsCheck(k.id) && (
+                <span className={`shrink-0 rounded-pill px-2.5 py-1 text-xs font-display font-semibold ${
+                  bedarf[k.id] ? 'bg-olive text-cream' : 'bg-coral/15 text-coral-deep'
+                }`}>
+                  {bedarf[k.id] ? 'Bedarf geklärt ✓' : 'Bedarf checken'}
+                </span>
+              )}
+            </div>
             <p className="mt-1 text-sm text-ink/70">{k.intro}</p>
             <p className="mt-3 text-sm font-display font-semibold text-coral-deep">
               {anzahl[k.id] ? `${anzahl[k.id]} ${anzahl[k.id] === 1 ? 'Angebot' : 'Angebote'} eingetragen` : 'Vergleich starten →'}

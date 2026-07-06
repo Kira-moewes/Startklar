@@ -6,6 +6,11 @@ export type Angebot = {
   anbieter: string
   werte: Record<string, string>
   favorit: boolean
+  // Keys, deren Wert aus dem Anbieter-Katalog vorbefüllt wurde (Richtwert).
+  // Wird beim manuellen Editieren der Zelle entfernt.
+  richtwert?: Record<string, true>
+  // Stand (MM/JJJJ bzw. YYYY-MM) des Katalog-Eintrags, aus dem vorbefüllt wurde.
+  richtwertStand?: string
 }
 
 const store = vergleichStore
@@ -39,9 +44,27 @@ export function useVergleich(kategorieId: string) {
     })
   }, [kategorieId])
 
+  // Legt ein Angebot mit vorbefüllten Richtwerten aus dem Anbieter-Katalog an.
+  const addMitRichtwerten = useCallback((anbieter: string, werte: Record<string, string>, stand: string) => {
+    setAngebote(prev => {
+      const richtwert: Record<string, true> = {}
+      for (const key of Object.keys(werte)) richtwert[key] = true
+      const neu: Angebot = { id: crypto.randomUUID(), anbieter, werte: { ...werte }, favorit: false, richtwert, richtwertStand: stand }
+      const next = [...prev, neu]
+      void store.setItem(kategorieId, next)
+      return next
+    })
+  }, [kategorieId])
+
   const setWert = useCallback((angebotId: string, key: string, wert: string) => {
     setAngebote(prev => {
-      const next = prev.map(a => a.id === angebotId ? { ...a, werte: { ...a.werte, [key]: wert } } : a)
+      const next = prev.map(a => {
+        if (a.id !== angebotId) return a
+        // Eigene Eingabe schlägt den Richtwert – Marker für dieses Feld entfernen.
+        const richtwert = a.richtwert ? { ...a.richtwert } : undefined
+        if (richtwert) delete richtwert[key]
+        return { ...a, werte: { ...a.werte, [key]: wert }, richtwert }
+      })
       void store.setItem(kategorieId, next)
       return next
     })
@@ -72,7 +95,7 @@ export function useVergleich(kategorieId: string) {
     })
   }, [kategorieId])
 
-  return { angebote, add, setWert, setAnbieter, toggleFavorit, remove, persist, loading }
+  return { angebote, add, addMitRichtwerten, setWert, setAnbieter, toggleFavorit, remove, persist, loading }
 }
 
 // Zählt Kategorien mit mindestens einem eingetragenen Angebot (für Übersicht).

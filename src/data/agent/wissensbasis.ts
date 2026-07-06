@@ -1,5 +1,6 @@
 import { journeys } from '../index'
 import { vergleichsKategorien } from '../vergleich'
+import { bedarfsChecks } from '../bedarf'
 import { faktum } from '../fakten'
 import { normalisiere } from '../../lib/retrieval'
 import { faqEintraege } from './faq'
@@ -47,6 +48,20 @@ export function wissensbasis(): WissensEintrag[] {
       route: `/vergleich/${kat.id}`,
       normTitel: normalisiere(`${kat.titel} vergleichen anbieter vergleich`),
       normText: normalisiere(text),
+    })
+  }
+
+  for (const check of Object.values(bedarfsChecks)) {
+    const text = [check.intro, ...check.fragen.map(f => f.titel)].join(' ')
+    eintraege.push({
+      id: `bedarf:${check.kategorieId}`,
+      art: 'faq',
+      titel: check.titel,
+      kurz: check.intro,
+      text: `brauche ich ${text}`,
+      route: `/vergleich/${check.kategorieId}/check`,
+      normTitel: normalisiere(`${check.titel} bedarf brauche ich`),
+      normText: normalisiere(`brauche ich bedarf ${text}`),
     })
   }
 
