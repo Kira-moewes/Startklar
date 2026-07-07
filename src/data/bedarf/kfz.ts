@@ -30,7 +30,7 @@ const sbZiel = (puffer: string): Zielwert => {
 export const kfzCheck: BedarfsCheck = {
   kategorieId: 'kfz',
   titel: 'Worauf kommt es bei meiner Kfz-Versicherung an?',
-  intro: 'Vier kurze Fragen zeigen dir, welcher Schutz zu deinem Auto passt und wie du beim Beitrag sparst.',
+  intro: 'Sieben kurze Fragen zeigen dir, welcher Schutz zu deinem Auto passt und wie du beim Beitrag sparst.',
   fragen: [
     {
       key: 'situation',

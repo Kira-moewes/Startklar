@@ -45,6 +45,27 @@ export function luminanz(hex: string): number {
   return 0.2126 * r + 0.7152 * g + 0.0722 * b
 }
 
+// Passende Schriftfarbe für einen Akzent: dunkle (#283618) oder cremefarbene
+// (#FEFAE0) Schrift – je nachdem, welche den höheren WCAG-Kontrast liefert.
+// Kontrastbasiert statt fester Luminanzschwelle, damit auch die im Dunkelmodus
+// aufgehellten Mitteltöne die lesbarere Variante bekommen.
+export function onAkzent(hex: string): string {
+  const DUNKEL = '#283618', CREME = '#FEFAE0'
+  const bg = luminanz(hex)
+  const kontrast = (fg: number) => (Math.max(bg, fg) + 0.05) / (Math.min(bg, fg) + 0.05)
+  return kontrast(luminanz(DUNKEL)) >= kontrast(luminanz(CREME)) ? DUNKEL : CREME
+}
+
+// Mischt einen Hex-Wert anteilig mit einem anderen (0..1) im sRGB-Raum –
+// grobe Näherung der Dark-Mode-Aufhellung (color-mix mit Creme in index.css),
+// um die Schriftfarbe gegen den tatsächlich gerenderten Akzent zu bestimmen.
+export function mischen(hex: string, mitHex: string, anteil: number): string {
+  const a = hexZuRgb(hex), b = hexZuRgb(mitHex)
+  if (!a || !b) return hex
+  const m = a.map((v, i) => Math.round(v * (1 - anteil) + b[i] * anteil))
+  return `#${m.map(v => v.toString(16).padStart(2, '0')).join('')}`
+}
+
 export function ableitungen(hex: string): AkzentAbleitung {
   const rgb = hexZuRgb(hex)
   if (!rgb) return { base: '#606C38', soft: '#7C8A4E', deep: '#4A5426', onAkzent: '#FEFAE0' }
@@ -53,7 +74,6 @@ export function ableitungen(hex: string): AkzentAbleitung {
     base: hslZuHex(h, s, l),
     soft: hslZuHex(h, s, Math.min(0.92, l + 0.12)),
     deep: hslZuHex(h, s, Math.max(0.08, l - 0.12)),
-    // Helle Akzentfarbe → dunkle Schrift, sonst Creme.
-    onAkzent: luminanz(hex) > 0.45 ? '#283618' : '#FEFAE0',
+    onAkzent: onAkzent(hex),
   }
 }

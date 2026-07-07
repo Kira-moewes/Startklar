@@ -43,7 +43,7 @@ const sbZiel = (puffer: string): Zielwert => {
 export const haftpflichtCheck: BedarfsCheck = {
   kategorieId: 'haftpflicht',
   titel: 'Brauche ich eine Haftpflicht?',
-  intro: 'Drei kurze Fragen zeigen dir, ob du eine private Haftpflicht brauchst und worauf es bei dir ankommt.',
+  intro: 'Sechs kurze Fragen zeigen dir, ob du eine private Haftpflicht brauchst und worauf es bei dir ankommt.',
   fragen: [
     {
       key: 'mitversichert',

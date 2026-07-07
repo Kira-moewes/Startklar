@@ -3,17 +3,22 @@ import { parseEuro, enthaeltJa } from '../../lib/bedarfMatch'
 
 // Faustregel 650 €/m² folgt gängiger Verbraucherberatung, redaktionell noch ungeprüft.
 
+// Katalog-Richtwerte stehen teils als qm-Pauschale ("650 €/m²"). Die skaliert
+// mit der Wohnfläche und lässt sich nicht mit einer absoluten Zielsumme
+// vergleichen – dann 'unklar' statt fälschlich 'nicht-erfuellt' (⚠).
+const istProQm = (w: string) => /\/\s*m|pro\s*m|m²|qm/i.test(w)
+
 const summeZiel = (flaeche: string): Zielwert => {
   if (flaeche === 'unter30') {
     return {
       kriteriumKey: 'summe', label: 'Versicherungssumme', ziel: 'mind. 20.000 €',
-      pruefe: (w): ZielStatus => { const e = parseEuro(w); return e === null ? 'unklar' : e >= 20000 ? 'erfuellt' : 'nicht-erfuellt' },
+      pruefe: (w): ZielStatus => { if (istProQm(w)) return 'unklar'; const e = parseEuro(w); return e === null ? 'unklar' : e >= 20000 ? 'erfuellt' : 'nicht-erfuellt' },
     }
   }
   if (flaeche === '30-60') {
     return {
       kriteriumKey: 'summe', label: 'Versicherungssumme', ziel: 'mind. 40.000 €',
-      pruefe: (w): ZielStatus => { const e = parseEuro(w); return e === null ? 'unklar' : e >= 40000 ? 'erfuellt' : 'nicht-erfuellt' },
+      pruefe: (w): ZielStatus => { if (istProQm(w)) return 'unklar'; const e = parseEuro(w); return e === null ? 'unklar' : e >= 40000 ? 'erfuellt' : 'nicht-erfuellt' },
     }
   }
   // über 60 m²: individuelle Faustregel, keine feste Ampel
@@ -37,7 +42,7 @@ const fahrradZiel: Zielwert = {
 export const hausratCheck: BedarfsCheck = {
   kategorieId: 'hausrat',
   titel: 'Brauche ich eine Hausratversicherung?',
-  intro: 'Vier kurze Fragen zeigen dir, ob sich eine Hausratversicherung für dich lohnt und wie hoch die Summe sein sollte.',
+  intro: 'Sieben kurze Fragen zeigen dir, ob sich eine Hausratversicherung für dich lohnt und wie hoch die Summe sein sollte.',
   fragen: [
     {
       key: 'wohnort',

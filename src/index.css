@@ -197,7 +197,15 @@ html {
   input {
     border-color: transparent !important;
     background: transparent !important;
+    color: #1a1a1a !important;
     padding-left: 0 !important;
+  }
+  /* Browser drucken Hintergründe nicht – helle Schrift auf farbigem Grund
+     (Favoriten-Spalte bg-pine, Best-Match-Badge bg-olive) würde sonst leer
+     drucken. Deshalb im Druck auf Dunkel umstellen. */
+  .text-cream,
+  .text-on-akzent {
+    color: #1a1a1a !important;
   }
   a {
     text-decoration: none;

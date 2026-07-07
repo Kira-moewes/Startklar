@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react'
 import { einstellungenStore } from '../lib/stores'
-import { ableitungen } from '../lib/farben'
+import { ableitungen, mischen, onAkzent } from '../lib/farben'
 
 export type Einstellungen = {
   theme: 'hell' | 'dunkel' | 'system'
@@ -47,11 +47,15 @@ function anwenden(e: Einstellungen) {
   let eigene: [string, string, string, string] | null = null
   if (e.akzent === 'eigene') {
     const a = ableitungen(e.akzentHex)
-    eigene = [a.base, a.soft, a.deep, a.onAkzent]
+    // Im Dunkeln hellt index.css den Akzent auf (color-mix mit Creme) – die
+    // Schriftfarbe muss gegen diesen gerenderten Ton bestimmt werden, sonst
+    // landet Creme auf hellem Akzent (schwacher Kontrast).
+    const on = dunkel ? onAkzent(mischen(a.base, '#F4F1DC', 0.3)) : a.onAkzent
+    eigene = [a.base, a.soft, a.deep, on]
     root.style.setProperty('--a-base', a.base)
     root.style.setProperty('--a-soft', a.soft)
     root.style.setProperty('--a-deep', a.deep)
-    root.style.setProperty('--t-on-akzent', a.onAkzent)
+    root.style.setProperty('--t-on-akzent', on)
   } else {
     for (const p of ['--a-base', '--a-soft', '--a-deep', '--t-on-akzent']) root.style.removeProperty(p)
   }

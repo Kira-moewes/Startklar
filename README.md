@@ -4,6 +4,22 @@ Erwachsenwerden – aber machbar. Startklar begleitet junge Menschen bei den
 ersten Behörden-, Geld- und Wohnungs-To-dos: verständlich, neutral und ohne
 erhobenen Zeigefinger.
 
+## Repo-Struktur: zwei getrennte Apps
+
+Dieses Repo enthält **zwei eigenständige Apps**, die keinen Code teilen:
+
+- **Startklar** – die App im **Repo-Root** (`src/`, `api/`, `public/`,
+  root-`package.json`, `netlify.toml`, `vercel.json`). Alle Konzept-Runden
+  (`docs/konzept-r3…r6.md`, „Runde 3–6") gehören ausschließlich hierher.
+- **Notizen/Ideen** – die App im Unterordner **`notizen/`** mit eigener
+  `package.json`, eigenem Build und eigenen Deploy-Configs. Unabhängig von
+  Startklar (siehe `notizen/CLAUDE.md`).
+
+**Wichtig für künftige Änderungen:** Anweisungen aus den Konzept-Runden immer in
+`src/` (Startklar) umsetzen, nie in `notizen/`. Kein `import` überquert die
+Grenze zwischen beiden Apps; Deploy-Configs bleiben je App in ihrem eigenen
+Verzeichnis.
+
 ## Konzept v3 (umgesetzt)
 
 Runde 3 ist geplant ([docs/konzept-r3.md](docs/konzept-r3.md)) und vollständig
