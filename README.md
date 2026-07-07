@@ -9,7 +9,7 @@ erhobenen Zeigefinger.
 Dieses Repo enthält **zwei eigenständige Apps**, die keinen Code teilen:
 
 - **Startklar** – die App im **Repo-Root** (`src/`, `api/`, `public/`,
-  root-`package.json`, `netlify.toml`, `vercel.json`). Alle Konzept-Runden
+  root-`package.json`, `vercel.json`). Deployment via Vercel. Alle Konzept-Runden
   (`docs/konzept-r3…r6.md`, „Runde 3–6") gehören ausschließlich hierher.
 - **Notizen/Ideen** – die App im Unterordner **`notizen/`** mit eigener
   `package.json`, eigenem Build und eigenen Deploy-Configs. Unabhängig von
@@ -31,7 +31,7 @@ umgesetzt:
   die passende Stelle in der App. Kann mit Bestätigung Aktionen ausführen
   (Termin vorbereiten, Schritt abhaken, Navigation). Optionaler **KI-Modus**
   (Opt-in in den Einstellungen): schickt die Frage an eine Serverless Function
-  (`netlify/functions/agent.mts` bzw. `api/agent.ts`), die die Claude-API
+  (`api/agent.ts`, auf Vercel als `/api/agent`), die die Claude-API
   nutzt – mit Guardrails, Rate-Limit und lokalem Fallback.
 - **Profilseite** (`/profil`) – alle 7 Onboarding-Antworten einzeln änderbar,
   mit Live-Vorschau, wie viele Schritte sich dadurch ändern.
@@ -90,16 +90,17 @@ Runde 6 ([docs/konzept-r6.md](docs/konzept-r6.md)):
   Papierflieger, Primär-Buttons, Fortschritt, Heatmap und Checkboxen folgen
   ihr – hell wie dunkel, ohne Farb-Flash beim Laden.
 
-## Deployment mit Netlify
+## Deployment mit Vercel
 
-1. Repo bei [Netlify](https://app.netlify.com) verbinden („Import from Git") –
-   Build-Kommando und Publish-Verzeichnis kommen aus `netlify.toml`, jeder
-   Push deployt automatisch.
-2. Optional für den KI-Modus: In den Site-Settings die Umgebungsvariable
-   `ANTHROPIC_API_KEY` setzen. Ohne Key funktioniert die App vollständig –
-   Klaro antwortet dann ausschließlich lokal.
-
-Alternativ funktioniert Vercel unverändert (`vercel.json` + `api/agent.ts`).
+1. Repo bei [Vercel](https://vercel.com) importieren („Import from Git") –
+   Framework-Preset **Vite**, Root Directory `./`. Build (`npm run build`) und
+   Ausgabeverzeichnis (`dist`) erkennt Vercel automatisch; jeder Push auf `main`
+   deployt. Die SPA-Fallback-Regel steht in `vercel.json`, damit react-router
+   auch bei direktem Aufruf von Unterseiten greift.
+2. Optional für den KI-Modus: In den Project-Settings → Environment Variables
+   die Variable `ANTHROPIC_API_KEY` setzen. Die Function `api/agent.ts` wird von
+   Vercel automatisch unter `/api/agent` bereitgestellt. Ohne Key funktioniert
+   die App vollständig – Klaro antwortet dann ausschließlich lokal.
 
 ## Module (Planungskonzept v2)
 
@@ -133,9 +134,9 @@ npm run preview  # Build lokal testen
 ```
 
 Stack: React 19, TypeScript, Vite 8, Tailwind CSS 4, react-router 7,
-localforage, vite-plugin-pwa. Deployment wahlweise via Vercel (`vercel.json`)
-oder Netlify (`netlify.toml`) – beide leiten alle Routen als SPA-Fallback auf
-`index.html`, damit react-router auch bei direktem Aufruf von Unterseiten greift.
+localforage, vite-plugin-pwa. Deployment via Vercel (`vercel.json`) – die
+SPA-Fallback-Regel leitet alle Routen auf `index.html`, damit react-router auch
+bei direktem Aufruf von Unterseiten greift.
 
 Hinweis: Inhalte sind keine Rechtsberatung; Beträge und Fristen stehen als
 `{PLATZHALTER}` in `src/data/fakten.ts`, bis sie redaktionell geprüft sind.

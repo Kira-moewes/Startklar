@@ -1,5 +1,5 @@
-// Vercel-Adapter für Klaros KI-Modus – gleiche Logik wie die Netlify
-// Function, benötigt ANTHROPIC_API_KEY in den Vercel-Env-Variablen.
+// Vercel-Adapter für Klaros KI-Modus – dünne Hülle um agentHandler,
+// benötigt ANTHROPIC_API_KEY in den Vercel-Env-Variablen.
 import { originErlaubt, verarbeiteAgentAnfrage } from '../src/server/agentHandler'
 
 type VercelRequest = {

@@ -1,4 +1,4 @@
-// Plattformneutraler Kern der Klaro-Cloud-Function (Netlify + Vercel).
+// Plattformneutraler Kern der Klaro-Cloud-Function (Vercel-Adapter: api/agent.ts).
 // Läuft NUR serverseitig; der ANTHROPIC_API_KEY erreicht nie den Client.
 // Die Function wird nur genutzt, wenn Nutzer:innen den KI-Modus in den
 // Einstellungen aktiv einschalten (Opt-in) und die lokale Antwort nicht reicht.
