@@ -74,6 +74,16 @@ Runde 6 ([docs/konzept-r6.md](docs/konzept-r6.md)):
   Papierflieger, Primär-Buttons, Fortschritt, Heatmap und Checkboxen folgen
   ihr – hell wie dunkel, ohne Farb-Flash beim Laden.
 
+## Konzept v7 (Strategie, geplant)
+
+Runde 7 ([docs/konzept-r7-strategie.md](docs/konzept-r7-strategie.md)) ist
+eine Strategierunde statt einer Umsetzungsrunde: psychologisches Fundament
+(Angst/Ambiguität statt Langeweile als Kern-Diagnose), Gamification-Engine
+mit Core Loop und Anti-Dark-Pattern-Leitplanken, drei Marken-/Design-
+Richtungen, Monetarisierung ohne Provision (Förderung → Piloten → B2G) und
+Roadmap mit Experimenten. Grundlage für r8 (Design-Deep-Dive) und r9
+(MVP-Umbau).
+
 ## Deployment mit Netlify
 
 1. Repo bei [Netlify](https://app.netlify.com) verbinden („Import from Git") –
