@@ -5,9 +5,11 @@ import { fragen, type Profile } from '../data/profile'
 import { istRelevant, relevanteTasks } from '../data/visibility'
 import { useProfile } from '../hooks/useProfile'
 import { useSettings, type Einstellungen } from '../hooks/useSettings'
+import { useSpiel } from '../hooks/useSpiel'
 import { beschreibeSicherung, exportiereAlles, importiereAlles, liesSicherung, loescheAlles, type ExportDatei } from '../lib/datenExport'
 import { luminanz } from '../lib/farben'
 import { agentChatStore } from '../lib/stores'
+import Flieger, { GEAR_SETS } from '../components/spiel/Flieger'
 
 function sichtbareSchritte(profile: Profile | null): number {
   return journeys
@@ -73,6 +75,7 @@ function Zeile({ label, hinweis, children }: { label: string; hinweis?: string; 
 export default function Profil() {
   const { profile, save, loading } = useProfile()
   const { einstellungen, setEinstellung } = useSettings()
+  const { state: spielState } = useSpiel()
   const [offeneFrage, setOffeneFrage] = useState<string | null>(null)
   const [aenderung, setAenderung] = useState<string | null>(null)
   const [zeigeKiHinweis, setZeigeKiHinweis] = useState(false)
@@ -279,6 +282,42 @@ export default function Profil() {
           </Zeile>
           <Zeile label="Weniger Animationen" hinweis="Schaltet Einflug- und Endlos-Animationen ab.">
             <Schalter an={einstellungen.wenigerAnimation} onToggle={() => setEinstellung('wenigerAnimation', !einstellungen.wenigerAnimation)} label="Weniger Animationen" />
+          </Zeile>
+        </Gruppe>
+
+        <Gruppe titel="Spiel & Figur">
+          <Zeile label="Startseite" hinweis="Das Himmels-Abenteuer als Start – oder die klassische Ansicht. Jederzeit umschaltbar, es geht nichts verloren.">
+            <OptionPill aktiv={einstellungen.startseite === 'spiel'} onClick={() => setEinstellung('startseite', 'spiel')}>Spiel (Himmel)</OptionPill>
+            <OptionPill aktiv={einstellungen.startseite === 'klassisch'} onClick={() => setEinstellung('startseite', 'klassisch')}>Klassisch</OptionPill>
+          </Zeile>
+          <Zeile label="Deine Figur" hinweis="So sieht deine Flieger-Katze gerade aus.">
+            <Flieger size={110} zustand="fliegen" ausruestung={einstellungen.ausruestung} shadow={false} />
+          </Zeile>
+          <Zeile label="Ausrüstung" hinweis="Kosmetik zum Selbstausdruck – erspielt oder (später) Teil der Pro-Version. Ändert nie den Fortschritt.">
+            <span className="flex flex-col gap-2 w-full">
+              {GEAR_SETS.map(g => {
+                const frei = g.id === 'keine' || spielState.freigeschaltet.includes(g.id)
+                const aktiv = einstellungen.ausruestung === g.id
+                return (
+                  <button
+                    key={g.id}
+                    disabled={!frei}
+                    onClick={() => frei && setEinstellung('ausruestung', g.id)}
+                    aria-pressed={aktiv}
+                    className={`text-left rounded-[14px] border-[1.5px] px-4 py-2.5 transition ${
+                      aktiv ? 'border-olive bg-olive/10' : 'border-pine/20 hover:border-olive'
+                    } ${frei ? '' : 'opacity-55 cursor-not-allowed'}`}
+                  >
+                    <span className="flex items-center justify-between gap-2">
+                      <span className="text-sm font-semibold text-pine">{g.titel}</span>
+                      {!frei && <span className="text-[12px] text-pine/55">{g.pro ? 'Pro 🔒' : 'noch gesperrt 🔒'}</span>}
+                      {aktiv && <span className="text-[12px] font-semibold text-olive">angelegt</span>}
+                    </span>
+                    <span className="block mt-0.5 text-[13px] text-pine/65">{g.beschreibung}</span>
+                  </button>
+                )
+              })}
+            </span>
           </Zeile>
         </Gruppe>
 

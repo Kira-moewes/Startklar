@@ -17,6 +17,7 @@ export default function Layout() {
           </Link>
           <nav className="flex flex-wrap items-center gap-x-5 gap-y-1" aria-label="Hauptnavigation">
             <NavLink to="/" end className={navClass}>Start</NavLink>
+            <NavLink to="/post" className={navClass}>Post</NavLink>
             <NavLink to="/fortschritt" className={navClass}>Fortschritt</NavLink>
             <NavLink to="/termine" className={navClass}>Termine</NavLink>
             <NavLink to="/vergleich" className={navClass}>Vergleich</NavLink>

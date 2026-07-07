@@ -57,6 +57,34 @@
 :root[data-schrift='s'] { font-size: 93.75%; }
 :root[data-schrift='l'] { font-size: 112.5%; }
 
+/*
+ * Welt „Himmel" – eigene Token-Achse NUR für die Spiel-Oberfläche
+ * (Himmelskarte, Flieger, Inseln). Klassische Seiten nutzen sie nicht, daher
+ * ist das Attribut auf <html> für die restliche App folgenlos.
+ * Tag = heller Himmel, Sternennacht = dunkles Theme. So folgt „Tag→Nacht"
+ * automatisch dem bestehenden Hell/Dunkel-Schalter.
+ */
+:root[data-welt='himmel'] {
+  --sky-1: #F7ECC9;   /* oberer, warmer Himmel */
+  --sky-2: #F1D9A8;   /* Horizontglühen */
+  --sky-3: #E8C48C;   /* unterer Rand */
+  --cloud: #FFFDF4;
+  --insel: #92A758;   /* Inselgras */
+  --insel-tief: #6E7F42;
+  --fels: #7C6A52;    /* Felskante der schwebenden Insel */
+  --stern: transparent;
+}
+:root[data-welt='himmel'][data-theme='dunkel'] {
+  --sky-1: #1B2340;
+  --sky-2: #2A2C55;
+  --sky-3: #3A2E5A;
+  --cloud: #E8ECFF;
+  --insel: #4C5D3A;
+  --insel-tief: #33421F;
+  --fels: #3A3550;
+  --stern: #FCF6D8;
+}
+
 @theme {
   --color-pine: var(--t-fg);
   --color-forest: var(--t-fg);

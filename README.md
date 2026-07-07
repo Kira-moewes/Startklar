@@ -87,6 +87,29 @@ eine **Pro-Version (Kosmetik/Komfort) statt Affiliate/Provision** – die
 eigentliche Hilfe bleibt gratis, gesponserter Zugang als spätere Option.
 Grundlage für r8 (Design-Deep-Dive) und r9 (MVP-Umbau).
 
+## Konzept v8 (Spiel-Ebene „Himmel & Papierflieger", erste Scheibe umgesetzt)
+
+Runde 8 ([docs/konzept-r8-himmel-papierflieger.md](docs/konzept-r8-himmel-papierflieger.md))
+bringt das Spielgefühl aus r7 als **additive, abschaltbare** Ebene in die App:
+
+- **Himmelskarte** (`/himmel`, neue Startseite für eingerichtete Profile): eine
+  Piloten-Katze im Papierflieger zieht von schwebender Insel zu Insel; jede real
+  erledigte Aufgabe erschließt eine Insel und bringt Flugmeilen. Umschalter
+  „Startseite: Spiel / Klassisch" im Profil – die bisherige App bleibt komplett
+  erhalten.
+- **Brief-Entschlüsseler** (`/post`): „Ich hab Post und versteh sie nicht" –
+  kuratierte Briefarten (Anmeldung, Rundfunkbeitrag, Nebenkosten, Mietvertrag,
+  Strom) ruhig eingeordnet, mit einem 2-Minuten-Schritt. Eigenes stilles
+  „Morgenhimmel"-Register für den Angst-Moment.
+- **Meisterschaft & Sammlung**: Level „Verstanden/Gemacht", freischaltbare
+  Piloten-Ausrüstung (Kosmetik = späterer Pro-Hebel), Flugbuch + Steckbriefe
+  unter `/sammlung`. Keine Streaks, kein Verlust – XP und Freischaltungen sinken
+  nie (per Unit-Test abgesichert).
+
+Technisch additiv: eigene Spiel-Schicht (`src/lib/spiel.ts`, `useSpiel`), die
+sich an den einen Erledigt-Punkt in `useProgress.ts` hängt; Welt-Theming als
+`data-welt`-Achse. Inhalts-Typen und bestehende Seiten bleiben unverändert.
+
 ## Deployment mit Netlify
 
 1. Repo bei [Netlify](https://app.netlify.com) verbinden („Import from Git") –
