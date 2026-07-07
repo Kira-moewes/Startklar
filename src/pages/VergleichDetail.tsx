@@ -39,7 +39,7 @@ export default function VergleichDetail() {
   const [zuletztBefuellt, setZuletztBefuellt] = useState<{ name: string; stand: string } | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const { ergebnis } = useBedarf(kategorieId)
+  const { ergebnis, profilGeaendert } = useBedarf(kategorieId)
 
   const vorschlaege = useMemo(
     () => (offen ? findeAnbieter(kategorieId, neuerName) : []),
@@ -156,7 +156,7 @@ export default function VergleichDetail() {
           </div>
           <Link
             to={`/vergleich/${kategorieId}/check`}
-            className="rounded-pill bg-coral px-6 py-3 font-display font-semibold text-white hover:bg-coral-deep transition shrink-0 text-center"
+            className="rounded-pill bg-coral px-6 py-3 font-display font-semibold text-on-akzent hover:bg-coral-deep transition shrink-0 text-center"
           >
             Bedarf checken
           </Link>
@@ -175,6 +175,14 @@ export default function VergleichDetail() {
               Antworten ändern
             </Link>
           </div>
+          {profilGeaendert && (
+            <p className="no-print mt-4 mb-0 rounded-field border border-coral/40 bg-coral/10 px-4 py-3 text-sm text-coral-deep">
+              ⚠ Dein Bedarfscheck könnte veraltet sein – du hast dein Profil geändert.{' '}
+              <Link to={`/vergleich/${kategorieId}/check`} className="font-semibold underline underline-offset-2">
+                Neu prüfen?
+              </Link>
+            </p>
+          )}
         </section>
       )}
 
@@ -220,7 +228,7 @@ export default function VergleichDetail() {
               </ul>
             )}
           </div>
-          <button type="submit" className="rounded-pill bg-coral px-6 py-3 font-display font-semibold text-white hover:bg-coral-deep transition shrink-0">
+          <button type="submit" className="rounded-pill bg-coral px-6 py-3 font-display font-semibold text-on-akzent hover:bg-coral-deep transition shrink-0">
             + Angebot
           </button>
         </form>
@@ -301,7 +309,7 @@ export default function VergleichDetail() {
                       onClick={() => toggleFavorit(a.id)}
                       aria-pressed={a.favorit}
                       className={`no-print mt-2 w-full rounded-pill px-2 py-1 text-xs font-display font-semibold transition ${
-                        a.favorit ? 'bg-coral text-white' : 'bg-pine-mist text-pine hover:bg-coral hover:text-white'
+                        a.favorit ? 'bg-coral text-on-akzent' : 'bg-pine-mist text-pine hover:bg-coral hover:text-on-akzent'
                       }`}
                     >
                       {a.favorit ? '★ Mein Favorit' : '☆ Favorit'}
@@ -337,7 +345,11 @@ export default function VergleichDetail() {
                           <input
                             value={a.werte[krit.key] ?? ''}
                             onChange={e => setWert(a.id, krit.key, e.target.value)}
-                            placeholder={krit.typ === 'euro' ? '€' : '–'}
+                            placeholder={
+                              kategorieId === 'kfz' && krit.key === 'beitrag'
+                                ? 'individuell – Angebot einholen'
+                                : krit.typ === 'euro' ? '€' : '–'
+                            }
                             aria-label={`${krit.label} für ${a.anbieter}`}
                             aria-description={istRichtwert && a.richtwertStand ? `Richtwert, Stand ${standLabel(a.richtwertStand)} – bitte beim Anbieter bestätigen` : undefined}
                             title={istRichtwert && a.richtwertStand ? `Richtwert, Stand ${standLabel(a.richtwertStand)} – bitte beim Anbieter bestätigen` : undefined}

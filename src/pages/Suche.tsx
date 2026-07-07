@@ -2,9 +2,10 @@ import { useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { journeys } from '../data'
 import { vergleichsKategorien } from '../data/vergleich'
+import { wissensbasis } from '../data/agent/wissensbasis'
 import { istRelevant } from '../data/visibility'
 import { useProfile } from '../hooks/useProfile'
-import { normalisiere } from '../lib/retrieval'
+import { suche } from '../lib/retrieval'
 import CategoryBadge from '../components/CategoryBadge'
 import type { Task, TaskCategory } from '../data/types'
 
@@ -38,37 +39,50 @@ export default function Suche() {
     return [...set]
   }, [])
 
+  // Gemeinsames Retrieval-Modul (wie Klaro): Tokenisierung, Synonyme,
+  // Titel-/Präfix-Scoring – ein Suchindex, zwei Verbraucher.
+  const suchTreffer = useMemo(() => {
+    const q = query.trim()
+    if (q.length === 0) return []
+    return suche(q, wissensbasis(), 50)
+  }, [query])
+
   const treffer = useMemo<Treffer[]>(() => {
-    const q = normalisiere(query.trim())
-    const ergebnisse: Treffer[] = []
-    for (const journey of journeys) {
-      for (const task of journey.tasks) {
+    const zuTreffer = (journeyId: string, task: Task): Treffer => ({
+      journeyId,
+      journeyTitel: journeys.find(j => j.id === journeyId)?.title ?? '',
+      task,
+      relevant: istRelevant(profile, journeyId) && istRelevant(profile, journeyId, task.id),
+    })
+
+    let ergebnisse: Treffer[]
+    if (query.trim().length > 0) {
+      // Scoring-Reihenfolge des Retrievals beibehalten, Task-Objekte auflösen
+      ergebnisse = []
+      for (const t of suchTreffer) {
+        if (t.eintrag.art !== 'task' || !t.eintrag.journeyId || !t.eintrag.taskId) continue
+        const journey = journeys.find(j => j.id === t.eintrag.journeyId)
+        const task = journey?.tasks.find(x => x.id === t.eintrag.taskId)
+        if (!journey || !task) continue
         if (filter && task.category !== filter) continue
-        if (q.length > 0) {
-          const heuhaufen = normalisiere(
-            [task.title, task.summary, task.deadline, task.consequence, ...task.steps].join(' ')
-          )
-          if (!heuhaufen.includes(q)) continue
-        }
-        ergebnisse.push({
-          journeyId: journey.id,
-          journeyTitel: journey.title,
-          task,
-          relevant: istRelevant(profile, journey.id) && istRelevant(profile, journey.id, task.id),
-        })
+        ergebnisse.push(zuTreffer(journey.id, task))
       }
+    } else {
+      // Ohne Suchbegriff (nur Filter): alle Schritte der Kategorie
+      ergebnisse = journeys.flatMap(j =>
+        j.tasks.filter(t => !filter || t.category === filter).map(t => zuTreffer(j.id, t))
+      )
     }
-    // Für dich relevante Treffer zuerst
+    // Für dich relevante Treffer zuerst (stabile Sortierung erhält das Scoring)
     return ergebnisse.sort((a, b) => Number(b.relevant) - Number(a.relevant))
-  }, [query, filter, profile])
+  }, [suchTreffer, query, filter, profile])
 
   const vergleichsTreffer = useMemo(() => {
-    const q = normalisiere(query.trim())
-    if (q.length === 0) return []
-    return vergleichsKategorien.filter(k =>
-      normalisiere([k.titel, k.intro, ...k.tipps].join(' ')).includes(q)
+    const ids = new Set(
+      suchTreffer.filter(t => t.eintrag.art === 'vergleich').map(t => t.eintrag.id.replace('vergleich:', ''))
     )
-  }, [query])
+    return vergleichsKategorien.filter(k => ids.has(k.id))
+  }, [suchTreffer])
 
   const suchen = (wert: string) => {
     setQuery(wert)

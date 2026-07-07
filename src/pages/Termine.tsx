@@ -89,7 +89,7 @@ export default function Termine() {
       {!zeigeForm && (
         <button
           onClick={() => setZeigeForm(true)}
-          className="self-start rounded-pill bg-coral px-6 py-3 font-display font-semibold text-white hover:bg-coral-deep transition"
+          className="self-start rounded-pill bg-coral px-6 py-3 font-display font-semibold text-on-akzent hover:bg-coral-deep transition"
         >
           + Termin anlegen
         </button>

@@ -84,7 +84,7 @@ export default function DokumenteSection({ bezugKey }: { bezugKey: string }) {
                   <button
                     type="button"
                     onClick={() => { void entfernen(d.id); setLoeschId(null) }}
-                    className="rounded-pill bg-coral px-3 py-1.5 font-display font-semibold text-white hover:bg-coral-deep transition"
+                    className="rounded-pill bg-coral px-3 py-1.5 font-display font-semibold text-on-akzent hover:bg-coral-deep transition"
                   >
                     Löschen
                   </button>

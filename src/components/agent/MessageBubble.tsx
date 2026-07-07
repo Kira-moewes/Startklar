@@ -17,6 +17,9 @@ export default function MessageBubble({ msg, onLink }: { msg: AgentMessage; onLi
         {msg.quelle === 'ki' && (
           <p className="m-0 mt-1.5 text-[11px] font-semibold uppercase tracking-wide text-olive/80">KI-Antwort</p>
         )}
+        {msg.quelle === 'lokal' && (
+          <p className="m-0 mt-1.5 text-[11px] font-semibold uppercase tracking-wide text-pine/45">Lokal – auf deinem Gerät</p>
+        )}
       </div>
       {msg.links && msg.links.length > 0 && (
         <div className="flex flex-wrap gap-2">

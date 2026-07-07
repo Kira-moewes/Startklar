@@ -3,7 +3,7 @@ import { agentChatStore } from '../lib/stores'
 import { suche } from '../lib/retrieval'
 import { wissensbasis } from '../data/agent/wissensbasis'
 import { beantworteIntent, kontextZusammenfassung, type AgentKontext } from '../data/agent/intents'
-import type { AgentLink, AgentMessage } from '../data/agent/types'
+import type { AgentAction, AgentLink, AgentMessage } from '../data/agent/types'
 import { useSettings } from './useSettings'
 
 const KEY = 'verlauf'
@@ -56,10 +56,17 @@ async function kiAntwort(frage: string, verlauf: AgentMessage[], kontext: string
     if (!res.ok) return null
     const daten = await res.json()
     if (typeof daten?.text !== 'string') return null
+    // Aktionen der Cloud-Antwort nur validiert übernehmen (bekannte Typen,
+    // interne Routen) – der Server filtert bereits, hier zweite Sicherung.
+    const actions: AgentAction[] = (Array.isArray(daten.actions) ? daten.actions : []).filter(
+      (a: AgentAction) =>
+        (a?.typ === 'navigiere' && typeof a.route === 'string' && a.route.startsWith('/') && typeof a.label === 'string') ||
+        (a?.typ === 'termin-vorschlag' && typeof a.titel === 'string')
+    )
     return klaroNachricht({
       text: daten.text,
       links: Array.isArray(daten.links) ? daten.links.filter((l: AgentLink) => typeof l?.route === 'string' && l.route.startsWith('/')) : undefined,
-      actions: Array.isArray(daten.actions) ? daten.actions : undefined,
+      actions: actions.length > 0 ? actions : undefined,
       quelle: 'ki',
     })
   } catch {

@@ -10,6 +10,7 @@ export type Einstellungen = {
   wenigerAnimation: boolean
   kiModus: boolean
   kiKontext: boolean
+  kiHinweisGesehen: boolean
 }
 
 export const standardEinstellungen: Einstellungen = {
@@ -20,7 +21,11 @@ export const standardEinstellungen: Einstellungen = {
   wenigerAnimation: false,
   kiModus: false,
   kiKontext: false,
+  kiHinweisGesehen: false,
 }
+
+// Hintergrundfarben der Themes (--t-bg in index.css) – für die PWA-/Browserleiste.
+const THEME_COLOR = { hell: '#FEFAE0', dunkel: '#161C10' } as const
 
 const SPIEGEL_KEY = 'startklar-anzeige'
 
@@ -34,6 +39,9 @@ function anwenden(e: Einstellungen) {
   root.setAttribute('data-akzent', e.akzent)
   root.setAttribute('data-schrift', e.schrift)
   root.setAttribute('data-motion', e.wenigerAnimation ? 'reduziert' : 'normal')
+  // PWA-/Browserleiste folgt dem Theme (statisches Fallback steht in index.html)
+  document.querySelector('meta[name="theme-color"]')
+    ?.setAttribute('content', dunkel ? THEME_COLOR.dunkel : THEME_COLOR.hell)
   // Eigene Farbe: abgeleitete Stufen als Inline-Variablen (gewinnen gegen
   // die Preset-Selektoren); bei Presets wieder entfernen.
   let eigene: [string, string, string, string] | null = null

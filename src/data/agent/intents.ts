@@ -1,6 +1,7 @@
 import type { Journey, Task } from '../types'
 import type { Profile } from '../profile'
 import type { Termin } from '../../hooks/useTermine'
+import type { BedarfsErgebnis } from '../bedarf/types'
 import type { AgentAction, AgentLink, AgentMessage } from './types'
 import { normalisiere, suche } from '../../lib/retrieval'
 import { wissensbasis } from './wissensbasis'
@@ -9,6 +10,7 @@ export type AgentKontext = {
   profile: Profile | null
   bereiche: Array<{ journey: Journey; tasks: Task[]; done: Record<string, boolean> }>
   termine: Termin[]
+  bedarf: Array<{ kategorieId: string; titel: string; ergebnis: BedarfsErgebnis }>
 }
 
 const heute = () => new Date().toISOString().slice(0, 10)
@@ -136,6 +138,34 @@ export function beantworteIntent(frage: string, ctx: AgentKontext): AgentMessage
     )
   }
 
+  // Bedarfscheck („Brauche ich eine Haftpflicht?") – nennt ein vorhandenes
+  // Check-Ergebnis („Dein Check sagt: …") oder verweist auf den Check.
+  const brauchFrage = /brauch(e)? ich|noetig|notwendig|lohnt (sich|es|die|der|eine)|sinnvoll|wichtig fuer mich/.test(f)
+  const bedarfsKategorie = [
+    { kategorieId: 'haftpflicht', muster: /haftpflicht/, label: 'Haftpflichtversicherung' },
+    { kategorieId: 'hausrat', muster: /hausrat/, label: 'Hausratversicherung' },
+    { kategorieId: 'kfz', muster: /kfz|auto ?versicherung/, label: 'Kfz-Versicherung' },
+    { kategorieId: 'krankenkasse', muster: /krankenkasse|krankenversicherung/, label: 'Krankenkasse' },
+  ].find(k => k.muster.test(f))
+  if (brauchFrage && bedarfsKategorie) {
+    const checkRoute = `/vergleich/${bedarfsKategorie.kategorieId}/check`
+    const vorhanden = ctx.bedarf.find(b => b.kategorieId === bedarfsKategorie.kategorieId)
+    if (vorhanden) {
+      return nachricht(
+        `Dein Check sagt: „${vorhanden.ergebnis.titel}" – ${vorhanden.ergebnis.begruendung} Wenn sich bei dir etwas geändert hat, beantworte die Fragen einfach neu.`,
+        [
+          { label: 'Check ansehen / ändern', route: checkRoute },
+          { label: 'Zum Vergleich', route: `/vergleich/${bedarfsKategorie.kategorieId}` },
+        ]
+      )
+    }
+    return nachricht(
+      `Das findest du mit dem Bedarfscheck heraus: Ein paar kurze Fragen zeigen dir, ob und wie viel ${bedarfsKategorie.label} du brauchst – mit konkreten Zielwerten für den Vergleich.`,
+      [{ label: 'Bedarfscheck starten', route: checkRoute }],
+      [{ typ: 'navigiere', route: checkRoute, label: 'Check starten' }]
+    )
+  }
+
   // Profil ändern / Lebenssituation geändert
   if (/profil (aendern|anpassen)|bin (um)?gezogen|habe jetzt ein auto|hab jetzt ein auto|situation .*(geaendert|anders)|bin jetzt (student|azubi|berufstaetig)/.test(f)) {
     return nachricht(
@@ -160,5 +190,8 @@ export function kontextZusammenfassung(ctx: AgentKontext): string {
   if (offen.length) teile.push(`Nächste offene Schritte: ${offen.join('; ')}`)
   const faellig = ctx.termine.filter(t => !t.erledigt && t.datum < heute()).length
   if (faellig > 0) teile.push(`${faellig} Termin(e) überfällig`)
+  if (ctx.bedarf.length > 0) {
+    teile.push(`Bedarfschecks: ${ctx.bedarf.map(b => `${b.kategorieId}=${b.ergebnis.stufe}`).join(', ')}`)
+  }
   return teile.join('. ').slice(0, 500)
 }

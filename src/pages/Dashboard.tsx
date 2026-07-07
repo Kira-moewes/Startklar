@@ -142,8 +142,9 @@ export default function Dashboard() {
           <div className="relative size-[156px]">
             <svg width="156" height="156" viewBox="0 0 156 156" className="-rotate-90">
               <circle cx="78" cy="78" r="66" fill="none" stroke="var(--color-paper)" strokeOpacity="0.15" strokeWidth="12" />
+              {/* Gefüllter Ring folgt der Akzentfarbe (Soft-Stufe: genug Kontrast auf der dunklen Kachel) */}
               <circle
-                cx="78" cy="78" r="66" fill="none" stroke="var(--color-paper)" strokeWidth="12" strokeLinecap="round"
+                cx="78" cy="78" r="66" fill="none" stroke="var(--color-olive-soft)" strokeWidth="12" strokeLinecap="round"
                 strokeDasharray={RING_UMFANG}
                 strokeDashoffset={RING_UMFANG * (1 - animPct / 100)}
               />

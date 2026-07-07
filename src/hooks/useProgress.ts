@@ -4,6 +4,23 @@ const keyOf = (j: string, t: string) => `${j}:${t}`
 
 const heute = () => new Date().toISOString().slice(0, 10)
 
+// Zentrale Schreiblogik (Store + Erledigt-Datum konsistent) – wird vom
+// Hook-Toggle und von Klaros „erledigt-vorschlag" gleichermaßen genutzt.
+export async function schreibeErledigt(journeyId: string, taskId: string, erledigt: boolean): Promise<void> {
+  const key = keyOf(journeyId, taskId)
+  await store.setItem(key, erledigt)
+  if (erledigt) await dateStore.setItem(key, heute())
+  else await dateStore.removeItem(key)
+}
+
+// Toggle-Semantik ohne React-State (z. B. aus dem Agent-Panel): liest den
+// aktuellen Stand und invertiert ihn. Liefert den neuen Wert zurück.
+export async function markiereErledigt(journeyId: string, taskId: string): Promise<boolean> {
+  const aktuell = (await store.getItem<boolean>(keyOf(journeyId, taskId))) ?? false
+  await schreibeErledigt(journeyId, taskId, !aktuell)
+  return !aktuell
+}
+
 export function useProgress(journeyId: string, taskIds: string[]) {
   const ids = useMemo(() => taskIds, [taskIds.join('|')])
   const [done, setDone] = useState<Record<string, boolean>>({})
@@ -22,9 +39,7 @@ export function useProgress(journeyId: string, taskIds: string[]) {
   const toggle = useCallback((taskId: string) => {
     setDone(prev => {
       const next = { ...prev, [taskId]: !prev[taskId] }
-      void store.setItem(keyOf(journeyId, taskId), next[taskId])
-      if (next[taskId]) void dateStore.setItem(keyOf(journeyId, taskId), heute())
-      else void dateStore.removeItem(keyOf(journeyId, taskId))
+      void schreibeErledigt(journeyId, taskId, next[taskId])
       return next
     })
   }, [journeyId])

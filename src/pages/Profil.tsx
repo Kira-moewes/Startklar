@@ -5,7 +5,7 @@ import { fragen, type Profile } from '../data/profile'
 import { istRelevant, relevanteTasks } from '../data/visibility'
 import { useProfile } from '../hooks/useProfile'
 import { useSettings, type Einstellungen } from '../hooks/useSettings'
-import { exportiereAlles, importiereAlles, loescheAlles } from '../lib/datenExport'
+import { beschreibeSicherung, exportiereAlles, importiereAlles, liesSicherung, loescheAlles, type ExportDatei } from '../lib/datenExport'
 import { luminanz } from '../lib/farben'
 import { agentChatStore } from '../lib/stores'
 
@@ -77,6 +77,7 @@ export default function Profil() {
   const [aenderung, setAenderung] = useState<string | null>(null)
   const [zeigeKiHinweis, setZeigeKiHinweis] = useState(false)
   const [loeschStufe, setLoeschStufe] = useState(0)
+  const [importVorschau, setImportVorschau] = useState<{ daten: ExportDatei; inhalt: string[] } | null>(null)
   const [datenStatus, setDatenStatus] = useState<string | null>(null)
   const [speicher, setSpeicher] = useState<string | null>(null)
   const importRef = useRef<HTMLInputElement>(null)
@@ -110,21 +111,41 @@ export default function Profil() {
   }
 
   const kiUmschalten = () => {
-    if (!einstellungen.kiModus && !zeigeKiHinweis) {
+    // Hinweisdialog wirklich nur einmalig (persistiert in den Einstellungen).
+    if (!einstellungen.kiModus && !einstellungen.kiHinweisGesehen && !zeigeKiHinweis) {
       setZeigeKiHinweis(true)
       return
     }
+    if (zeigeKiHinweis) setEinstellung('kiHinweisGesehen', true)
     setZeigeKiHinweis(false)
     setEinstellung('kiModus', !einstellungen.kiModus)
   }
 
-  const importieren = async (file: File | undefined) => {
+  // Schritt 1: Datei nur lesen und Vorschau zeigen – noch nichts überschreiben.
+  const importVorbereiten = async (file: File | undefined) => {
     if (!file) return
+    setDatenStatus(null)
     try {
-      const ergebnis = await importiereAlles(file)
+      const daten = await liesSicherung(file)
+      setImportVorschau({ daten, inhalt: beschreibeSicherung(daten) })
+    } catch (e) {
+      setImportVorschau(null)
+      setDatenStatus(e instanceof Error ? e.message : 'Import fehlgeschlagen.')
+    } finally {
+      if (importRef.current) importRef.current.value = ''
+    }
+  }
+
+  // Schritt 2: erst nach Bestätigung wirklich ersetzen.
+  const importBestaetigen = async () => {
+    if (!importVorschau) return
+    try {
+      const ergebnis = await importiereAlles(importVorschau.daten)
+      setImportVorschau(null)
       setDatenStatus(`Import erfolgreich (${ergebnis.eintraege} Einträge). Die App lädt neu …`)
       setTimeout(() => location.reload(), 1200)
     } catch (e) {
+      setImportVorschau(null)
       setDatenStatus(e instanceof Error ? e.message : 'Import fehlgeschlagen.')
     }
   }
@@ -313,12 +334,31 @@ export default function Profil() {
               type="file"
               accept="application/json"
               className="hidden"
-              onChange={e => void importieren(e.target.files?.[0])}
+              onChange={e => void importVorbereiten(e.target.files?.[0])}
             />
             <button onClick={() => importRef.current?.click()} className="rounded-pill border-[1.5px] border-pine/30 text-pine px-4.5 py-2 text-sm font-semibold hover:border-pine transition">
               Daten importieren
             </button>
           </Zeile>
+          {importVorschau && (
+            <div className="rounded-[14px] border-[1.5px] border-olive bg-olive/8 p-4">
+              <p className="m-0 text-sm font-semibold text-pine">Das steckt in der Sicherung:</p>
+              <ul className="mt-2 mb-0 list-disc pl-5 text-sm text-pine/85 space-y-0.5">
+                {importVorschau.inhalt.map((zeile, i) => <li key={i}>{zeile}</li>)}
+              </ul>
+              <p className="mt-3 m-0 text-[13px] text-pine/60">
+                Der Import ersetzt deinen aktuellen Stand vollständig – das lässt sich nicht rückgängig machen.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <button onClick={() => void importBestaetigen()} className="rounded-pill bg-pine text-cream px-4.5 py-2 text-sm font-semibold hover:bg-olive transition">
+                  Jetzt importieren
+                </button>
+                <button onClick={() => setImportVorschau(null)} className="rounded-pill border-[1.5px] border-pine/30 text-pine px-4.5 py-2 text-sm font-semibold hover:border-pine transition">
+                  Abbrechen
+                </button>
+              </div>
+            </div>
+          )}
           <Zeile label="Alles löschen" hinweis="Entfernt sämtliche Daten von diesem Gerät. Das lässt sich nicht rückgängig machen.">
             {loeschStufe === 0 ? (
               <button onClick={() => setLoeschStufe(1)} className="rounded-pill border-[1.5px] border-olive text-olive px-4.5 py-2 text-sm font-semibold hover:bg-olive/10 transition">

@@ -184,7 +184,7 @@ export default function BedarfsCheck() {
       <div className="no-print flex flex-wrap gap-3 pt-2">
         <Link
           to={`/vergleich/${kategorieId}`}
-          className="rounded-pill bg-coral px-6 py-3 font-display font-semibold text-white hover:bg-coral-deep transition"
+          className="rounded-pill bg-coral px-6 py-3 font-display font-semibold text-on-akzent hover:bg-coral-deep transition"
         >
           Zum Vergleich →
         </Link>

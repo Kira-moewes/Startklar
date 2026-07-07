@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { journeys } from '../../data'
 import { istRelevant, relevanteTasks } from '../../data/visibility'
 import { useProfile } from '../../hooks/useProfile'
-import { useAllProgress } from '../../hooks/useProgress'
+import { markiereErledigt, useAllProgress } from '../../hooks/useProgress'
 import { useTermine } from '../../hooks/useTermine'
 import { useAgent } from '../../hooks/useAgent'
-import { progressStore, progressDatesStore } from '../../lib/stores'
+import { useAlleBedarfsErgebnisse } from '../../hooks/useBedarf'
 import type { AgentAction } from '../../data/agent/types'
 import type { AgentKontext } from '../../data/agent/intents'
 import PaperPlane from '../PaperPlane'
@@ -16,8 +16,10 @@ import QuickChips from './QuickChips'
 
 export default function AgentPanel({ onClose }: { onClose: () => void }) {
   const navigate = useNavigate()
+  const { pathname } = useLocation()
   const { profile } = useProfile()
   const { termine } = useTermine()
+  const bedarf = useAlleBedarfsErgebnisse()
   const [eingabe, setEingabe] = useState('')
   const [behandelt, setBehandelt] = useState<Set<string>>(new Set())
   const panelRef = useRef<HTMLDivElement>(null)
@@ -48,7 +50,28 @@ export default function AgentPanel({ onClose }: { onClose: () => void }) {
       done: progress.find(p => p.journeyId === jd.journey.id)?.done ?? {},
     })),
     termine,
-  }), [profile, journeyData, progress, termine])
+    bedarf,
+  }), [profile, journeyData, progress, termine, bedarf])
+
+  // Quick-Chips kontextabhängig (r3 §2.8): Standard-Trio; auf Task-Seiten
+  // zusätzlich „Erklär mir diesen Schritt", auf /termine „Was ist überfällig?".
+  const chips = useMemo(() => {
+    const liste: Array<{ label: string; frage: string }> = []
+    const taskMatch = pathname.match(/^\/journey\/([^/]+)\/task\/([^/]+)/)
+    if (taskMatch) {
+      const task = journeys.find(j => j.id === taskMatch[1])?.tasks.find(t => t.id === taskMatch[2])
+      if (task) liste.push({ label: 'Erklär mir diesen Schritt', frage: `Erklär mir „${task.title}"` })
+    }
+    if (pathname.startsWith('/termine')) {
+      liste.push({ label: 'Was ist überfällig?', frage: 'Was ist überfällig?' })
+    }
+    liste.push(
+      { label: 'Nächster Schritt', frage: 'Was ist mein nächster Schritt?' },
+      { label: 'Wie weit bin ich?', frage: 'Wie weit bin ich?' },
+      { label: 'Was kannst du?', frage: 'Was kannst du?' },
+    )
+    return liste
+  }, [pathname])
 
   // Fokus auf die Eingabe, Esc schließt, Tab bleibt im Panel
   useEffect(() => {
@@ -96,12 +119,12 @@ export default function AgentPanel({ onClose }: { onClose: () => void }) {
       geheZu(`/termine?${params.toString()}`)
       return
     }
-    // erledigt-vorschlag: direkt in die zentralen Stores schreiben
-    const key2 = `${action.journeyId}:${action.taskId}`
-    await progressStore.setItem(key2, true)
-    await progressDatesStore.setItem(key2, new Date().toISOString().slice(0, 10))
+    // erledigt-vorschlag: über die zentrale Fortschritts-Logik (Toggle wie im Hook)
+    const jetztErledigt = await markiereErledigt(action.journeyId, action.taskId)
     anhaengen({
-      text: `✓ Erledigt – „${action.titel}" ist abgehakt. Stark!`,
+      text: jetztErledigt
+        ? `✓ Erledigt – „${action.titel}" ist abgehakt. Stark!`
+        : `„${action.titel}" ist wieder als offen markiert.`,
       links: [{ label: 'Zum Fortschritt', route: '/fortschritt' }],
       quelle: 'lokal',
     })
@@ -174,7 +197,7 @@ export default function AgentPanel({ onClose }: { onClose: () => void }) {
 
         {/* Chips + Eingabe */}
         <div className="px-5 pt-2 pb-4 border-t border-pine/14 bg-cream-card flex flex-col gap-3">
-          <QuickChips onPick={frageSenden} disabled={antwortet} />
+          <QuickChips chips={chips} onPick={frageSenden} disabled={antwortet} />
           <form
             className="flex gap-2"
             onSubmit={e => { e.preventDefault(); frageSenden(eingabe) }}
