@@ -77,12 +77,15 @@ Runde 6 ([docs/konzept-r6.md](docs/konzept-r6.md)):
 ## Konzept v7 (Strategie, geplant)
 
 Runde 7 ([docs/konzept-r7-strategie.md](docs/konzept-r7-strategie.md)) ist
-eine Strategierunde statt einer Umsetzungsrunde: psychologisches Fundament
-(Angst/Ambiguität statt Langeweile als Kern-Diagnose), Gamification-Engine
-mit Core Loop und Anti-Dark-Pattern-Leitplanken, drei Marken-/Design-
-Richtungen, Monetarisierung ohne Provision (Förderung → Piloten → B2G) und
-Roadmap mit Experimenten. Grundlage für r8 (Design-Deep-Dive) und r9
-(MVP-Umbau).
+eine Strategierunde statt einer Umsetzungsrunde. Kurs: eine **schlanke
+Consumer-App**, deren Kern das Spielgefühl beim Abhaken echter To-dos und der
+**Brief-Entschlüsseler** für den Angst-Moment ist. Inhalte: psychologisches
+Fundament (Angst/Ambiguität statt Langeweile als Kern-Diagnose),
+Gamification-Engine mit Core Loop und Anti-Dark-Pattern-Leitplanken,
+„was echt hilft", drei Marken-/Design-Richtungen und Monetarisierung über
+eine **Pro-Version (Kosmetik/Komfort) statt Affiliate/Provision** – die
+eigentliche Hilfe bleibt gratis, gesponserter Zugang als spätere Option.
+Grundlage für r8 (Design-Deep-Dive) und r9 (MVP-Umbau).
 
 ## Deployment mit Netlify
 

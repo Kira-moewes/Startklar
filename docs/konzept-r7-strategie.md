@@ -1,19 +1,56 @@
 # Startklar – Konzept Runde 7: Strategie
 
-**Thema:** Pivot vom Werkzeug zum Spiel der Selbstwirksamkeit – psychologisches Fundament, Gamification-Engine, Markenrichtungen, Monetarisierung ohne Provision, Roadmap
+**Thema:** Pivot vom Werkzeug zum Spiel der Selbstwirksamkeit – schlanke Consumer-App: psychologisches Fundament, Gamification-Engine, Was-echt-hilft, Markenrichtungen, Monetarisierung (Pro-Version statt Provision), Roadmap
 **Status:** Strategie beschlossen – Grundlage für r8 (Design-Deep-Dive) und r9 (MVP-Umbau) · **Stand:** Juli 2026
 
 Anders als r3–r6 ist dies keine Umsetzungsrunde, sondern die Strategieschicht
-darüber. Kapitel 2 und 3 (Fundament + Core Loop) sind tief ausgearbeitet und
-entscheidungsreif; Kapitel 4–6 (Marke, Monetarisierung, Roadmap) sind Skizzen
-mit klarer Empfehlung, die in r8/r9 vertieft werden.
+darüber. **Kapitel 0 setzt den Rahmen** (schlanke Consumer-App, Pro-Version,
+kein Affiliate); Kapitel 2 und 3 (Fundament + Core Loop) sind tief
+ausgearbeitet und entscheidungsreif; Kapitel 4–6 (Marke, was echt hilft,
+Monetarisierung, Roadmap) sind Skizzen mit klarer Empfehlung für r8/r9.
 
 **Getroffene Entscheidungen (Kira, abgefragt):**
 
 - **Codebasis:** wird *nach* der Strategie entschieden → Kap. 6.4 liefert die Kriterien, keine Vorfestlegung.
 - **Kern-Persona:** 16–21 breit (Schulabgänger, Azubis, Erstauszieher) + **Care-Leaver-Stresstest** für jedes Feature.
-- **Marktzugang B2G/B2B:** keiner vorhanden, Kaltstart → Monetarisierungspfad muss ohne Kontakte funktionieren.
+- **Ausrichtung & Erlös:** siehe Kapitel 0 – schlanke Consumer-App, Pro-Version statt Provision.
 - **Tiefenstaffelung:** Fundament + Core Loop zuerst, Rest als begründete Skizze.
+
+---
+
+## 0. Kurskorrektur: schlanke Consumer-App (überschreibt frühere B2G-Lastigkeit)
+
+Eine frühere Fassung dieser Runde hat ein B2G-Vertriebsmodell (Jugendämter,
+Förderanträge, Kohorten-Dashboards) in den Mittelpunkt gestellt. Das war
+Overengineering für das, was startklar sein soll. **Entscheidung (Kira):**
+startklar ist eine **schlanke Consumer-App**, deren Kern das Spielgefühl beim
+Abhaken echter Erwachsen-To-dos ist – kein Behörden-Vertriebsprojekt.
+
+Was das konkret festlegt (und was in Kap. 5/6 unten ausgeführt ist):
+
+- **Erlösmodell:** eine **Pro-/Bezahlversion** (Kosmetik + Komfort) als Haupt-
+  und einzige *aktiv verfolgte* Quelle. Die eigentliche Hilfe bleibt immer
+  gratis (harte Paywall-Grenze, Kap. 5.1).
+- **Kein Affiliate, keine Werbung, keine Provision.** Bewusste Entscheidung
+  (Begründung Kap. 5.3). Positiver Nebeneffekt: der neutrale Anbieter-Vergleich
+  aus r4–r6 bleibt glaubwürdig – Neutralität ist jetzt Prinzip, nicht
+  Verkaufsargument.
+- **Förder-Tür bleibt offen, wird aber nicht gebaut.** Das Datenmodell bleibt
+  local-first und neutral, sodass später *gesponserter Zugang* durch eine
+  Stiftung/Kasse möglich ist (Kap. 5.4) – ohne dass wir jetzt einen Vertrieb
+  aufbauen.
+
+**Was aus den früheren Kapiteln gültig bleibt:** Kapitel 1–4 (psychologisches
+Fundament, SDT, Care-Leaver-Schutz, Anti-Dark-Pattern-Leitplanken, Core Loop)
+sind nicht B2G-spezifisch, sondern genau das Fundament dieser App – sie stehen
+unverändert. Nur Monetarisierung (Kap. 5) und Roadmap (Kap. 6) sind auf die
+schlanke Consumer-Ausrichtung korrigiert, und ein neues Kapitel 4b macht
+explizit, was Nutzern *wirklich* hilft und wie oft die App realistisch genutzt
+wird.
+
+> Hinweis zur Lesart: Wo frühere Passagen (z. B. in Kap. 1.4) B2G/Kohorten als
+> „Kernmodell" bezeichnen, gilt stattdessen dieses Kapitel 0. Solche Modelle
+> sind auf „später möglich, nicht aktiv" herabgestuft.
 
 ---
 
@@ -338,8 +375,9 @@ zuletzt da war, nur *wie weit* man gekommen ist.
 - **Nordstern:** Anzahl realer Erledigungen (Level-2-Ereignisse) und
   **Zeit von „Aufgabe taucht auf" bis „real erledigt"**.
 - **Wirkungs-Metrik:** Veränderung der Selbstwirksamkeits-Kurzskala
-  (Kap. 2.3) über 8–12 Wochen – lokal berechnet, opt-in anonym aggregiert →
-  das Kohorten-Dashboard aus Kapitel 5.
+  (Kap. 2.3) über 8–12 Wochen – lokal berechnet; die opt-in-anonyme
+  Aggregation ist nur für einen späteren gesponserten Zugang vorbereitet
+  (Kap. 5.4), nicht Kern des Consumer-Produkts.
 - **Guardrail:** Sessions/Tag wird beobachtet, aber nie optimiert. Alarm
   gilt dem umgekehrten Muster: hohe Nutzung bei niedriger Realwelt-
   Erledigung heißt, das Spiel frisst den Zweck – dann wird Mechanik
@@ -425,55 +463,144 @@ und wir das Ruhe-Register-Problem gestalterisch lösen.
 
 ---
 
-## 5. Monetarisierung ohne Provision (Skizze mit Empfehlung)
+## 4b. Was echt hilft – und wie oft die App genutzt wird
 
-### 5.1 Prinzip
+### 4b.1 Die unbequeme Wahrheit: seltene Nutzung, hoher Einsatz
 
-Die Zielgruppe hat wenig Geld und darf nicht Hauptzahler sein. Die vage
-Idee „Optimierung (junge Leute?)" ist in dieser Form verworfen: Sobald
-„optimierte junge Menschen" das Produkt sind, das ein Dritter kauft, sind
-die Nutzer Gegenstand statt Kunde – das ist die Logik von
-Überwachungssoftware und zerstört das Vertrauen, von dem alles andere
-abhängt. **Umgebaut zu:** Institutionen zahlen für *Zugang* für ihre jungen
-Leute und für *Wirkungsnachweis auf Kohortenebene* – anonym, aggregiert,
-opt-in, mit Mindest-Zellgrößen. Niemals Einblick in Einzelpersonen; die
-local-first-Architektur garantiert das technisch, nicht nur vertraglich.
+startklar ist keine Daily-Habit-App. Man richtet seine Krankenkasse *einmal*
+ein, zieht *einmal* um, klärt *einmal* die Steuer-ID. Die Aufgaben sind
+**episodisch**, nicht täglich. Zwei Konsequenzen:
 
-### 5.2 Modelle im Kaltstart-Check
+1. **Streaks & Daily-Engagement-Tricks passen nicht** – nicht nur ethisch
+   verboten (Kap. 2.5), sondern am realen Nutzungsrhythmus vorbei. Wer aus
+   einer Behörden-App eine Daily-App zwingt, verliert.
+2. **Der Erfolgsmaßstab ist nicht DAU.** Erfolg heißt: *wird geöffnet, wenn
+   ein angsteinflößender Brief kommt* + *wird weiterempfohlen*. Danach wird
+   gebaut und gemessen (Kap. 3.5, 6.1).
 
-| Modell | Wer zahlt, wofür | Kaltstart-Tauglichkeit | Urteil |
-|---|---|---|---|
-| **Stiftungen / Förderprogramme** | Stiftung/Programm finanziert Entwicklung + kostenlosen Zugang (Kandidaten-Kategorien: Jugendhilfe-Digitalisierung, Bildung, Teilhabe – z. B. DKJS, Aktion Mensch; konkrete Programme in eigener Recherche-Runde prüfen) | **Hoch** – Anträge brauchen keine Kontakte, sondern Konzept + Wirkungslogik (haben wir jetzt) | **Phase 1** |
-| **B2G: Jugendhilfe-Träger, Jugendämter, Kommunen** | Lizenz pro Einrichtung/Kommune (Jahres-Flatrate) für Zugang + Kohorten-Dashboard; rechtlicher Rahmen § 41/41a SGB VIII macht Verselbständigung zur Pflichtaufgabe | **Mittel** – lange Zyklen, braucht Referenzen und Wirkungsdaten; kalt nur als Discovery, nicht als Verkauf | **Phase 2–3, Kernmodell** |
-| **Schulen / Schulsozialarbeit** | Land/Träger/Förderverein; Unterrichtsmaterial-Paket + Klassenlizenz | **Niedrig–mittel** – kleinste Budgets, längste Wege; aber gute Sichtbarkeit | Später, über Projektmittel |
-| **Krankenkassen (Präventions-/Gesundheitskompetenz-Budgets, § 20 SGB V)** | Kasse finanziert Zugang als Präventionsleistung (rechtliche Passung prüfen) | Mittel | **Prüfen** in Phase 2 – Vorsicht: Neutralität bei gleichzeitigem Krankenkassen-Vergleich in der App sauber trennen |
-| **Freemium (Kosmetik/Komfort)** | Nutzer zahlen freiwillig kleine Beträge für zusätzliche Ausdrucks-Themes, nie für Fortschritt (Kap. 2.5) | Hoch, aber kleiner Erlös | Nebenerlös + Preisbereitschafts-Signal, nie Fundament |
-| **White-Label für Träger/Bundesländer** | Institution kauft angepasste Instanz | Niedrig (setzt Kernprodukt + Referenzen voraus) | Skalierungspfad ab Phase 3 |
-| **Sponsoring / Werbung** | Marken zahlen für Nähe zur Zielgruppe | Hoch verfügbar – aber vergiftet die Neutralität, die unser B2G-Kernasset ist | **Verworfen** (höchstens ungebrandete Projektförderung ohne jede Produktnähe) |
+### 4b.2 Was Nutzern wirklich hilft (absteigend nach Wert)
 
-### 5.3 Empfohlener Pfad (Kaltstart)
+1. **Der Brief-Entschlüsseler (Panik-Moment) – der Kern.** „Ich hab Post und
+   versteh sie nicht" → *Was ist das, ist es ein Notfall (meist nein), bis
+   wann, erster Schritt in 2 Minuten.* Ein **Schmerzmittel, kein Vitamin**:
+   echter, dringender, wiederkehrender (Briefe hören nie auf) Bedarf. Das ist
+   der eine Grund, die App nicht zu löschen. In Kap. 3.2 als „Loop B" geführt –
+   ab jetzt der MVP-Kern, nicht das Nebenfeature.
+2. **Angst-Runterfahren auf Abruf** – der eine Satz Einordnung (was, wie
+   lange, was ist das Schlimmste), den kein Behörden-PDF liefert.
+3. **Fristen-Gedächtnis** – die App merkt sich die Deadline, damit der Nutzer
+   es nicht muss; selbst eingerichtet, kein ungefragter Push (Autonomie, M1).
+4. **Vorausgefüllte Artefakte & Skripte** – der Steckbrief zum Mitnehmen,
+   „genau das sagst du am Telefon", „genau diese Unterlagen bringst du mit".
+   Der Wert ist nicht Information, sondern **die Aktivierungsenergie des
+   nächsten realen Schritts senken**.
+5. **„Mach's allein"-Skripte** – die wortwörtliche Formulierung fürs
+   Amtstelefonat, für alle ohne Eltern zum Fragen (Care Leaver, aber nicht
+   nur). Das Wertvollste und am wenigsten Angebotene.
+6. **Fortschritt, der sich wie echte Kompetenz anfühlt** – die „Das kann ich
+   jetzt"-Sammlung (Kap. 3.3). Macht das Erledigte behaltens- und teilenswert.
 
-1. **Phase 1 (jetzt–12 Monate): Förderung statt Umsatz.** 2–3 Förderanträge
-   auf Basis der Wirkungslogik aus Kapitel 2/3; parallel Wettbewerbe/Preise
-   (Sichtbarkeit + Legitimität). Die App bleibt für Endnutzer komplett
-   kostenlos.
-2. **Phase 2: Piloten gegen Daten statt Geld.** 2–3 Jugendhilfe-Träger
-   nutzen die App kostenlos und liefern dafür strukturiertes Feedback +
-   anonyme Wirkungsdaten + Referenz. Kaltakquise dafür beginnt schon in
-   Phase 1 als Discovery (Kap. 6.2, E4) – Träger-Gespräche sind zugleich
-   Produktforschung.
-3. **Phase 3: B2G-Lizenzen.** Jahres-Flatrate pro Einrichtung/Kommune;
-   Verkaufsargumente: Wirkungsdaten aus den Piloten, Provisionsfreiheit,
-   Datenschutz durch Architektur. Freemium-Kosmetik läuft als Nebenerlös.
+### 4b.3 Was *nicht* hilft (bewusst weglassen)
 
-### 5.4 Wirkungsnachweis-Produkt (das, was „Optimierung" ersetzt)
+- Generische Finanzbildungs-/Ratgeber-Inhalte – gibt es tausendfach, kein
+  Grund für *unsere* App.
+- Streaks / Daily Rewards – falscher Rhythmus + Kap. 2.5.
+- Breite statt Tiefe – lieber 1–2 Themen exzellent als 20 halbgar.
 
-Ein Kohorten-Dashboard für zahlende Institutionen: aggregierte, anonyme
-Kennzahlen (aktivierte Zugänge, erschlossene Skill-Gebiete, Realwelt-
-Erledigungen, Selbstwirksamkeits-Delta) – nur mit Opt-in der Nutzer, nur ab
-Mindest-Kohortengröße, ohne jede Einzelansicht. Die Betreuerin sieht „von
-euren 40 Jugendlichen haben 28 die Krankenkassen-Frage geklärt", nie „Lea
-hat nichts gemacht". Das ist verkaufbar, ehrlich und schützt die Nutzer.
+### 4b.4 Kernsatz, der Nutzen und Geld verbindet
+
+Was die App für die Nutzer wertvoll macht – ein Schmerzmittel für einen
+verletzlichen jungen Kohorten im Angst-Moment – ist *exakt* das, was eine
+Stiftung oder Krankenkasse später finanzieren würde. **Nutzer-Wert =
+förderbarer Wert.** Genau deshalb war Affiliate falsch: es wäre
+Wert-*Extraktion* gewesen, die gegen das Vertrauen arbeitet. Es den Nutzern
+recht zu machen, *ist* hier die Geld-Strategie.
+
+---
+
+## 5. Monetarisierung: Pro-Version statt Provision
+
+### 5.1 Prinzip: Nutzer zahlt für Ausdruck, nie für Hilfe
+
+Die Zielgruppe hat wenig Geld und darf nicht *gezwungen* werden zu zahlen.
+Deshalb die harte Grenze: **Die eigentliche Hilfe ist immer gratis** – alle
+To-dos, Anleitungen, Bedarfschecks, das Fristen-Gedächtnis und der
+Brief-Entschlüsseler (Kap. 4b.2). Bezahlt wird ausschließlich freiwillig für
+**Selbstausdruck und Komfort**. Und die verworfene Idee „Optimierung junger
+Leute" bleibt verworfen: Nutzer sind nie das Produkt, das ein Dritter kauft.
+
+### 5.2 Die Pro-Version (Haupt- und einzige aktiv verfolgte Quelle)
+
+Ein optionaler Kauf, der **Kosmetik + Komfort** freischaltet:
+
+- **Kosmetik:** zusätzliche Maskottchen-Varianten/Outfits, Themes, weitere
+  Farbwelten. Reiner Selbstausdruck (SDT-Autonomie, Kap. 2.2) – der Erlös
+  ist mit dem Produktziel deckungsgleich: Nutzer zahlen, *weil es Spaß macht*,
+  nicht weil wir sie irgendwohin geleitet haben.
+- **Komfort:** z. B. erweiterte Export-/Druck-Extras, mehr Personalisierung.
+
+**Feste Regeln (aus Kap. 2.5 und 3.4):**
+
+- **Kein Pay-to-win, keine Verlust-Mechanik.** Nichts, das Fähigkeit oder
+  Fortschritt hinter Zahlung legt.
+- **Bestehendes bleibt gratis.** Der freie Farb-Picker aus r6 bleibt frei;
+  Pro fügt *zusätzliche* Ausdrucks-Sets hinzu, nimmt nichts weg (sonst
+  Verlust-Framing).
+- **Form offen:** Einmalkauf vs. billiges Abo wird in r8/r9 entschieden – für
+  eine seltene-Nutzung-App (Kap. 4b.1) spricht viel für den **Einmalkauf**
+  (ein ehrlicher Kaufmoment statt Abo-Druck auf eine App, die man selten
+  öffnet).
+
+Ehrliche Erwartung: Bei einer kleinen App mit seltener Nutzung ist die
+Konversion frei→zahlend klein (Größenordnung 1–3 %). Pro deckt Hosting plus
+ein bisschen – es ist saubere, kleine Einnahme, kein Geschäftsmodell für sich.
+Das ist bewusst so gewählt.
+
+### 5.3 Warum kein Affiliate (bewusste Entscheidung)
+
+Affiliate-/Provisionslinks im Vergleich wären naheliegend, sind aber
+verworfen – aus drei Gründen:
+
+1. **Ökonomie.** Die Zielgruppe ist jung und klamm; die relevanten Aktionen
+   (Girokonto, Strom, Haftpflicht) sind seltene Einmal-Events mit dünner
+   Provision. Realistisch < 1–2 € pro Nutzer über die gesamte App-Lebenszeit.
+   Um damit spürbar Geld zu verdienen, bräuchte es zehntausende konvertierende
+   Nutzer – also genau das „riesig große Projekt", das wir nicht wollen.
+2. **Incentive-Korruption.** Sobald ein Link Geld bringt, kippt der
+   App-Anreiz leise von „bring dich fertig" zu „route dich zu einem
+   Abschluss". Das untergräbt den Kern (Kap. 3.5-Guardrail).
+3. **Minderjährige + Finanzprodukte.** Provisionswerbung für Konten/Kredite
+   an teils Minderjährige ist rechtlich und moralisch heikel.
+
+**Positiver Nebeneffekt:** Der neutrale Anbieter-Vergleich aus r4–r6 („nennt
+Anbieter, bewertet nicht, keine Provision, keine Links") bleibt vollständig
+glaubwürdig. Neutralität ist damit ein echtes Prinzip, kein Marketing.
+Ebenso verworfen: **Werbung** (korrumpiert, schlecht bei Minderjährigen,
+wertlos bei seltener Nutzung).
+
+### 5.4 Gesponserter Zugang (warm gehalten, nicht aktiv verfolgt)
+
+Die eine Geld-Alternative neben Pro, die es sich lohnt offenzuhalten – in
+schlanker Form, ohne Vertriebsapparat: Eine **Stiftung, eine Krankenkasse
+(Präventionsbudget, § 20 SGB V), eine Sparkassen- oder Stadtwerke-Stiftung**
+finanziert freien (Pro-)Zugang für eine Region oder Kohorte. *Ein* solcher
+Deal kann mehr bringen als tausende Pro-Käufe – und die App bleibt gratis für
+die, die nicht zahlen können. Das ist die schlanke, förder-artige Version von
+B2G, kein Enterprise-Sales.
+
+Damit das später möglich ist, verbauen wir jetzt zwei Dinge architektonisch
+*nicht*: die **local-first-Datenhoheit** und die Option einer **opt-in,
+anonymen, aggregierten** Wirkungsmessung (Selbstwirksamkeits-Delta, Kap. 2.3)
+ab Mindest-Kohortengröße – niemals Einzelansicht. Gebaut wird das erst, wenn
+ein konkreter Sponsor es braucht.
+
+**Nebenquellen (marginal, null Korruption):** ein „Unterstützer"-/Pay-what-
+you-want-Button; Förderpreise/Wettbewerbe als nicht-verwässernder Anschub
+fürs Bauen. **Später möglich, jetzt nicht:** Maskottchen-Merch (nebenbei
+Marketing), White-Label an Kasse/Verlag (setzt fertiges Produkt voraus).
+
+> Das frühere Kohorten-Dashboard-/B2G-Lizenzmodell lebt hier als „später
+> möglich" weiter, ist aber ausdrücklich nicht das Kernmodell (siehe Kap. 0).
 
 ---
 
@@ -481,50 +608,58 @@ hat nichts gemacht". Das ist verkaufbar, ehrlich und schützt die Nutzer.
 
 ### 6.1 Riskanteste Annahmen (absteigend nach Sprengkraft)
 
-- **A1:** Die Zielgruppe öffnet die App **im Angst-Moment** (Loop B) – nicht
-  nur in motivierten Momenten. (Wenn falsch: wir sind ein Nice-to-have.)
-- **A2:** Das Skill-/Spiel-Framing motiviert real stärker als das heutige
-  To-do-Framing. (Wenn falsch: der Pivot ist Kosmetik.)
-- **A3:** Eine Stiftung fördert bzw. ein Träger will das Kohorten-Modell.
-  (Wenn falsch: kein Geschäftsmodell ohne Provision.)
-- **A4:** Retention funktioniert ohne Streak-/Push-Druck. (Wenn falsch:
-  Zielkonflikt zwischen Ethik-Leitplanken und Überleben – dann lieber
-  Vertriebsweg über Institutionen als Dark Patterns.)
+- **A1:** Die Zielgruppe öffnet die App **im Angst-Moment** (Brief-Pfad,
+  Kap. 4b.2) – nicht nur in motivierten Momenten. (Wenn falsch: wir sind ein
+  Nice-to-have.)
+- **A2:** Das Spielgefühl beim Abhaken treibt **echtes Erledigen**, nicht nur
+  Nutzungszeit. (Wenn falsch: der Pivot ist Kosmetik ohne Wirkung.)
+- **A3:** Es gibt eine tragfähige Einnahme – jemand zahlt für Pro-Kosmetik
+  bzw. (später) eine Stiftung/Kasse finanziert gesponserten Zugang. (Wenn
+  falsch: bleibt Passionsprojekt statt selbsttragend – bewusst akzeptabel,
+  aber gut zu wissen.)
+- **A4:** Retention funktioniert ohne Streak-/Push-Druck – getragen vom
+  wiederkehrenden Angst-Moment, nicht von Daily Habits (Kap. 4b.1). (Wenn
+  falsch: der Wiederkommens-Grund fehlt – dann Kanal überdenken, nie Dark
+  Patterns.)
 - **A5:** Zwei Register in einer Marke funktionieren gestalterisch. (Wenn
-  falsch: Loop B braucht eine eigene, nüchterne Oberfläche.)
+  falsch: der Brief-Pfad braucht eine eigene, nüchterne Oberfläche.)
 
 ### 6.2 Experimente vor dem Bauen (klein, billig, vor r9)
 
-- **E1 „Brief-Test" (testet A1):** Landingpage/Insta-Kanal: „Schick uns den
-  Brief, den du nicht verstehst – wir erklären ihn dir in 24 h, kostenlos."
-  Wizard-of-Oz: wir antworten manuell mit dem Loop-B-Format. Misst, ob der
-  Angst-Moment Nachfrage erzeugt, und liefert echte Brief-Beispiele als
-  Content-Rohstoff.
+- **E1 „Brief-Test" (testet A1) – das wichtigste Experiment:** Landingpage/
+  Insta-Kanal: „Schick uns den Brief, den du nicht verstehst – wir erklären
+  ihn dir in 24 h, kostenlos." Wizard-of-Oz: wir antworten manuell im
+  Brief-Pfad-Format. Misst, ob der Angst-Moment echte Nachfrage erzeugt, und
+  liefert echte Brief-Beispiele als Content-Rohstoff.
 - **E2 Fake-Door-A/B (testet A2, A5, Richtungswahl):** zwei bis drei
   Landingpages mit identischem Angebot, unterschiedlichem Framing
   (Skill-Game vs. ruhige Hilfe; ggf. Richtung A/B/C-Moodboards) →
   Warteliste als Messgröße.
 - **E3 Papier-Prototyp Core Loop (testet A2):** Loop A als klickbarer
   Dummy/Papier mit 5–8 Personen aus der Zielgruppe, davon 1–2 Care Leaver
-  (Zugang über Careleaver-Initiativen/lokale Träger – bewusst auch als
-  erster B2G-Kontaktaufbau).
-- **E4 Träger-Discovery (testet A3):** 3–5 Kaltgespräche mit
-  Jugendhilfe-Trägern – ausdrücklich Forschung, kein Verkauf: Wie
-  verselbständigen sie heute? Was fehlt? Was dürfte ein Werkzeug kosten?
-- **E5 Förder-Scan (testet A3):** systematische Liste passender Programme
-  mit Fristen und Passung; daraus 2 Anträge.
+  (Zugang über Careleaver-Initiativen).
+- **E4 Preisbereitschaft Pro (testet A3):** im Prototyp/Fake-Door ein
+  „Pro"-Angebot einblenden (Preis + Inhalte) und Klick-/Kaufabsicht messen –
+  bevor irgendein Bezahlsystem gebaut wird.
+- *(Optional/später)* **Gesponserter-Zugang-Sondierung:** 2–3 lockere
+  Gespräche mit Stiftung/Kasse/kommunaler Stelle – erst, wenn ein Prototyp
+  existiert. Ausdrücklich kein Vertriebsaufbau jetzt.
 
 ### 6.3 MVP-Schnitt (r9, nach r8-Design)
 
-- **Ein Skill-Gebiet komplett im neuen Loop:** Kandidat „Krankenkasse &
-  Gesundheit" (existiert inhaltlich inkl. Bedarfscheck seit r6, betrifft
-  jeden ab 18, hat echte Briefe → Loop B andockbar). Alternative „Erste
-  Wohnung" ist emotionaler, aber größer – Entscheidung in r8 anhand E1-Daten.
-- **Loop B (Panik-Pfad)** für die häufigsten 5–10 Briefarten, notfalls
-  redaktionell statt automatisch beantwortet.
+- **Der Brief-Entschlüsseler (Panik-Pfad) als Kern** – für die häufigsten
+  5–10 Briefarten, notfalls redaktionell/manuell hinter den Kulissen statt
+  automatisch. Das ist das Feature, das die App unlöschbar macht (Kap. 4b.2).
+- **Ein Skill-Gebiet komplett im Core Loop:** Kandidat „Krankenkasse &
+  Gesundheit" (existiert inhaltlich inkl. Bedarfscheck seit r6, betrifft jeden
+  ab 18, hat echte Briefe → docken direkt an den Brief-Pfad an). Alternative
+  „Erste Wohnung" emotionaler, aber größer – Entscheidung in r8 anhand E1.
 - **Meisterschaft Level 1–2**, Sammlung, Landkarte nur für das eine Gebiet.
-- **Nicht im MVP:** Community/Vignetten, Level 3, Kohorten-Dashboard
-  (nur Datenmodell dafür vorbereiten: Opt-in-Flag + lokale Aggregation).
+- **Ein Pro-Kosmetik-Slot** (mind. ein freischalt-/kaufbares Set), um die
+  Bezahl-Mechanik früh real zu testen – ohne Funktion zu verstecken (Kap. 5.2).
+- **Nicht im MVP:** Community/Vignetten, Level 3, Wirkungsmessung/Dashboard
+  (nur neutral vorbereiten: Opt-in-Flag + lokale Aggregation als spätere
+  Option, Kap. 5.4).
 
 ### 6.4 Entscheidungskriterien Codebasis (bewusst offen, Entscheid nach r8)
 
@@ -545,18 +680,17 @@ wäre Verschwendung von sechs Runden Arbeit.
 
 ### 6.5 Rundenplan
 
-1. **Parallel ab sofort:** E1–E5 (kosten fast nichts, liefern Daten für alles Weitere).
+1. **Parallel ab sofort:** E1–E4 (kosten fast nichts, liefern Daten für alles Weitere); E1 „Brief-Test" zuerst.
 2. **r8 – Design-Deep-Dive:** eine Markenrichtung ausarbeiten (Moodboard, Klaro-Charakter, Register-Wechsel-Prototyp, Token-Mapping); Codebasis-Entscheid.
 3. **r9 – MVP-Umbau:** Kap. 6.3, gegen die Ethik-Leitplanken (2.5) reviewt.
-4. **Laufend:** Förder-/Discovery-Track (5.3 Phase 1→2).
+4. **Später, nur wenn sinnvoll:** gesponserter Zugang sondieren (5.4) – kein aktiver Track jetzt.
 
 ### Offene Fragen (ehrlich, weil nicht aus dem Schreibtisch beantwortbar)
 
 - Öffnet die Zielgruppe im Brief-Moment überhaupt *irgendeine* App – oder
-  gewinnt TikTok/Google? (E1 beantwortet das teilweise; sonst braucht Loop B
-  einen anderen Kanal, z. B. WhatsApp-Einstieg.)
-- Wie viel „Spiel" verträgt der B2G-Einkäufer? (Jugendamts-Entscheider
-  könnten Gamification als unseriös lesen – E4 muss das Wording testen:
-  „Selbstwirksamkeits-Training" verkauft vielleicht besser als „Spiel".)
-- Rechtliche Passung § 20 SGB V für Krankenkassen-Finanzierung (Kap. 5.2)
-  und die Neutralitäts-Trennung dabei.
+  gewinnt TikTok/Google? (E1 beantwortet das teilweise; sonst braucht der
+  Brief-Pfad einen anderen Kanal, z. B. WhatsApp-Einstieg.)
+- Zahlt jemand für reine Kosmetik/Komfort, wenn die Hilfe gratis ist – und
+  in welcher Form (Einmalkauf vs. Abo)? (E4 gibt ein erstes Signal.)
+- Rechtliche Passung § 20 SGB V für eine spätere Krankenkassen-Finanzierung
+  (Kap. 5.4) und die Neutralitäts-Trennung dabei.
