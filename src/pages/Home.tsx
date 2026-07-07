@@ -6,6 +6,7 @@ import { useCountUp } from '../hooks/useCountUp'
 import { istRelevant, relevanteTasks } from '../data/visibility'
 import PaperPlane from '../components/PaperPlane'
 import MarqueeTiles from '../components/MarqueeTiles'
+import Hero from '../components/Hero'
 
 export default function Home() {
   const { profile, loading } = useProfile()
@@ -30,8 +31,11 @@ export default function Home() {
 
   return (
     <div className="flex flex-col">
+      {/* Video-Hero (Higgsfield) — CTA scrollt zum Inhalt darunter */}
+      <Hero />
+
       {/* Hero – editorial, mehrschichtig */}
-      <section ref={heroRef} onMouseMove={heroMove} className="relative overflow-hidden px-7 pt-18 pb-16">
+      <section id="start" ref={heroRef} onMouseMove={heroMove} className="relative overflow-hidden px-7 pt-18 pb-16">
         <div className="relative h-[480px] flex items-center justify-center">
           {/* dünne Orbit-Linien */}
           <div aria-hidden="true" className="absolute top-1/2 left-1/2 size-[720px] -mt-[360px] -ml-[360px] border border-pine/10 rounded-full pointer-events-none" />
