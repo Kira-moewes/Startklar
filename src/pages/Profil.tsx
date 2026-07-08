@@ -8,6 +8,7 @@ import { useSettings, type Einstellungen } from '../hooks/useSettings'
 import { beschreibeSicherung, exportiereAlles, importiereAlles, liesSicherung, loescheAlles, type ExportDatei } from '../lib/datenExport'
 import { luminanz } from '../lib/farben'
 import { agentChatStore } from '../lib/stores'
+import PageHead from '../components/PageHead'
 
 function sichtbareSchritte(profile: Profile | null): number {
   return journeys
@@ -157,15 +158,14 @@ export default function Profil() {
 
   return (
     <div className="mx-auto max-w-[780px] w-full px-7 pt-14 pb-24">
-      <h1 className="m-0 font-serif font-normal text-[clamp(38px,5vw,60px)] text-pine" style={{ animation: 'rise .6s cubic-bezier(.2,.7,.2,1) both' }}>
-        Dein <em className="text-olive">Profil</em>
-      </h1>
-      <p className="mt-3 m-0 text-[17px] text-pine/70" style={{ animation: 'rise .6s cubic-bezier(.2,.7,.2,1) .05s both' }}>
-        Deine Angaben bestimmen, welche Schritte du siehst. Alles bleibt auf deinem Gerät.
-      </p>
+      <PageHead
+        eyebrow="Profil"
+        title={<>Dein <em className="text-olive">Profil</em></>}
+        intro="Deine Angaben bestimmen, welche Schritte du siehst. Alles bleibt auf deinem Gerät."
+      />
 
       {/* Antworten */}
-      <h2 className="mt-10 m-0 font-serif font-medium text-[28px] text-pine">Deine Antworten</h2>
+      <h2 className="mt-2 m-0 font-serif font-medium text-[28px] text-pine">Deine Antworten</h2>
       {aenderung && (
         <p role="status" className="mt-3 m-0 rounded-[14px] border border-olive/40 bg-olive/8 px-4 py-2.5 text-sm font-semibold text-olive">
           ✓ {aenderung}
@@ -257,15 +257,15 @@ export default function Profil() {
             </label>
           </Zeile>
           {einstellungen.akzent === 'eigene' && luminanz(einstellungen.akzentHex) > 0.75 && (
-            <p className="m-0 text-[13px] text-coral-deep">
+            <p className="m-0 text-[13px] text-olive-deep font-semibold">
               Sehr helle Farbe – Schrift und Kontrast leiden. Etwas kräftiger wählen wirkt besser.
             </p>
           )}
           <Zeile label="Vorschau" hinweis="So wirkt deine Farbe in der App.">
             <span className="flex items-center gap-3">
-              <span className="rounded-pill bg-olive text-on-akzent px-4 py-2 text-sm font-display font-semibold">Button</span>
-              <span className="rounded-pill bg-pine-mist text-olive px-3 py-1 text-xs font-display font-semibold">Chip</span>
-              <span className="h-2 w-24 rounded-pill bg-pine-mist overflow-hidden inline-block">
+              <span className="rounded-pill bg-olive text-on-akzent px-4 py-2 text-sm font-semibold">Button</span>
+              <span className="rounded-pill bg-pine/10 text-olive px-3 py-1 text-xs font-semibold">Chip</span>
+              <span className="h-2 w-24 rounded-pill bg-pine/12 overflow-hidden inline-block">
                 <span className="block h-full w-2/3 rounded-pill bg-olive" />
               </span>
             </span>
