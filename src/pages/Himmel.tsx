@@ -1,9 +1,11 @@
+import { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ersteWohnungJourney } from '../data'
 import { useSpiel } from '../hooks/useSpiel'
 import { gebietMeisterschaft, gebietXp, questLevel } from '../lib/spiel'
 import { useSettings } from '../hooks/useSettings'
 import Flieger from '../components/spiel/Flieger'
+import HimmelsTour from '../components/spiel/HimmelsTour'
 
 const GEBIET = ersteWohnungJourney.id
 
@@ -14,8 +16,14 @@ const VERSATZ = ['-14%', '12%', '-10%', '14%', '-8%', '10%']
 export default function Himmel() {
   const navigate = useNavigate()
   const { state } = useSpiel()
-  const { einstellungen } = useSettings()
+  const { einstellungen, setEinstellung, loading } = useSettings()
   const tasks = ersteWohnungJourney.tasks
+
+  // Beim ersten Himmel-Besuch: erst der Story-Intro. Danach die geführte Tour.
+  useEffect(() => {
+    if (!loading && !einstellungen.introGesehen) navigate('/intro', { replace: true })
+  }, [loading, einstellungen.introGesehen, navigate])
+  const zeigeTour = !loading && einstellungen.introGesehen && !einstellungen.tourGesehen
 
   const level = (id: string) => questLevel(state, GEBIET, id)
   const naechsterIndex = tasks.findIndex(t => level(t.id) < 2)
@@ -174,6 +182,8 @@ export default function Himmel() {
           </Link>
         </div>
       </div>
+
+      {zeigeTour && <HimmelsTour onFertig={() => setEinstellung('tourGesehen', true)} />}
     </div>
   )
 }

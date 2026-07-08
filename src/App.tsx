@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout'
 import Home from './pages/Home'
 import Himmel from './pages/Himmel'
+import Intro from './pages/Intro'
 import Post from './pages/Post'
 import Sammlung from './pages/Sammlung'
 import Dashboard from './pages/Dashboard'
@@ -37,6 +38,7 @@ export default function App() {
         <Route element={<Layout />}>
           <Route path="/" element={<StartRoute />} />
           <Route path="/himmel" element={<Himmel />} />
+          <Route path="/intro" element={<Intro />} />
           <Route path="/post" element={<Post />} />
           <Route path="/sammlung" element={<Sammlung />} />
           <Route path="/dashboard" element={<Dashboard />} />

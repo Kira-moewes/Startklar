@@ -188,6 +188,19 @@ html {
   from { opacity: 0; transform: translateY(24px); }
   to { opacity: 1; transform: none; }
 }
+@keyframes wink {
+  0%, 100% { transform: rotate(-28deg); }
+  50% { transform: rotate(-8deg); }
+}
+/* Intro „Über dem Nebel": langsam aufsteigender Nebel + sanftes Ein-/Ausblenden */
+@keyframes nebelWogen {
+  0%, 100% { transform: translateY(0) scaleX(1); opacity: 0.85; }
+  50% { transform: translateY(-10px) scaleX(1.05); opacity: 1; }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

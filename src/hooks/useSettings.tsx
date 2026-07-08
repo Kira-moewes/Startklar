@@ -15,6 +15,8 @@ export type Einstellungen = {
   welt: 'himmel'
   startseite: 'spiel' | 'klassisch' // Umschalter: neue Spiel-Startseite oder klassische Ansicht
   ausruestung: string // angelegtes Kosmetik-Set der Flieger-Figur ('keine' | Freischaltungs-ID)
+  introGesehen: boolean // Story-Intro „Über dem Nebel" schon gespielt?
+  tourGesehen: boolean // geführte Himmelstour schon gezeigt?
 }
 
 export const standardEinstellungen: Einstellungen = {
@@ -29,6 +31,8 @@ export const standardEinstellungen: Einstellungen = {
   welt: 'himmel',
   startseite: 'spiel',
   ausruestung: 'keine',
+  introGesehen: false,
+  tourGesehen: false,
 }
 
 // Hintergrundfarben der Themes (--t-bg in index.css) – für die PWA-/Browserleiste.
