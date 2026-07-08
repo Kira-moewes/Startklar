@@ -7,12 +7,21 @@ zusammengeführt (siehe Abschnitt 6).
 
 - **Repo:** `62nghwy7c9-maker/Startklar`
 - **Arbeits-Branch dieses Chats:** `claude/install-skills-plugins-b3yt6t`
-  (enthält jetzt **beides**: Design + Story-Welt)
-- **Offener PR:** #7 (Vercel-Vorschau, **nicht mergen** ohne Ansage). Der PR #6
-  des Story-Chats kann geschlossen werden – seine Arbeit steckt vollständig in #7.
+  (kanonischer Branch – enthält jetzt **alles**: Design + Story-Welt + 3D +
+  den gestärkten Brief-Pfad).
+- **Offener PR:** #7 (Vercel-Vorschau, **nicht mergen** ohne Ansage). PR #6
+  (Story-Chat) UND PR #8 (Brief-Pfad-Chat) sind damit überholt – ihre Arbeit
+  steckt vollständig in #7 und kann geschlossen werden.
+- **Brief-Pfad-Konsolidierung (neu):** Der gestärkte Brief-Entschlüsseler wurde
+  aus PR #8 hierher übernommen (zu-spät-Zweig, „Mach's allein"-Skript mit
+  Kopier-Button, Krisen-Weiche in `Post.tsx`; neue Felder + `krisenhilfen` in
+  `src/data/briefe.ts`; Test `src/data/briefe.test.ts`; ✉️-Einstieg in `Home.tsx`).
+  Fakten in `briefe.ts` (Fristen, Krisen-Nummern) vor Launch fachlich prüfen.
+  Jetzt **17 Tests** grün (vorher 9). **Wichtig:** Ab hier fährt nur EIN Chat
+  diesen Branch – kein paralleles Pushen mehr, sonst überschreiben sich die Stände.
 - **Stack:** React 19, Vite 8, Tailwind 4 (CSS-first), react-router 7,
   localforage, vite-plugin-pwa, seit dem Merge Three.js + @react-three/fiber.
-  Tests: Vitest (9 grün). Linter: oxlint.
+  Tests: Vitest (17 grün). Linter: oxlint.
 - **Ton:** Deutsch, per du. Ehrliche Kritik vor Zustimmung.
 
 ---
@@ -95,7 +104,7 @@ erweiterter Footer mit Markenblock + Sitemap.
 npm install          # nach dem Merge nötig (three, @react-three/fiber)
 npm run build        # muss grün sein
 npm run lint         # oxlint (nur Warnungen ok)
-npm test             # vitest run (9 grün)
+npm test             # vitest run (17 grün)
 npm run preview -- --port 4173 --strictPort   # lokale Vorschau
 ```
 - E2E/Screenshots optional mit `playwright-core` + Chromium unter
@@ -127,7 +136,7 @@ npm run preview -- --port 4173 --strictPort   # lokale Vorschau
   (Menü), `src/index.css` (beide Animations-Sets nebeneinander), `src/pages/Profil.tsx`
   (PageHead + Spiel-Einstellungen).
 - **Ergebnis:** eine App, beide Welten, Umschalter „Spiel/Klassisch" im Profil.
-  Build grün, 9 Tests grün, kein horizontaler Überlauf.
+  Build grün, 17 Tests grün, kein horizontaler Überlauf.
 - **Achtung Snapshot:** Es wurde ein Stand des Story-Branches gemergt. Wenn der
   Story-Chat *danach* weiter pusht, erneut mergen (Überschneidung ist winzig →
   einfach). Vor Weiterarbeit `git fetch` + `git log origin/<branch>` prüfen.

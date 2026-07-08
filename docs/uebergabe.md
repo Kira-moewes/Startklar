@@ -5,12 +5,13 @@ weiterzumachen – ohne den bisherigen Gesprächsverlauf. Lies zusätzlich für 
 „Warum": `docs/konzept-r7-strategie.md` und `docs/konzept-r8-himmel-papierflieger.md`.
 
 - **Repo:** `62nghwy7c9-maker/Startklar`
-- **Arbeits-Branch:** `claude/ue5-claude-code-setup-kd7erm` (NICHT `main`).
-  Hierher wurde die gesamte Startklar-Arbeit (Strategie r7, Spiel-Ebene r8, 3D)
-  gemergt; dieser Chat arbeitet ab jetzt ausschließlich hier. (Der frühere
-  Branch `claude/startklar-app-strategy-cq0dd4` ist Historie.)
-- **Offener PR:** #6 (Vercel-Vorschau, hängt an diesem Branch, **nicht mergen**
-  ohne Ansage)
+- **Kanonischer Branch (eine Wahrheit):** `claude/install-skills-plugins-b3yt6t`
+  (NICHT `main`). Enthält jetzt **alles**: Design-Redesign + Story-Welt „Über dem
+  Nebel" + 3D + den gestärkten Brief-Pfad. Für Branch-/PR-Details ist
+  `docs/uebergabe-design.md` das Master-Dokument. Historie/überholt: die Branches
+  `…startklar-app-strategy-cq0dd4` (PR #6) und `…ue5-claude-code-setup-kd7erm`
+  (PR #8) – ihre Arbeit steckt vollständig hier.
+- **Offener PR:** #7 (Vercel-Vorschau, **nicht mergen** ohne Ansage)
 - **Stack:** React 19, Vite 8, Tailwind 4 (CSS-first), react-router 7, localforage,
   vite-plugin-pwa, Three.js + @react-three/fiber. Tests: Vitest. Linter: oxlint.
 - **Ton der Zusammenarbeit:** Deutsch, per du, wie unter Mitgründern. Ehrliche
