@@ -118,30 +118,30 @@ export default function VergleichDetail() {
   const listboxId = 'anbieter-vorschlaege'
 
   return (
-    <div className="mx-auto max-w-4xl px-6 py-10 flex flex-col gap-8">
+    <div className="mx-auto max-w-4xl px-6 py-12 flex flex-col gap-8">
       <div>
-        <Link to="/vergleich" className="no-print text-sm text-pine underline underline-offset-2">← Alle Vergleiche</Link>
-        <div className="mt-3 flex items-start justify-between gap-4">
-          <h1 className="font-serif text-5xl font-normal text-pine">{kat.titel}</h1>
+        <Link to="/vergleich" className="no-print text-sm font-semibold text-olive hover:text-olive-deep transition">← Alle Vergleiche</Link>
+        <div className="mt-4 flex items-start justify-between gap-4">
+          <h1 className="m-0 font-serif font-normal text-[clamp(34px,5vw,54px)] leading-[1.05] text-pine" style={{ animation: 'rise .6s var(--ease-out) both' }}>{kat.titel}</h1>
           {angebote.length > 0 && (
             <button
               type="button"
               onClick={() => window.print()}
-              className="no-print shrink-0 rounded-pill border-[1.5px] border-pine/30 px-4 py-2 text-sm font-display font-semibold text-pine hover:border-pine transition"
+              className="no-print shrink-0 rounded-pill border-[1.5px] border-pine/30 px-4 py-2 text-sm font-semibold text-pine hover:border-pine transition"
             >
               Drucken / PDF
             </button>
           )}
         </div>
-        <p className="mt-2 text-lg text-ink/80">{kat.intro}</p>
+        <p className="mt-3 m-0 text-[17px] leading-relaxed text-pine/75" style={{ animation: 'rise .6s var(--ease-out) .06s both' }}>{kat.intro}</p>
       </div>
 
-      <section aria-label="Worauf achten" className="rounded-card border-2 border-pine-mist bg-cream p-6">
-        <h2 className="font-display text-lg font-semibold text-pine">Worauf du achten solltest</h2>
-        <ul className="mt-3 space-y-2 text-ink/80">
+      <section aria-label="Worauf achten" className="rounded-[22px] border border-pine/14 bg-cream-card p-6">
+        <h2 className="m-0 font-serif text-xl font-medium text-pine">Worauf du achten solltest</h2>
+        <ul className="mt-4 flex flex-col gap-2.5 text-pine/80">
           {kat.tipps.map((tipp, i) => (
             <li key={i} className="flex gap-3">
-              <span className="text-coral font-bold shrink-0">→</span>
+              <span className="text-olive font-bold shrink-0">→</span>
               <span>{tipp}</span>
             </li>
           ))}
@@ -149,14 +149,14 @@ export default function VergleichDetail() {
       </section>
 
       {hatBedarfsCheck(kategorieId) && !ergebnis && (
-        <section className="no-print rounded-card border-2 border-coral/40 bg-coral/5 p-6 flex flex-col sm:flex-row sm:items-center gap-4">
+        <section className="no-print rounded-[22px] border-[1.5px] border-olive/40 bg-olive/8 p-6 flex flex-col sm:flex-row sm:items-center gap-4">
           <div className="flex-1">
-            <h2 className="font-display text-lg font-semibold text-pine">Bevor du vergleichst</h2>
-            <p className="mt-1 text-ink/80">Ein paar kurze Fragen zeigen dir, ob und wie viel {kat.titel} du brauchst.</p>
+            <h2 className="m-0 font-serif text-xl font-medium text-pine">Bevor du vergleichst</h2>
+            <p className="mt-1.5 m-0 text-pine/80">Ein paar kurze Fragen zeigen dir, ob und wie viel {kat.titel} du brauchst.</p>
           </div>
           <Link
             to={`/vergleich/${kategorieId}/check`}
-            className="rounded-pill bg-coral px-6 py-3 font-display font-semibold text-on-akzent hover:bg-coral-deep transition shrink-0 text-center"
+            className="rounded-pill bg-olive px-6 py-3 font-semibold text-on-akzent hover:bg-olive-deep transition shrink-0 text-center"
           >
             Bedarf checken
           </Link>

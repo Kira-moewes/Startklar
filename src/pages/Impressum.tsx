@@ -1,14 +1,16 @@
+import PageHead from '../components/PageHead'
+
 const absaetze: string[] = [
   '[Impressum-Text folgt – von Kira, via eRecht24]',
 ]
 
 export default function Impressum() {
   return (
-    <div className="mx-auto max-w-3xl px-6 py-12">
-      <h1 className="font-serif text-4xl font-normal text-pine">Impressum</h1>
-      <div className="mt-6 flex flex-col gap-4">
+    <div className="mx-auto max-w-[720px] w-full px-7 pt-14 pb-24">
+      <PageHead eyebrow="Rechtliches" title="Impressum" />
+      <div className="flex flex-col gap-4">
         {absaetze.map((a, i) => (
-          <p key={i} className="text-ink/85 leading-relaxed">
+          <p key={i} className="m-0 text-pine/85 leading-relaxed">
             {a}
           </p>
         ))}
