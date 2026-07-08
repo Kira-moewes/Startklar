@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import PaperPlane from './PaperPlane'
+import KlaroPlane from './KlaroPlane'
 
 // Generischer Ein-Frage-pro-Schritt-Wizard. Aus dem Onboarding extrahiert,
 // damit ihn auch die Bedarfschecks nutzen können. Optik/Verhalten identisch
@@ -52,33 +52,36 @@ export default function FragenWizard({ fragen, initial, abschlussLabel = 'Späte
           style={{ left: `${pct}%`, transitionTimingFunction: 'cubic-bezier(.2,.7,.2,1)' }}
         >
           <div style={{ transform: 'translateX(-40%)', filter: 'drop-shadow(0 6px 10px rgba(40,54,24,.25))' }}>
-            <PaperPlane width={46} height={37} shadow={false} />
+            <KlaroPlane width={46} height={37} shadow={false} />
           </div>
         </div>
       </div>
 
-      <p className="mt-8.5 m-0 text-[13px] font-semibold tracking-[.18em] uppercase text-olive" style={{ animation: 'rise .6s cubic-bezier(.2,.7,.2,1) .05s both' }}>
-        Frage {index + 1} von {fragen.length}
-      </p>
-      <h1 className="mt-3 m-0 font-serif font-normal text-[clamp(30px,4.4vw,44px)] leading-[1.15] text-pine" style={{ animation: 'rise .6s cubic-bezier(.2,.7,.2,1) .1s both' }}>
-        {frage.titel}
-      </h1>
-      {frage.hinweis && <p className="mt-3 text-base text-pine/65">{frage.hinweis}</p>}
+      {/* Frageblock tritt bei jedem Wechsel neu und gestaffelt ein */}
+      <div key={index}>
+        <p className="mt-8.5 m-0 text-[13px] font-semibold tracking-[.18em] uppercase text-olive" style={{ animation: 'rise .5s var(--ease-out) both' }}>
+          Frage {index + 1} von {fragen.length}
+        </p>
+        <h1 className="mt-3 m-0 font-serif font-normal text-[clamp(30px,4.4vw,44px)] leading-[1.15] text-pine" style={{ animation: 'rise .55s var(--ease-out) .06s both' }}>
+          {frage.titel}
+        </h1>
+        {frage.hinweis && <p className="mt-3 text-base text-pine/65" style={{ animation: 'rise .55s var(--ease-out) .1s both' }}>{frage.hinweis}</p>}
 
-      <div className="mt-8 flex flex-col gap-3" role="group" aria-label={frage.titel}>
-        {frage.optionen.map((o, i) => (
-          <button
-            key={o.wert}
-            onClick={() => waehle(o.wert)}
-            className={`min-h-[58px] text-left rounded-2xl px-5.5 py-4 text-[17px] font-semibold border-[1.5px] transition hover:translate-x-1.5
-              ${gewaehlt === o.wert
-                ? 'border-olive bg-olive text-cream'
-                : 'border-pine/20 bg-cream-card text-pine'}`}
-            style={{ animation: `rise .5s cubic-bezier(.2,.7,.2,1) ${i * 0.05}s both` }}
-          >
-            {o.label}
-          </button>
-        ))}
+        <div className="mt-8 flex flex-col gap-3" role="group" aria-label={frage.titel}>
+          {frage.optionen.map((o, i) => (
+            <button
+              key={o.wert}
+              onClick={() => waehle(o.wert)}
+              className={`min-h-[58px] text-left rounded-2xl px-5.5 py-4 text-[17px] font-semibold border-[1.5px] transition-[transform,border-color,background-color,color] duration-200 hover:translate-x-1.5 active:scale-[.99]
+                ${gewaehlt === o.wert
+                  ? 'border-olive bg-olive text-cream'
+                  : 'border-pine/20 bg-cream-card text-pine hover:border-olive/60'}`}
+              style={{ animation: `rise .5s var(--ease-out) ${0.12 + i * 0.05}s both` }}
+            >
+              {o.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="mt-9 flex justify-between items-center">
