@@ -88,6 +88,21 @@ export default function Home() {
             </Link>
           </div>
         </div>
+
+        {/* Angst-Moment-Einstieg – auch ohne Spiel-Modus erreichbar (r7 Kap. 4b.2:
+            der Brief-Pfad ist der Kern, nicht das Nebenfeature). Ruhiger Ton. */}
+        <Link
+          to="/post"
+          className="relative mt-8 mx-auto max-w-[1200px] w-full flex items-center gap-4 rounded-[20px] border-[1.5px] border-pine/20 bg-cream-card/70 px-6 py-5 hover:border-olive transition"
+          style={{ animation: 'rise 1s cubic-bezier(.2,.7,.2,1) .3s both' }}
+        >
+          <span className="grid place-items-center size-12 flex-none rounded-full bg-olive/12 text-2xl">✉️</span>
+          <span className="flex-1">
+            <span className="block text-[16.5px] font-semibold text-pine">Post bekommen und nicht verstanden?</span>
+            <span className="block text-[14px] text-pine/65">Wir schauen gemeinsam drauf – ruhig, kein Notfall, ein Schritt nach dem anderen.</span>
+          </span>
+          <span className="flex-none text-olive font-semibold text-lg">→</span>
+        </Link>
       </section>
 
       {/* Dunkles Band: Marquee + Zahlen + Bereiche */}

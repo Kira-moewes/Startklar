@@ -5,8 +5,12 @@ weiterzumachen – ohne den bisherigen Gesprächsverlauf. Lies zusätzlich für 
 „Warum": `docs/konzept-r7-strategie.md` und `docs/konzept-r8-himmel-papierflieger.md`.
 
 - **Repo:** `62nghwy7c9-maker/Startklar`
-- **Arbeits-Branch:** `claude/startklar-app-strategy-cq0dd4` (NICHT `main`)
-- **Offener PR:** #6 (nur für die Vercel-Vorschau, **nicht mergen** ohne Ansage)
+- **Arbeits-Branch:** `claude/ue5-claude-code-setup-kd7erm` (NICHT `main`).
+  Hierher wurde die gesamte Startklar-Arbeit (Strategie r7, Spiel-Ebene r8, 3D)
+  gemergt; dieser Chat arbeitet ab jetzt ausschließlich hier. (Der frühere
+  Branch `claude/startklar-app-strategy-cq0dd4` ist Historie.)
+- **Offener PR:** #6 (Vercel-Vorschau, hängt an diesem Branch, **nicht mergen**
+  ohne Ansage)
 - **Stack:** React 19, Vite 8, Tailwind 4 (CSS-first), react-router 7, localforage,
   vite-plugin-pwa, Three.js + @react-three/fiber. Tests: Vitest. Linter: oxlint.
 - **Ton der Zusammenarbeit:** Deutsch, per du, wie unter Mitgründern. Ehrliche
@@ -60,6 +64,12 @@ Spiel-Ebene „Über dem Nebel", komplett additiv, für das Skill-Gebiet
   Schalter im Profil, aus dem PWA-Precache ausgenommen.
 - **Brief-Entschlüsseler** `/post`: kuratierte Briefarten (Anmeldung, Rundfunk-
   beitrag, Nebenkosten, Mietvertrag, Strom), ruhiges „Morgenhimmel"-Register.
+  *Gestärkt (Folge-Runde):* je Brief ein schamfreier „Schon zu spät?"-Zweig
+  (r7 Kap. 2.4) und ein wörtliches „Mach's allein"-Skript mit Kopier-Button
+  (r7 Kap. 4b.2); eine ruhige Krisen-Weiche mit echten kostenlosen Hilfen;
+  der Angst-Moment-Einstieg ist jetzt auch auf der klassischen Home sichtbar
+  (nicht mehr nur unter `/himmel`). Inhalte in `src/data/briefe.ts`
+  (Fakten vor Launch prüfen), Test `src/data/briefe.test.ts`.
 - **Intro-Film** `/intro`: animierter Prolog (Heiminsel überm Nebel, Fiete
   landet, Klaro auf Funk). Skippbar, reduced-motion, wiederholbar (Profil).
 - **Geführte Tour**: Fiete/Klaro erklären beim ersten Himmel-Besuch die App.
@@ -124,7 +134,9 @@ npm test         # vitest run (aktuell 9 Tests grün)
 Chats lassen sich nicht als Gespräch zusammenführen – nur ihre Arbeit über Git.
 **Wenn ein zweiter Chat parallel am Repo arbeitet:** unbedingt auf einem
 *eigenen* Branch, sonst überschreiben sich die Pushes auf
-`claude/startklar-app-strategy-cq0dd4`. Zusammenführen am Ende per Merge/PR.
+`claude/ue5-claude-code-setup-kd7erm`. Der UE5-Setup-Chat z. B. arbeitet auf
+seinem eigenen Branch und macht bei Bedarf einen eigenen PR (dann bekommt er
+dort denselben Vercel-Preview-Mechanismus). Zusammenführen am Ende per Merge/PR.
 Vor dem Weiterarbeiten immer `git fetch` + `git log origin/<branch>` prüfen,
 ob jemand anderes gepusht hat.
 
@@ -133,7 +145,7 @@ ob jemand anderes gepusht hat.
 ## 8. Kurz-Prompt zum Einfügen in den neuen Chat
 
 > Arbeite am Repo `62nghwy7c9-maker/Startklar`, Branch
-> `claude/startklar-app-strategy-cq0dd4` (nicht main). Lies zuerst
+> `claude/ue5-claude-code-setup-kd7erm` (nicht main). Lies zuerst
 > `docs/uebergabe.md` vollständig, dann `docs/konzept-r7-strategie.md` und
 > `docs/konzept-r8-himmel-papierflieger.md`. Danach machen wir genau dort weiter.
 > Ton: Deutsch, per du, wie unter Mitgründern – ehrliche Kritik vor Zustimmung.
