@@ -120,7 +120,7 @@ function TileGroup() {
 export default function MarqueeTiles() {
   return (
     <div aria-hidden="true" className="overflow-hidden pt-2 pb-14">
-      <div className="flex gap-5 w-max" style={{ animation: 'mq 45s linear infinite' }}>
+      <div className="mq-track flex gap-5 w-max" style={{ animation: 'mq 45s linear infinite' }}>
         <TileGroup />
         <TileGroup />
       </div>

@@ -85,6 +85,12 @@
   --animate-rise: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
+/* Motion-Tokens: eine gemeinsame Kurve/Rhythmik für alle Übergänge */
+:root {
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 body {
   font-family: var(--font-body);
   background: var(--color-cream);
@@ -159,6 +165,66 @@ html {
 @keyframes panel-in {
   from { opacity: 0; transform: translateY(24px); }
   to { opacity: 1; transform: none; }
+}
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes cueBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+@keyframes heroWord {
+  to { transform: none; }
+}
+@keyframes heroFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Scroll-Reveal (siehe src/components/Reveal.tsx) */
+.reveal {
+  opacity: 0;
+  transform: translateY(var(--reveal-y, 28px));
+  transition:
+    opacity 0.9s var(--ease-expo),
+    transform 0.9s var(--ease-expo);
+}
+.reveal-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Marquees pausieren unter dem Zeiger */
+.mq-track:hover {
+  animation-play-state: paused;
+}
+
+/* Navigation: Unterstrich wächst von links */
+.nav-u {
+  position: relative;
+}
+.nav-u::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 100%;
+  bottom: -3px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--t-akzent);
+  transition: right 0.32s var(--ease-out);
+}
+.nav-u:hover::after,
+.nav-u-on::after {
+  right: 0;
+}
+
+/* Sichtbarer Tastatur-Fokus, markenfarben */
+:focus-visible {
+  outline: 2px solid var(--t-akzent);
+  outline-offset: 3px;
+  border-radius: 6px;
 }
 
 @media (prefers-reduced-motion: reduce) {
