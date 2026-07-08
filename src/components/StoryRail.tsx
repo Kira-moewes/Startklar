@@ -6,12 +6,10 @@ import KlaroPlane from './KlaroPlane'
 // die Route entlang und neigt sich je nach Scroll-Geschwindigkeit —
 // alles transform-basiert, in einem einzigen rAF-Loop.
 const KAPITEL = [
-  { id: 'start', label: 'Prolog · Abflug' },
-  { id: 'bereiche', label: 'Kapitel 01 · Deine Bereiche' },
-  { id: 'ablauf', label: 'Kapitel 02 · So funktioniert’s' },
-  { id: 'werkzeuge', label: 'Kapitel 03 · Deine Werkzeuge' },
-  { id: 'begleiter', label: 'Kapitel 04 · Dein Begleiter' },
-  { id: 'haltung', label: 'Kapitel 05 · Unsere Haltung' },
+  { id: 'ablauf', label: 'Prolog · So geht’s' },
+  { id: 'werkzeuge', label: 'Kapitel 01 · Deine Werkzeuge' },
+  { id: 'begleiter', label: 'Kapitel 02 · Dein Begleiter' },
+  { id: 'haltung', label: 'Kapitel 03 · Unsere Haltung' },
   { id: 'finale', label: 'Finale · Bereit?' },
 ]
 

@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout'
 import Home from './pages/Home'
+import SoGehts from './pages/SoGehts'
 import Dashboard from './pages/Dashboard'
 import JourneyOverview from './pages/JourneyOverview'
 import TaskDetail from './pages/TaskDetail'
@@ -20,6 +21,7 @@ export default function App() {
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
+          <Route path="/so-gehts" element={<SoGehts />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/fortschritt" element={<Dashboard />} />
           <Route path="/suche" element={<Suche />} />
