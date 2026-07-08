@@ -29,3 +29,6 @@ startklar-dist.zip
 
 # Python-Bytecode (Skill-Skripte)
 __pycache__/
+
+# Python-Bytecode aus Skill-Skripten
+__pycache__/

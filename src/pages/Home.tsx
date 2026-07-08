@@ -89,6 +89,7 @@ export default function Home() {
   const { profile, loading } = useProfile()
   const heroRef = useRef<HTMLElement>(null)
   const statsView = useInView<HTMLDivElement>()
+  const finaleView = useInView<HTMLElement>('0px 0px -30% 0px')
 
   const sichtbar = journeys
     .map(j => ({ journey: j, tasks: relevanteTasks(j, profile) }))
@@ -384,8 +385,22 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Schluss-CTA */}
-      <section id="finale" className="mx-auto max-w-[1200px] w-full px-7 pb-20 scroll-mt-16">
+      {/* Schluss-CTA – Klaro fliegt mit Looping ein */}
+      <section id="finale" ref={finaleView.ref} className="mx-auto max-w-[1200px] w-full px-7 pb-20 scroll-mt-16">
+        <div aria-hidden="true" className="relative mx-auto hidden md:block w-[900px] max-w-full h-[240px] -mb-6">
+          <svg viewBox="0 0 900 240" width="900" height="240" className={`finale-pfad absolute inset-0 ${finaleView.inView ? 'flieg' : ''}`}>
+            <path
+              d="M -60 200 C 100 130, 300 70, 440 130 C 480 148, 500 160, 520 160 C 575 160, 575 60, 520 60 C 465 60, 465 160, 520 160 C 560 160, 700 170, 880 120"
+              fill="none"
+              stroke="color-mix(in srgb, var(--t-akzent) 40%, transparent)"
+              strokeWidth="2"
+              strokeDasharray="7 9"
+            />
+          </svg>
+          <div className={`finale-flug absolute top-0 left-0 ${finaleView.inView ? 'flieg' : ''}`}>
+            <KlaroPlane width={64} height={51} shadow={false} />
+          </div>
+        </div>
         <Reveal>
           {!loading && !profile && (
             <div className="bg-olive text-cream rounded-[30px] px-9 py-14 md:px-14 flex flex-wrap items-center justify-between gap-8">

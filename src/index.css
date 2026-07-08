@@ -225,6 +225,33 @@ html {
   will-change: transform;
 }
 
+/* Finale-Szene: Klaro fliegt mit Looping ein, sobald das Kapitel sichtbar
+   wird. Motion-Path (offset-path) nur wo unterstützt; die gestrichelte
+   Flugspur blendet parallel ein. */
+@supports (offset-path: path('M 0 0 L 1 1')) {
+  .finale-flug {
+    offset-path: path('M -60 200 C 100 130, 300 70, 440 130 C 480 148, 500 160, 520 160 C 575 160, 575 60, 520 60 C 465 60, 465 160, 520 160 C 560 160, 700 170, 880 120');
+    offset-rotate: auto 21deg;
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  .finale-flug.flieg {
+    animation: finaleFlug 3.6s cubic-bezier(0.45, 0.05, 0.3, 1) 0.2s both;
+  }
+}
+@keyframes finaleFlug {
+  0% { offset-distance: 0%; opacity: 0; }
+  6% { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 1; }
+}
+.finale-pfad {
+  opacity: 0;
+  transition: opacity 1.4s var(--ease-out) 0.2s;
+}
+.finale-pfad.flieg {
+  opacity: 1;
+}
+
 /* Navigation: Unterstrich wächst von links */
 .nav-u {
   position: relative;
