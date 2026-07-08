@@ -333,6 +333,9 @@ export default function Profil() {
               </Link>
             </span>
           </Zeile>
+          <Zeile label="3D-Flugwelt" hinweis="Die räumliche Himmels-Animation. Auf schwachen Geräten oder zum Akkusparen ausschalten – dann zeigt die App eine ruhige 2D-Ansicht.">
+            <Schalter an={einstellungen.effekte3d} onToggle={() => setEinstellung('effekte3d', !einstellungen.effekte3d)} label="3D-Flugwelt" />
+          </Zeile>
         </Gruppe>
 
         <Gruppe titel="Klaro (KI-Assistent)">

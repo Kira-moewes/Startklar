@@ -6,6 +6,7 @@ import { gebietMeisterschaft, gebietXp, questLevel } from '../lib/spiel'
 import { useSettings } from '../hooks/useSettings'
 import Flieger from '../components/spiel/Flieger'
 import HimmelsTour from '../components/spiel/HimmelsTour'
+import FlugWeltHero from '../components/spiel/FlugWeltHero'
 
 const GEBIET = ersteWohnungJourney.id
 
@@ -72,7 +73,10 @@ export default function Himmel() {
         />
       ))}
 
-      <div className="relative mx-auto max-w-[720px] px-6 pt-10 pb-28">
+      {/* 3D-Flugwelt als Hero (mit 2D-Fallback für schwache Geräte) */}
+      <FlugWeltHero className="h-[42vh] min-h-[280px] w-full" />
+
+      <div className="relative mx-auto max-w-[720px] px-6 pt-6 pb-28">
         {/* Kopf: Begrüßung + Fortschritt */}
         <header style={{ animation: 'rise .6s cubic-bezier(.2,.7,.2,1) both' }}>
           <p className="m-0 text-[13px] font-semibold uppercase tracking-[0.16em] text-pine/60">
