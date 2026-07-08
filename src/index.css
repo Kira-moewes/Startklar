@@ -65,10 +65,13 @@
  * automatisch dem bestehenden Hell/Dunkel-Schalter.
  */
 :root[data-welt='himmel'] {
-  --sky-1: #F7ECC9;   /* oberer, warmer Himmel */
-  --sky-2: #F1D9A8;   /* Horizontglühen */
-  --sky-3: #E8C48C;   /* unterer Rand */
-  --cloud: #FFFDF4;
+  /* Ruhiger, tieferer Dämmerhimmel – bewusst weniger hell/blass, damit die
+     Seite zur cremig-erdigen Markenwelt (cream/pine/olive) passt statt hell
+     herauszustechen. */
+  --sky-1: #DFD3B0;   /* oberer Himmel, entsättigtes Warm */
+  --sky-2: #CBB68A;   /* Horizontglühen, tiefer */
+  --sky-3: #B39C74;   /* unterer Rand, erdiger Übergang zur Creme-Welt */
+  --cloud: #F3EEDD;
   --insel: #92A758;   /* Inselgras */
   --insel-tief: #6E7F42;
   --fels: #7C6A52;    /* Felskante der schwebenden Insel */

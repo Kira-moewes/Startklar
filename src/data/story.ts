@@ -29,7 +29,7 @@ export const introBeats: IntroBeat[] = [
   {
     sprecher: 'fiete',
     name: 'Fiete',
-    text: 'Das da unten nennen sie „das echte Leben". Sieht bodenlos aus. Ist es nicht – du siehst den Boden nur noch nicht.',
+    text: 'Sieht bodenlos aus, nicht?',
     szene: 'nebel',
   },
   {

@@ -6,7 +6,6 @@ import { useProfile } from '../hooks/useProfile'
 import { useAllProgress } from '../hooks/useProgress'
 import { useTermine } from '../hooks/useTermine'
 import { useCountUp } from '../hooks/useCountUp'
-import Heatmap from '../components/ui/Heatmap'
 import Reveal from '../components/Reveal'
 import PageHead from '../components/PageHead'
 import type { Task } from '../data/types'
@@ -54,17 +53,23 @@ export default function Dashboard() {
   const animErledigt = useCountUp(stats.totalDone)
   const animOffen = useCountUp(stats.totalTasks - stats.totalDone)
 
-  // Echte Aktivität: erledigte Aufgaben der letzten 5 Wochen, ein Feld pro Tag.
-  const heatmapData = useMemo(() => {
-    const cellCount = 35
-    const cells = new Array(cellCount).fill(0)
-    const today = new Date()
-    for (const iso of Object.values(dates)) {
-      const diff = Math.floor((today.getTime() - new Date(iso + 'T00:00:00').getTime()) / 86400000)
-      if (diff >= 0 && diff < cellCount) cells[cellCount - 1 - diff] += 1
+  // Aktivität als anschaulicher „Flugtage"-Streifen: die letzten 7 Tage, ein
+  // Tag = ein Feld. Ein Flieger erscheint an jedem Tag, an dem etwas erledigt
+  // wurde – konkret und ermutigend statt abstraktes Raster.
+  const flugTage = useMemo(() => {
+    const namen = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa']
+    const heute = new Date()
+    const tage: Array<{ label: string; count: number; istHeute: boolean }> = []
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(heute)
+      d.setDate(heute.getDate() - i)
+      const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+      const count = Object.values(dates).filter(v => v === iso).length
+      tage.push({ label: namen[d.getDay()], count, istHeute: i === 0 })
     }
-    return cells
+    return tage
   }, [dates])
+  const aktiveTage = flugTage.filter(t => t.count > 0).length
 
   const zuletztErledigt = useMemo(() => {
     const list: Array<{ journeyId: string; task: Task; datum: string }> = []
@@ -238,13 +243,35 @@ export default function Dashboard() {
       {stats.totalDone > 0 && (
         <Reveal className="block">
           <section>
-            <h2 className="mt-13 m-0 font-serif font-medium text-[28px] text-pine">Aktivität</h2>
-            <div className="mt-5">
-              <Heatmap
-                data={heatmapData}
-                caption="Ein Feld pro Tag, kräftiger = mehr erledigt. (Letzte 5 Wochen)"
-                cols={7}
-              />
+            <h2 className="mt-13 m-0 font-serif font-medium text-[28px] text-pine">Deine Flugtage</h2>
+            <div className="mt-5 rounded-[22px] bg-cream-card border border-pine/14 px-6 py-5">
+              <p className="m-0 text-[15.5px] leading-relaxed text-pine/75">
+                {aktiveTage > 0 ? (
+                  <>
+                    Diese Woche an <strong className="text-olive">{aktiveTage} {aktiveTage === 1 ? 'Tag' : 'Tagen'}</strong> etwas geschafft
+                    {aktiveTage >= 3 ? ' – richtig stark.' : '. Jeder Tag zählt.'}
+                  </>
+                ) : (
+                  'Diese Woche noch nichts abgehakt – ein einziger kleiner Schritt bringt deinen Flieger wieder in die Luft.'
+                )}
+              </p>
+              <div className="mt-4 flex justify-between gap-1.5" role="img" aria-label={`An ${aktiveTage} der letzten 7 Tage etwas erledigt.`}>
+                {flugTage.map((t, i) => (
+                  <div key={i} className="flex flex-1 flex-col items-center gap-1.5">
+                    <div
+                      className={`grid aspect-square w-full max-w-[46px] place-items-center rounded-[14px] border text-lg transition ${
+                        t.count > 0
+                          ? 'bg-olive text-on-akzent border-olive shadow-[0_6px_14px_rgba(40,54,24,.16)]'
+                          : `bg-pine/5 border-pine/12 text-pine/25 ${t.istHeute ? 'border-dashed border-olive/50' : ''}`
+                      }`}
+                    >
+                      {t.count > 0 ? '✈' : '·'}
+                    </div>
+                    <span className={`text-[12px] ${t.istHeute ? 'font-bold text-olive' : 'text-pine/50'}`}>{t.label}</span>
+                  </div>
+                ))}
+              </div>
+              <p className="mt-3.5 m-0 text-[12.5px] text-pine/45">Ein ✈ = ein Tag, an dem du etwas erledigt hast. (Letzte 7 Tage)</p>
             </div>
           </section>
         </Reveal>
