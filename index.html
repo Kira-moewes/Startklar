@@ -17,6 +17,7 @@
         r.setAttribute('data-akzent', e.akzent || 'olive')
         r.setAttribute('data-schrift', e.schrift || 'm')
         r.setAttribute('data-motion', e.wenigerAnimation ? 'reduziert' : 'normal')
+        r.setAttribute('data-welt', e.welt || 'himmel')
         var tc = document.querySelector('meta[name="theme-color"]')
         if (tc) tc.setAttribute('content', dunkel ? '#161C10' : '#FEFAE0')
         if (e.akzent === 'eigene' && e.eigene) {

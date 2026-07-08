@@ -10,6 +10,11 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
+      // Die schwere 3D-Welt NICHT beim Installieren vorab laden – sie kommt
+      // erst bei Bedarf über das Netz (datensparsam auf schwachen Anschlüssen).
+      workbox: {
+        globIgnores: ['**/FlugWelt3D-*.js'],
+      },
       manifest: {
         name: 'Startklar',
         short_name: 'Startklar',
