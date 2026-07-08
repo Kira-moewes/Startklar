@@ -200,6 +200,31 @@ html {
   animation-play-state: paused;
 }
 
+/* Klaro-Charakter: Blinzeln + Pupillen folgen dem Cursor (--px/--py) */
+.kp-eye {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: blinkEye 4.8s ease-in-out infinite;
+}
+.kp-eye + .kp-eye {
+  animation-delay: 0.07s;
+}
+.kp-pupil {
+  transform: translate(calc(var(--px, 0) * 3.2px), calc(var(--py, 0) * 2.6px));
+  transition: transform 0.18s var(--ease-out);
+}
+@keyframes blinkEye {
+  0%, 91%, 100% { transform: scaleY(1); }
+  94% { transform: scaleY(0.08); }
+}
+
+/* Magnetische Buttons: ziehen sich sanft zum Cursor */
+.magnet {
+  transform: translate(var(--mx, 0px), var(--my, 0px));
+  transition: transform 0.25s var(--ease-out);
+  will-change: transform;
+}
+
 /* Navigation: Unterstrich wächst von links */
 .nav-u {
   position: relative;

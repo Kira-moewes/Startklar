@@ -44,8 +44,10 @@ export default function Layout() {
         </div>
       </header>
       <main className="flex-1">
-        {/* Sanfter Auftritt bei Seitenwechsel (nur opacity/transform) */}
-        <div key={location.pathname} style={{ animation: 'pageIn .5s var(--ease-out) both' }}>
+        {/* Sanfter Auftritt bei Seitenwechsel (nur opacity/transform).
+            Kein fill-mode: eine dauerhaft angewendete transform-Animation
+            würde sonst position:fixed im Seiteninhalt einfangen. */}
+        <div key={location.pathname} style={{ animation: 'pageIn .5s var(--ease-out)' }}>
           <Outlet />
         </div>
       </main>

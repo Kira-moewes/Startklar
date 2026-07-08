@@ -5,10 +5,23 @@ import { useProfile } from '../hooks/useProfile'
 import { useCountUp } from '../hooks/useCountUp'
 import { useInView } from '../hooks/useInView'
 import { istRelevant, relevanteTasks } from '../data/visibility'
-import PaperPlane from '../components/PaperPlane'
+import KlaroPlane from '../components/KlaroPlane'
 import MarqueeTiles from '../components/MarqueeTiles'
 import Hero from '../components/Hero'
 import Reveal from '../components/Reveal'
+import StoryRail from '../components/StoryRail'
+
+// Magnetische Buttons: ziehen sich ein paar Pixel zum Cursor (CSS .magnet)
+const magnetMove = (e: React.MouseEvent<HTMLElement>) => {
+  const el = e.currentTarget
+  const r = el.getBoundingClientRect()
+  el.style.setProperty('--mx', `${(((e.clientX - r.left) / r.width) - 0.5) * 10}px`)
+  el.style.setProperty('--my', `${(((e.clientY - r.top) / r.height) - 0.5) * 8}px`)
+}
+const magnetLeave = (e: React.MouseEvent<HTMLElement>) => {
+  e.currentTarget.style.setProperty('--mx', '0px')
+  e.currentTarget.style.setProperty('--my', '0px')
+}
 
 const SCHRITTE = [
   {
@@ -96,6 +109,9 @@ export default function Home() {
 
   return (
     <div className="flex flex-col">
+      {/* Kapitel-Leiste: Klaro fliegt die Story entlang (ab 1360px) */}
+      <StoryRail />
+
       {/* Video-Hero (Higgsfield) — CTA scrollt zum Inhalt darunter */}
       <Hero />
 
@@ -115,10 +131,18 @@ export default function Home() {
             />
           </svg>
 
-          {/* das große Wort */}
-          <div className="relative text-center pointer-events-none" style={{ animation: 'rise 1.1s cubic-bezier(.2,.7,.2,1) .2s both' }}>
+          {/* das große Wort – Buchstabe für Buchstabe */}
+          <div className="relative text-center pointer-events-none">
             <h2 className="m-0 whitespace-nowrap font-serif font-normal leading-none text-pine tracking-[-.01em] text-[clamp(72px,12.5vw,190px)]">
-              startklar
+              {'startklar'.split('').map((c, i) => (
+                <span
+                  key={i}
+                  className="inline-block"
+                  style={{ animation: `rise .9s var(--ease-expo) ${0.2 + i * 0.05}s both` }}
+                >
+                  {c}
+                </span>
+              ))}
             </h2>
           </div>
 
@@ -130,7 +154,7 @@ export default function Home() {
           >
             <div style={{ animation: 'flyIn 2.4s cubic-bezier(.3,.6,.2,1) both' }}>
               <div style={{ animation: 'glide 5s ease-in-out 2.4s infinite' }}>
-                <PaperPlane />
+                <KlaroPlane />
               </div>
             </div>
           </div>
@@ -145,10 +169,10 @@ export default function Home() {
             </p>
           </div>
           <div className="flex flex-wrap gap-3.5">
-            <Link to="/onboarding" className="rounded-pill bg-olive text-on-akzent px-7.5 py-4 text-[15px] font-semibold transition hover:bg-olive-deep hover:-translate-y-0.5 active:translate-y-0 active:scale-98">
+            <Link to="/onboarding" onMouseMove={magnetMove} onMouseLeave={magnetLeave} className="magnet rounded-pill bg-olive text-on-akzent px-7.5 py-4 text-[15px] font-semibold transition-colors hover:bg-olive-deep active:scale-98">
               In 2 Minuten loslegen
             </Link>
-            <Link to="/fortschritt" className="rounded-pill border-[1.5px] border-pine/30 text-pine px-7.5 py-4 text-[15px] font-semibold transition hover:border-pine hover:-translate-y-0.5 active:translate-y-0 active:scale-98">
+            <Link to="/fortschritt" onMouseMove={magnetMove} onMouseLeave={magnetLeave} className="magnet rounded-pill border-[1.5px] border-pine/30 text-pine px-7.5 py-4 text-[15px] font-semibold transition-colors hover:border-pine active:scale-98">
               Dein Fortschritt
             </Link>
           </div>
@@ -156,7 +180,7 @@ export default function Home() {
       </section>
 
       {/* Dunkles Band: Marquee + Zahlen + Bereiche */}
-      <section className="bg-band rounded-t-[56px] pt-18 pb-[90px] text-paper">
+      <section id="bereiche" className="bg-band rounded-t-[56px] pt-18 pb-[90px] text-paper scroll-mt-16">
         <MarqueeTiles />
 
         {/* Zahlen – zählen hoch, sobald sie ins Bild scrollen */}
@@ -181,6 +205,7 @@ export default function Home() {
           <Reveal>
             <div className="flex flex-wrap items-baseline justify-between gap-5">
               <h2 className="m-0 font-serif font-normal text-[clamp(32px,4vw,48px)]">
+                <span className="block text-xs font-sans font-semibold tracking-[.24em] uppercase text-olive-soft mb-3">Kapitel 01</span>
                 Deine <em className="text-olive-soft">Bereiche</em>
               </h2>
               <p className="m-0 text-[15px] text-paper/60 max-w-[340px]">
@@ -217,9 +242,9 @@ export default function Home() {
       </section>
 
       {/* So funktioniert's */}
-      <section className="mx-auto max-w-[1200px] w-full px-7 pt-20 pb-6">
+      <section id="ablauf" className="mx-auto max-w-[1200px] w-full px-7 pt-20 pb-6 scroll-mt-16">
         <Reveal>
-          <p className="m-0 text-xs font-semibold tracking-[.24em] uppercase text-olive">So funktioniert's</p>
+          <p className="m-0 text-xs font-semibold tracking-[.24em] uppercase text-olive">Kapitel 02 · So funktioniert's</p>
           <h2 className="mt-3 m-0 font-serif font-normal text-pine text-[clamp(32px,4.5vw,52px)] leading-[1.08] max-w-[16ch]">
             Von <em className="text-olive">„keine Ahnung"</em> zu erledigt — in drei Schritten.
           </h2>
@@ -239,9 +264,9 @@ export default function Home() {
       </section>
 
       {/* Feature: Vergleich & Bedarfscheck */}
-      <section className="mx-auto max-w-[1200px] w-full px-7 py-16 grid gap-12 md:grid-cols-2 md:items-center">
+      <section id="werkzeuge" className="mx-auto max-w-[1200px] w-full px-7 py-16 grid gap-12 md:grid-cols-2 md:items-center scroll-mt-16">
         <Reveal>
-          <p className="m-0 text-xs font-semibold tracking-[.24em] uppercase text-olive">Vergleich & Bedarfscheck</p>
+          <p className="m-0 text-xs font-semibold tracking-[.24em] uppercase text-olive">Kapitel 03 · Vergleich & Bedarfscheck</p>
           <h2 className="mt-3 m-0 font-serif font-normal text-pine text-[clamp(28px,3.6vw,42px)] leading-[1.1]">
             Erst dein Bedarf, <em className="text-olive">dann</em> der Vergleich.
           </h2>
@@ -283,7 +308,7 @@ export default function Home() {
       </section>
 
       {/* Feature: Klaro */}
-      <section className="mx-auto max-w-[1200px] w-full px-7 py-4 pb-16 grid gap-12 md:grid-cols-2 md:items-center">
+      <section id="begleiter" className="mx-auto max-w-[1200px] w-full px-7 py-4 pb-16 grid gap-12 md:grid-cols-2 md:items-center scroll-mt-16">
         <Reveal delay={140} className="order-last md:order-first">
           {/* dekorativer Chat-Ausschnitt */}
           <div aria-hidden="true" className="bg-band text-paper rounded-[26px] p-7 shadow-[0_24px_60px_rgba(40,54,24,.18)]">
@@ -308,7 +333,7 @@ export default function Home() {
           </div>
         </Reveal>
         <Reveal>
-          <p className="m-0 text-xs font-semibold tracking-[.24em] uppercase text-olive">Klaro, dein Assistent</p>
+          <p className="m-0 text-xs font-semibold tracking-[.24em] uppercase text-olive">Kapitel 04 · Klaro, dein Assistent</p>
           <h2 className="mt-3 m-0 font-serif font-normal text-pine text-[clamp(28px,3.6vw,42px)] leading-[1.1]">
             Fragen kostet nichts. <em className="text-olive">Wirklich.</em>
           </h2>
@@ -321,11 +346,12 @@ export default function Home() {
       </section>
 
       {/* Prinzipien */}
-      <section className="bg-band rounded-[56px] mx-3.5 text-paper">
+      <section id="haltung" className="bg-band rounded-[56px] mx-3.5 text-paper scroll-mt-16">
         <div className="mx-auto max-w-[1200px] px-7 py-18">
           <Reveal>
             <div className="flex flex-wrap items-baseline justify-between gap-5">
               <h2 className="m-0 font-serif font-normal text-[clamp(30px,4vw,46px)]">
+                <span className="block text-xs font-sans font-semibold tracking-[.24em] uppercase text-olive-soft mb-3">Kapitel 05 · Unsere Haltung</span>
                 Was Startklar <em className="text-olive-soft">anders</em> macht
               </h2>
               <p className="m-0 text-[15px] text-paper/60 max-w-[340px]">
@@ -359,7 +385,7 @@ export default function Home() {
       </div>
 
       {/* Schluss-CTA */}
-      <section className="mx-auto max-w-[1200px] w-full px-7 pb-20">
+      <section id="finale" className="mx-auto max-w-[1200px] w-full px-7 pb-20 scroll-mt-16">
         <Reveal>
           {!loading && !profile && (
             <div className="bg-olive text-cream rounded-[30px] px-9 py-14 md:px-14 flex flex-wrap items-center justify-between gap-8">
@@ -369,7 +395,7 @@ export default function Home() {
                   7 Fragen, unter 2 Minuten — danach siehst du nur, was für dich zählt. Kein Konto, keine E-Mail.
                 </p>
               </div>
-              <Link to="/onboarding" className="flex-none rounded-pill bg-cream text-pine px-8 py-4 text-base font-semibold transition hover:scale-104 active:scale-100">
+              <Link to="/onboarding" onMouseMove={magnetMove} onMouseLeave={magnetLeave} className="magnet flex-none rounded-pill bg-cream text-pine px-8 py-4 text-base font-semibold active:scale-98">
                 Los geht's →
               </Link>
             </div>
