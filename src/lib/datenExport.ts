@@ -60,6 +60,7 @@ export function beschreibeSicherung(daten: ExportDatei): string[] {
   if (unterlagen > 0) teile.push(`${unterlagen} ${unterlagen === 1 ? 'Unterlage' : 'Unterlagen'}`)
   const chat = anzahl('agent-chat')
   if (chat > 0) teile.push('Klaro-Chatverlauf')
+  if (anzahl('spiel') > 0) teile.push('Spielfortschritt')
   if (anzahl('einstellungen') > 0) teile.push('Einstellungen')
   if (teile.length === 0) teile.push('Die Sicherung ist leer.')
   return teile

@@ -11,6 +11,9 @@ export const bedarfStore = localforage.createInstance({ name: 'startklar', store
 export const dokumenteStore = localforage.createInstance({ name: 'startklar', storeName: 'dokumente' })
 export const einstellungenStore = localforage.createInstance({ name: 'startklar', storeName: 'einstellungen' })
 export const agentChatStore = localforage.createInstance({ name: 'startklar', storeName: 'agent-chat' })
+// Spiel-Schicht (XP, Meisterschaft, Freischaltungen, Flugbuch) – liegt bewusst
+// neben dem Fortschritt, ohne die Inhalts-Typen zu verändern.
+export const spielStore = localforage.createInstance({ name: 'startklar', storeName: 'spiel' })
 
 // Für Export/Import/Löschen: Name im Export-JSON → Instanz
 export const alleStores: Record<string, LocalForage> = {
@@ -23,4 +26,5 @@ export const alleStores: Record<string, LocalForage> = {
   'dokumente': dokumenteStore,
   'einstellungen': einstellungenStore,
   'agent-chat': agentChatStore,
+  'spiel': spielStore,
 }

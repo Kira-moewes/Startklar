@@ -1,6 +1,10 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout'
 import Home from './pages/Home'
+import Himmel from './pages/Himmel'
+import Intro from './pages/Intro'
+import Post from './pages/Post'
+import Sammlung from './pages/Sammlung'
 import Dashboard from './pages/Dashboard'
 import JourneyOverview from './pages/JourneyOverview'
 import TaskDetail from './pages/TaskDetail'
@@ -13,13 +17,30 @@ import Termine from './pages/Termine'
 import Vergleich from './pages/Vergleich'
 import VergleichDetail from './pages/VergleichDetail'
 import BedarfsCheck from './pages/BedarfsCheck'
+import { useProfile } from './hooks/useProfile'
+import { useSettings } from './hooks/useSettings'
+
+// Startseite: Spiel (Himmelskarte) für eingerichtete Profile, sonst die
+// klassische Marketing-Startseite. Über den Umschalter in den Einstellungen
+// jederzeit auf „klassisch" zurückstellbar (Reversibilität).
+function StartRoute() {
+  const { profile, loading: pLoading } = useProfile()
+  const { einstellungen, loading: sLoading } = useSettings()
+  if (pLoading || sLoading) return null
+  if (profile && einstellungen.startseite === 'spiel') return <Himmel />
+  return <Home />
+}
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route element={<Layout />}>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<StartRoute />} />
+          <Route path="/himmel" element={<Himmel />} />
+          <Route path="/intro" element={<Intro />} />
+          <Route path="/post" element={<Post />} />
+          <Route path="/sammlung" element={<Sammlung />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/fortschritt" element={<Dashboard />} />
           <Route path="/suche" element={<Suche />} />
