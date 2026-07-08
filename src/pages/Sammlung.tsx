@@ -3,6 +3,7 @@ import { useSpiel } from '../hooks/useSpiel'
 import { useSettings } from '../hooks/useSettings'
 import { useAlleBedarfsErgebnisse } from '../hooks/useBedarf'
 import Flieger from '../components/spiel/Flieger'
+import Reveal from '../components/Reveal'
 
 const STUFE_LABEL: Record<string, string> = {
   wichtig: 'Wichtig für dich',
@@ -62,26 +63,28 @@ export default function Sammlung() {
           </p>
         ) : (
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
-            {steckbriefe.map(s => (
-              <article key={s.kategorieId} className="rounded-[20px] border border-pine/14 bg-cream-card p-5">
-                <div className="flex items-center justify-between gap-2">
-                  <h3 className="m-0 font-serif text-xl text-pine">{s.titel}</h3>
-                  <span className="rounded-pill bg-olive/12 text-olive text-[12px] font-semibold px-2.5 py-1">
-                    {STUFE_LABEL[s.ergebnis.stufe] ?? s.ergebnis.stufe}
-                  </span>
-                </div>
-                <p className="mt-2 m-0 text-[14px] leading-[1.5] text-pine/75">{s.ergebnis.titel}</p>
-                {s.ergebnis.bausteine && s.ergebnis.bausteine.length > 0 && (
-                  <div className="mt-3 flex flex-wrap gap-1.5">
-                    {s.ergebnis.bausteine.map((b, i) => (
-                      <span key={i} className="rounded-pill border border-pine/20 px-2.5 py-1 text-[12px] text-pine/70">{b}</span>
-                    ))}
+            {steckbriefe.map((s, i) => (
+              <Reveal key={s.kategorieId} delay={i * 80} className="h-full">
+                <article className="group h-full rounded-[20px] border border-pine/14 bg-cream-card p-5 transition duration-300 hover:-translate-y-1 hover:border-olive hover:shadow-[0_14px_32px_rgba(40,54,24,.10)]">
+                  <div className="flex items-center justify-between gap-2">
+                    <h3 className="m-0 font-serif text-xl text-pine">{s.titel}</h3>
+                    <span className="rounded-pill bg-olive/12 text-olive text-[12px] font-semibold px-2.5 py-1">
+                      {STUFE_LABEL[s.ergebnis.stufe] ?? s.ergebnis.stufe}
+                    </span>
                   </div>
-                )}
-                <Link to={`/vergleich/${s.kategorieId}/check`} className="mt-3 inline-block text-sm font-semibold text-olive hover:underline">
-                  Ansehen & drucken →
-                </Link>
-              </article>
+                  <p className="mt-2 m-0 text-[14px] leading-[1.5] text-pine/75">{s.ergebnis.titel}</p>
+                  {s.ergebnis.bausteine && s.ergebnis.bausteine.length > 0 && (
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      {s.ergebnis.bausteine.map((b, i) => (
+                        <span key={i} className="rounded-pill border border-pine/20 px-2.5 py-1 text-[12px] text-pine/70">{b}</span>
+                      ))}
+                    </div>
+                  )}
+                  <Link to={`/vergleich/${s.kategorieId}/check`} className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-olive hover:text-olive-deep">
+                    Ansehen & drucken <span className="transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">→</span>
+                  </Link>
+                </article>
+              </Reveal>
             ))}
           </div>
         )}

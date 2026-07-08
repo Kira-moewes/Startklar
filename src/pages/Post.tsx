@@ -46,10 +46,10 @@ export default function Post() {
                 <li key={b.id}>
                   <button
                     onClick={() => setGewaehlt(b)}
-                    className="w-full text-left rounded-[18px] border border-pine/15 bg-white/75 px-5 py-4 hover:border-olive transition"
+                    className="group w-full text-left rounded-[18px] border border-pine/15 bg-white/75 px-5 py-4 transition duration-300 hover:border-olive hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(40,54,24,.08)]"
                   >
                     <span className="flex items-center justify-between gap-3">
-                      <span className="font-semibold text-pine leading-tight">{b.titel}</span>
+                      <span className="font-semibold text-pine leading-tight transition-colors group-hover:text-olive-deep">{b.titel}</span>
                       <span
                         className="flex-none rounded-pill px-2.5 py-1 text-[11.5px] font-semibold text-white"
                         style={{ background: DRINGLICHKEIT[b.dringlichkeit].farbe }}
