@@ -9,8 +9,13 @@ weiterzumachen – ohne den bisherigen Gesprächsverlauf. Lies zusätzlich für 
   Hierher wurde die gesamte Startklar-Arbeit (Strategie r7, Spiel-Ebene r8, 3D)
   gemergt; dieser Chat arbeitet ab jetzt ausschließlich hier. (Der frühere
   Branch `claude/startklar-app-strategy-cq0dd4` ist Historie.)
-- **Offener PR:** #6 (Vercel-Vorschau, hängt an diesem Branch, **nicht mergen**
-  ohne Ansage)
+- **Offener PR:** Achtung, PR #6 hängt am ALTEN Branch
+  `claude/startklar-app-strategy-cq0dd4` (Stand ohne die Brief-Pfad-Stärkung)
+  und ist `dirty` (Konflikte mit `main`). Unser Branch `…kd7erm` hat noch
+  KEINEN eigenen PR – d. h. für eine Vorschau *unseres* Stands braucht es einen
+  neuen PR von `…kd7erm`. Nichts ohne Ansage mergen. (Zusätzlich läuft PR #7,
+  Branch `claude/install-skills-plugins-b3yt6t`, „Premium-Redesign Startseite" –
+  fasst dieselbe `Home.tsx` an, Kollisionsgefahr.)
 - **Stack:** React 19, Vite 8, Tailwind 4 (CSS-first), react-router 7, localforage,
   vite-plugin-pwa, Three.js + @react-three/fiber. Tests: Vitest. Linter: oxlint.
 - **Ton der Zusammenarbeit:** Deutsch, per du, wie unter Mitgründern. Ehrliche
