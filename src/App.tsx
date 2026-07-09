@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Link, Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout'
 import Home from './pages/Home'
 import SoGehts from './pages/SoGehts'
@@ -32,6 +32,31 @@ function StartRoute() {
   return <Home />
 }
 
+// Fallback für unbekannte Adressen (z. B. veraltete PWA-Deeplinks): ruhig,
+// schamfrei, mit Weg zurück – statt einer leeren Seite ohne Hinweis.
+function NichtGefunden() {
+  return (
+    <div className="mx-auto max-w-[640px] w-full px-7 pt-20 pb-28 text-center">
+      <p className="m-0 text-xs font-semibold tracking-[.24em] uppercase text-olive">Hoppla</p>
+      <h1 className="mt-4 m-0 font-serif font-normal text-pine text-[clamp(30px,5vw,46px)] leading-[1.1]">
+        Diese Seite gibt es nicht <em className="text-olive">(mehr)</em>.
+      </h1>
+      <p className="mt-4 mx-auto m-0 max-w-[420px] text-[16px] leading-relaxed text-pine/70">
+        Kein Drama – vielleicht hat sich die Adresse geändert. Geh zurück zum Anfang,
+        dann findest du alles wieder.
+      </p>
+      <div className="mt-8 flex flex-wrap justify-center gap-3.5">
+        <Link to="/" className="rounded-pill bg-olive text-on-akzent px-8 py-4 text-base font-semibold transition hover:bg-olive-deep">
+          Zur Startseite
+        </Link>
+        <Link to="/suche" className="rounded-pill border-[1.5px] border-pine/30 text-pine px-8 py-4 text-base font-semibold transition hover:border-pine">
+          Suche öffnen →
+        </Link>
+      </div>
+    </div>
+  )
+}
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -56,6 +81,7 @@ export default function App() {
           <Route path="/profil" element={<Profil />} />
           <Route path="/impressum" element={<Impressum />} />
           <Route path="/datenschutz" element={<Datenschutz />} />
+          <Route path="*" element={<NichtGefunden />} />
         </Route>
       </Routes>
     </BrowserRouter>
