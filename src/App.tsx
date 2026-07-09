@@ -1,25 +1,32 @@
+import { lazy } from 'react'
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout'
 import Home from './pages/Home'
-import SoGehts from './pages/SoGehts'
-import Himmel from './pages/Himmel'
-import Intro from './pages/Intro'
-import Post from './pages/Post'
-import Sammlung from './pages/Sammlung'
-import Dashboard from './pages/Dashboard'
-import JourneyOverview from './pages/JourneyOverview'
-import TaskDetail from './pages/TaskDetail'
-import Impressum from './pages/Impressum'
-import Datenschutz from './pages/Datenschutz'
-import Onboarding from './pages/Onboarding'
-import Profil from './pages/Profil'
-import Suche from './pages/Suche'
-import Termine from './pages/Termine'
-import Vergleich from './pages/Vergleich'
-import VergleichDetail from './pages/VergleichDetail'
-import BedarfsCheck from './pages/BedarfsCheck'
 import { useProfile } from './hooks/useProfile'
 import { useSettings } from './hooks/useSettings'
+
+// Routen werden bei Bedarf nachgeladen (eigener Chunk je Seite) – so bleibt der
+// Erst-Download klein und datensparsam. Nur Layout + Home laden sofort (der
+// häufigste erste Bildschirm); alles Übrige kommt beim Navigieren. Die
+// Suspense-Grenze sitzt in `Layout` um den Outlet, damit die Navigation sichtbar
+// bleibt, während eine Seite lädt.
+const SoGehts = lazy(() => import('./pages/SoGehts'))
+const Himmel = lazy(() => import('./pages/Himmel'))
+const Intro = lazy(() => import('./pages/Intro'))
+const Post = lazy(() => import('./pages/Post'))
+const Sammlung = lazy(() => import('./pages/Sammlung'))
+const Dashboard = lazy(() => import('./pages/Dashboard'))
+const JourneyOverview = lazy(() => import('./pages/JourneyOverview'))
+const TaskDetail = lazy(() => import('./pages/TaskDetail'))
+const Impressum = lazy(() => import('./pages/Impressum'))
+const Datenschutz = lazy(() => import('./pages/Datenschutz'))
+const Onboarding = lazy(() => import('./pages/Onboarding'))
+const Profil = lazy(() => import('./pages/Profil'))
+const Suche = lazy(() => import('./pages/Suche'))
+const Termine = lazy(() => import('./pages/Termine'))
+const Vergleich = lazy(() => import('./pages/Vergleich'))
+const VergleichDetail = lazy(() => import('./pages/VergleichDetail'))
+const BedarfsCheck = lazy(() => import('./pages/BedarfsCheck'))
 
 // Startseite: Spiel (Himmelskarte) für eingerichtete Profile, sonst die
 // klassische Marketing-Startseite. Über den Umschalter in den Einstellungen

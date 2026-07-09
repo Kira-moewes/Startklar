@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useProfile } from '../hooks/useProfile'
 import AgentButton from './agent/AgentButton'
@@ -50,7 +51,9 @@ export default function Layout() {
             Kein fill-mode: eine dauerhaft angewendete transform-Animation
             würde sonst position:fixed im Seiteninhalt einfangen. */}
         <div key={location.pathname} style={{ animation: 'pageIn .5s var(--ease-out)' }}>
-          <Outlet />
+          <Suspense fallback={<div className="mx-auto max-w-[960px] px-7 py-24 text-center text-[14px] text-pine/40">Lädt …</div>}>
+            <Outlet />
+          </Suspense>
         </div>
       </main>
       <AgentButton />
