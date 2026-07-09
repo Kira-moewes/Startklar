@@ -88,21 +88,25 @@ Wrackteil einen Papierflieger (Fiete-Nod) und lässt ihn los.
 
 ---
 
-## 5. Figuren-Darstellung — **Option 2 (entschieden)**
-Konflikt: fotoreale Story-Bilder haben eine *feste* Figur; ein selbst gestaltbarer
-Avatar ist *variabel*. Beides fotoreal zusammen geht nicht (unendliche Kombis /
-Credits pro Nutzer). **Lösung Option 2:**
-- **Story-Bilder zeigen die Figur nie frontal** — von hinten, aus Distanz, nur
-  Hände, oder First-Person. So ist jedes Bild **avatar-agnostisch** = „du" (das
-  Hero-Bild macht's vor). Umgebungen sind fotoreal (Higgsfield).
-- **Der gestaltete Avatar lebt in Profil, auf der Insel-Karte, in Nahaufnahme-UI;**
-  in Foto-Szenen wirkt er nur subtil mit (Jacken-/Haarfarbe von hinten).
-- **Kein Stil-Bruch,** weil die Foto-Szenen gesichtslos sind — gezeichneter Avatar
-  und fotoreale Figur stehen nie gleichzeitig im Widerspruch auf dem Schirm.
-- Folge: Higgsfield-Bildbedarf ist **endlich & günstig** (~10–14 Umgebungs-/
-  Rücken-Bilder, einmalig). Der Avatar-Editor bleibt (Hautton/Gesicht/Haare/Bart/
-  Augen/Brille/Outfit), dient aber Profil/Karte/Nahaufnahme — eher „wähl & feintune"
-  als unendliche Kombinatorik.
+## 5. Figuren-Darstellung — **Feste Figur + Ausrüsten (entschieden)**
+*(Ersetzt die frühere „Option 2 / von hinten"-Idee.)* Kira hat sich für eine
+**feste, fotorealistische Hauptfigur** entschieden, die man **ausrüstet/anpasst** —
+weil einfacher und stärker, und weil Higgsfield die Figur schon konsistent hält
+(4 Testbilder: Cockpit, Absturz an der Klippe, Wrack, schlafend im Gras — derselbe
+junge Mann, Gesicht sichtbar, im Markenlook).
+- **Identität/Gesicht sind fest** — dieselbe Figur in allen Story-Bildern. Gesicht
+  darf sichtbar sein (die „nie ein Gesicht"-Regel entfällt).
+- **„Ausrüsten" lebt in der Spiel-Ebene, nicht in den Fotos:** Outfit, Jacke,
+  Ausrüstung, Accessoires wechselt man an der Figur **auf der Insel-Karte / im
+  Profil** — freischaltbar über Credits (Standard) und Pro (Premium-Designs). Das
+  ist der Sammel-/Ausrüst-Loop.
+- **Story-Fotos bleiben im Kanon-Look** → keine Generierung pro Nutzer, kein
+  Stil-Bruch, günstig. Konsistentes Kino *und* Anpassung als Belohnung.
+- **Higgsfield-Konsistenz:** für alle weiteren Szenen eines der generierten Bilder
+  als **Charakter-Referenz** anhängen, damit es derselbe Typ bleibt.
+- **Repräsentations-Trade (bewusst):** eine feste Figur = nicht jede:r sieht sich
+  selbst. Für den Start ok; günstige Erweiterung *später*: **2–3 feste Held:innen
+  zur Auswahl** (je Higgsfield-konsistent). Nicht jetzt.
 
 ---
 
@@ -156,12 +160,21 @@ Kontrast beachten.
 
 ---
 
-## 8. Higgsfield-Bildliste (Option 2 — Rücken/Umgebung, fotoreal)
+## 8. Higgsfield-Bildliste (feste Figur, fotoreal)
 **Stil-Anker voranstellen** (`cinematic photoreal film still, warm sepia-olive haze,
 soft hazy dusk light, muted earthy palette, subtle 35mm grain, shallow DoF,
-atmospheric fog, same color grade as reference, no text/logos`), `hero.jpg` als
-Referenz, **Figur immer von hinten/Distanz/Hände/abwesend — nie ein Gesicht.**
-Format 9:16 (Vollbild-Story) bzw. 16:9 (Banner).
+atmospheric fog, same color grade as reference, no text/logos`), eines der
+generierten Bilder als **Charakter-Referenz** (feste Figur, Gesicht darf sichtbar
+sein — konsistent halten). Format 9:16 (Vollbild-Story) bzw. 16:9 (Banner).
+
+**Absturz-Logik (wichtig):** Beim Absturz-Dive **keine Person auf der Insel** — er
+sitzt im Flugzeug, sonst schaut er seinem eigenen Absturz zu. Insel dabei als
+schwebendes, **durchgeschnittenes** Stück mit Wurzeln zeigen (verkauft die
+Schwebeinsel-Prämisse). Person-am-Inselrand ist erst der *„erster Blick"*-Moment
+**nach** dem Aufwachen. Reihenfolge: **Cockpit → Absturz-Dive (leer) → Aufwachen am
+Wrack (Gesicht) → erster Blick (Person am Rand)**.
+**Vorhandene Testbilder (Higgsfield, konsistente Figur):** Cockpit, Absturz-Dive
+(durchgeschnittene Insel), Wrack, schlafend im Gras.
 
 - **P1 Der Flug kippt** — small propeller plane airborne, mid-crash, nose-diving with thin smoke toward a sea of fog, wide, no people, no fire.
 - **P2 Durch den Nebel** — the plane vanishing into a huge fog bank, near whiteout, quiet dread, no people.
