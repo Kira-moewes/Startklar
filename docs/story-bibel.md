@@ -58,10 +58,22 @@ Ziel dreht von *gerettet werden* → *jemand werden, der keine Rettung mehr brau
 
 ## 4. Aufbau: das Spiel läuft in Kapiteln
 App und Spiel sind getrennt; die echte Hilfe steht allein. Jedes **Kapitel = eine
-Insel = ein Lebensbereich** — Erzähleinheit und echte Aufgabe zugleich. Man trifft
-**Entscheidungen** (Verzweigungen), **sammelt** Beweisstücke fürs Flugbuch, und
-**kartiert** die Insel durch echte Schritte. Jeder echte Fortschritt lichtet den
-Nebel und bringt Credits.
+Insel = ein Lebensbereich** — Erzähleinheit und echte Aufgabe zugleich.
+
+**Struktur (entschieden):**
+- **Story ist linear** — fester roter Faden, keine verzweigenden Pfade.
+- **Entscheidungen verzweigen NICHT** — egal was gewählt wird, die Story läuft gleich
+  weiter. Die Wahl gibt Stimme/Agency im Moment (Klaro reagiert leicht anders),
+  spaltet die Geschichte aber nicht. Günstig, kein Content-Explosion. *Schreib-Regel:*
+  beide Antworten müssen plausibel vorwärts führen (keine harten Gabelungen).
+- **Auslöser für den nächsten Story-Schritt ist der „Erledigt"-Button an der echten
+  Aufgabe.** Die Geschichte bewegt sich nur, wenn das echte Leben sich bewegt — man
+  kann die Story **nicht durch Klicken durchgrinden** (Anti-Dark-Pattern-Kern).
+
+**Kapitel-Loop:** (1) Story-Beat (Bild + Text) → (2) optionale Flavor-Entscheidung
+(2 Bubbles) → (3) echte Aufgabe (mit App-Hilfe: Brief-Entschlüsseler, Skript,
+Checkliste) → (4) **„Erledigt" antippen** → Nebel lichtet sich, Insel leuchtet,
+Credits, nächster Beat. Man **sammelt** dabei Beweisstücke fürs Flugbuch.
 
 | Kapitel | Insel / Bereich | Bewohner:in | Beispiel-Entscheidung | Sammelstück |
 |---|---|---|---|---|
