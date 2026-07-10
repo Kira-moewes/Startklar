@@ -34,16 +34,13 @@ export default function Post() {
     }
   }
 
-  // Ruhiges „Morgenhimmel"-Register: stiller, blasser Verlauf, keine
-  // Spiel-Elemente – erst wenn der erste Schritt gewählt ist, geht es weiter.
-  const himmel = 'linear-gradient(180deg, #EAF1F3 0%, #F3EFE6 60%, #F7F3E8 100%)'
-
+  // Sitzt auf dem warmen Creme-Hintergrund der App (aus Layout) – gleiche
+  // Bildsprache wie alle Unterseiten, keine eigene Hintergrundfarbe mehr.
   return (
-    <div className="min-h-dvh" style={{ background: himmel }}>
-      <div className="mx-auto max-w-[640px] px-6 pt-14 pb-24">
+    <div className="mx-auto max-w-[640px] w-full px-7 pt-14 pb-24">
         {!gewaehlt ? (
           <>
-            <p className="m-0 text-[13px] font-semibold uppercase tracking-[0.16em] text-pine/55">
+            <p className="m-0 text-[13px] font-semibold uppercase tracking-[0.16em] text-olive">
               Ganz ruhig
             </p>
             <h1 className="mt-2 mb-0 font-serif font-normal text-[clamp(28px,4.6vw,42px)] leading-[1.12] text-pine">
@@ -58,7 +55,7 @@ export default function Post() {
               value={suche}
               onChange={e => setSuche(e.target.value)}
               placeholder="Absender oder Stichwort (z. B. Rundfunk, Kaution)"
-              className="mt-6 w-full rounded-field border border-pine/20 bg-white/70 px-4 py-3 text-[15px] text-pine outline-none focus:border-olive"
+              className="mt-6 w-full rounded-field border border-pine/20 bg-cream-card px-4 py-3 text-[15px] text-pine outline-none focus:border-olive"
             />
 
             <ul className="mt-4 m-0 p-0 list-none flex flex-col gap-3">
@@ -66,7 +63,7 @@ export default function Post() {
                 <li key={b.id}>
                   <button
                     onClick={() => waehle(b)}
-                    className="group w-full text-left rounded-[18px] border border-pine/15 bg-white/75 px-5 py-4 transition duration-300 hover:border-olive hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(40,54,24,.08)]"
+                    className="group w-full text-left rounded-[18px] border border-pine/15 bg-cream-card px-5 py-4 transition duration-300 hover:border-olive hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(40,54,24,.08)]"
                   >
                     <span className="flex items-center justify-between gap-3">
                       <span className="font-semibold text-pine leading-tight transition-colors group-hover:text-olive-deep">{b.titel}</span>
@@ -100,7 +97,7 @@ export default function Post() {
               {gewaehlt.titel}
             </h1>
 
-            <div className="mt-6 rounded-[20px] border border-pine/15 bg-white/80 p-6">
+            <div className="mt-6 rounded-[20px] border border-pine/14 bg-cream-card p-6">
               <p className="m-0 text-[16.5px] leading-[1.6] text-pine/85">{gewaehlt.einordnung}</p>
 
               <div className="mt-5 flex items-start gap-3">
@@ -124,7 +121,7 @@ export default function Post() {
 
               {/* „Mach's allein"-Skript: die wörtliche Formulierung zum Mitnehmen –
                   senkt die Aktivierungsenergie fürs Telefonat (r7 Kap. 4b.2). */}
-              <div className="mt-4 rounded-[16px] border border-pine/15 bg-white/60 px-5 py-4">
+              <div className="mt-4 rounded-[16px] border border-pine/12 bg-cream px-5 py-4">
                 <p className="m-0 text-[13px] font-semibold uppercase tracking-wide text-pine/55">
                   Niemanden zum Fragen? Sag oder schreib genau das
                 </p>
@@ -142,7 +139,7 @@ export default function Post() {
 
             {/* „Schon zu spät?"-Zweig: schamfrei, standardmäßig eingeklappt, damit
                 er niemanden beunruhigt, der noch in der Frist ist (r7 Kap. 2.4). */}
-            <div className="mt-4 rounded-[16px] border border-pine/15 bg-white/55">
+            <div className="mt-4 rounded-[16px] border border-pine/14 bg-cream-card">
               <button
                 onClick={() => setZuSpaetOffen(o => !o)}
                 aria-expanded={zuSpaetOffen}
@@ -173,7 +170,7 @@ export default function Post() {
 
         {/* Krisen-Weiche: immer erreichbar, ruhig. Steckt hinter der Post echte
             Not, tritt das Produkt zurück und verweist auf echte Hilfe (r7 Kap. 2.4). */}
-        <details className="mt-10 rounded-[16px] border border-pine/12 bg-white/45 [&_summary]:list-none">
+        <details className="mt-10 rounded-[16px] border border-pine/12 bg-cream-card [&_summary]:list-none">
           <summary className="cursor-pointer px-5 py-3.5 text-[14.5px] font-semibold text-pine/70 marker:hidden">
             Es geht dir gerade wirklich schlecht?
           </summary>
@@ -185,7 +182,7 @@ export default function Post() {
             </p>
             <ul className="m-0 p-0 list-none flex flex-col gap-3">
               {krisenhilfen.map(h => (
-                <li key={h.titel} className="rounded-[14px] border border-pine/12 bg-white/70 px-4 py-3">
+                <li key={h.titel} className="rounded-[14px] border border-pine/12 bg-cream px-4 py-3">
                   <div className="flex items-baseline justify-between gap-3">
                     <span className="text-[14.5px] font-semibold text-pine">{h.titel}</span>
                     <span className="flex-none text-[14.5px] font-semibold text-olive">{h.kontakt}</span>
@@ -196,7 +193,6 @@ export default function Post() {
             </ul>
           </div>
         </details>
-      </div>
     </div>
   )
 }
