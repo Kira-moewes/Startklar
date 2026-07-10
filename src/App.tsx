@@ -1,4 +1,3 @@
-import { lazy, Suspense } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout'
 import Home from './pages/Home'
@@ -15,22 +14,10 @@ import Vergleich from './pages/Vergleich'
 import VergleichDetail from './pages/VergleichDetail'
 import BedarfsCheck from './pages/BedarfsCheck'
 
-// Three.js nur laden, wenn die Iglu-Seite wirklich besucht wird
-const Igloo = lazy(() => import('./pages/Igloo'))
-
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Vollbild-Erlebnis ohne App-Navigation */}
-        <Route
-          path="/iglu"
-          element={
-            <Suspense fallback={null}>
-              <Igloo />
-            </Suspense>
-          }
-        />
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
           <Route path="/dashboard" element={<Dashboard />} />

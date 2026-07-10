@@ -13,13 +13,11 @@
     "@fontsource-variable/instrument-sans": "^5.2.8",
     "@fontsource/instrument-serif": "^5.2.8",
     "@tailwindcss/vite": "^4.3.2",
-    "@types/three": "^0.185.1",
     "localforage": "^1.10.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-router-dom": "^7.18.1",
-    "tailwindcss": "^4.3.2",
-    "three": "^0.185.1"
+    "tailwindcss": "^4.3.2"
   },
   "devDependencies": {
     "@types/node": "^24.13.2",
