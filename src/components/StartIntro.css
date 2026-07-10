@@ -20,8 +20,8 @@
   /* Pine-getöntes Fast-Schwarz statt reinem Schwarz – gehört zur Markenwelt */
   background: #0e100a;
   color: #f4f1dc;
-  /* weicher Übergang zur eigentlichen Seite: ruhiges Ausblenden statt Schieben */
-  transition: opacity 1.2s ease;
+  /* weicher Übergang zur eigentlichen Seite: langes, ruhiges Ausblenden */
+  transition: opacity 2.2s cubic-bezier(0.4, 0, 0.2, 1);
   animation: sintroAuf 0.35s ease both;
 }
 .sintro--hebt { opacity: 0; pointer-events: none; }

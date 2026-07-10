@@ -157,7 +157,7 @@ export default function StartIntro() {
     // Nur die Hebe-Phase bekommt ein Sicherheitsnetz, falls transitionend
     // nie feuert (Tab im Hintergrund).
     if (phase === 'hebt') {
-      timer.current = setTimeout(() => setPhase('fertig'), 1400)
+      timer.current = setTimeout(() => setPhase('fertig'), 2500)
     }
     return () => clearTimeout(timer.current)
   }, [phase])
