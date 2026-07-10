@@ -13,6 +13,66 @@ import './StartIntro.css'
  */
 const SITZUNGS_MARKE = 'startklar-startintro'
 
+/**
+ * Radar-Zielscheibe: Kompassring mit Strichen und Gradzahlen, komplett
+ * programmatisch erzeugt (keine handgezeichneten Pfaddaten). Der rotierende
+ * Suchstrahl und die Papierflieger-Punkte liegen als CSS-Ebenen darüber.
+ */
+function Radar() {
+  const M = 210 // Mittelpunkt im viewBox-Raster 0..420
+  const ticks = Array.from({ length: 72 }, (_, i) => i * 5)
+  const zahlen = Array.from({ length: 18 }, (_, i) => i * 20)
+  return (
+    <svg className="sintro__radarring" viewBox="0 0 420 420" aria-hidden="true">
+      {/* Außenring + zwei stille Innenkreise */}
+      <circle cx={M} cy={M} r={186} fill="none" stroke="currentColor" strokeOpacity={0.55} />
+      <circle cx={M} cy={M} r={124} fill="none" stroke="currentColor" strokeOpacity={0.16} />
+      <circle cx={M} cy={M} r={62} fill="none" stroke="currentColor" strokeOpacity={0.16} />
+      {/* Skalenstriche: alle 5°, länger an den 20°-Marken */}
+      {ticks.map(g => (
+        <line
+          key={g}
+          x1={M} y1={24} x2={M} y2={g % 20 === 0 ? 34 : 29}
+          stroke="currentColor"
+          strokeOpacity={g % 20 === 0 ? 0.75 : 0.4}
+          transform={`rotate(${g} ${M} ${M})`}
+        />
+      ))}
+      {/* Gradzahlen, tangential am Ring entlang wie auf einem Kompass */}
+      {zahlen.map(g => (
+        <text
+          key={g}
+          x={M} y={16}
+          textAnchor="middle"
+          fontSize={10}
+          letterSpacing={1}
+          fill="currentColor"
+          fillOpacity={0.5}
+          transform={`rotate(${g} ${M} ${M})`}
+        >
+          {g}
+        </text>
+      ))}
+      {/* Fadenkreuz in der Mitte, bewusst klein und ruhig */}
+      <g stroke="currentColor" strokeOpacity={0.9}>
+        <line x1={M} y1={M - 16} x2={M} y2={M - 7} />
+        <line x1={M} y1={M + 7} x2={M} y2={M + 16} />
+        <line x1={M - 16} y1={M} x2={M - 7} y2={M} />
+        <line x1={M + 7} y1={M} x2={M + 16} y2={M} />
+      </g>
+    </svg>
+  )
+}
+
+/** Kleiner Papierflieger als Radar-Punkt (eigene, simple Silhouette). */
+function Blip({ className }: { className: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M2 12 L22 4 L14 22 L11 14 Z" fill="currentColor" />
+    </svg>
+  )
+}
+
 function sofortUeberspringen(): boolean {
   if (typeof window === 'undefined') return true
   try {
@@ -40,7 +100,7 @@ export default function StartIntro() {
       /* ohne Storage läuft das Intro schlimmstenfalls beim Reload erneut */
     }
     if (phase === 'zeigt') {
-      timer.current = setTimeout(() => setPhase('hebt'), 2050)
+      timer.current = setTimeout(() => setPhase('hebt'), 3300)
     } else {
       // Sicherheitsnetz: auch wenn transitionend nie feuert (Tab im
       // Hintergrund), verschwindet das Intro garantiert.
@@ -67,6 +127,15 @@ export default function StartIntro() {
       <span className="sintro__ecke is--br" />
       <div className="sintro__skala is--links" />
       <div className="sintro__skala is--rechts" />
+
+      {/* Radar-Zielscheibe: Ring, rotierender Suchstrahl, Papierflieger-Punkte */}
+      <div className="sintro__radar">
+        <Radar />
+        <div className="sintro__sweep" />
+        <Blip className="sintro__blip is--1" />
+        <Blip className="sintro__blip is--2" />
+        <Blip className="sintro__blip is--3" />
+      </div>
 
       <div className="sintro__mitte">
         <p className="sintro__label">

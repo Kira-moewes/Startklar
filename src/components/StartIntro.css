@@ -68,8 +68,63 @@
 .sintro__skala.is--links { left: 22px; }
 .sintro__skala.is--rechts { right: 22px; }
 
-/* Mittelteil: Klammer-Label, riesige condensed Wortmarke, Grundlinie */
-.sintro__mitte { position: relative; padding: 0 clamp(22px, 6vw, 72px); }
+/* Radar-Zielscheibe: mittig, ruhig leuchtend; Strahl und Punkte als Ebenen */
+.sintro__radar {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -54%;
+  width: min(82vmin, 640px);
+  aspect-ratio: 1;
+  color: #f4f1dc;
+  animation: sintroTeil 1s ease 0.2s both;
+}
+.sintro__radarring { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* Suchstrahl: rotierender Kegel mit heller Vorderkante und Leuchtspur */
+.sintro__sweep {
+  position: absolute;
+  /* 24/420 des Radars = Ringradius; der Strahl bleibt knapp im Ring */
+  inset: 8.4%;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    rgba(166, 181, 108, 0) 0deg 285deg,
+    rgba(166, 181, 108, 0.16) 340deg,
+    rgba(244, 241, 220, 0.4) 357deg,
+    rgba(244, 241, 220, 0.75) 360deg
+  );
+  animation: sintroSweep 2.6s linear infinite;
+}
+
+/* Papierflieger-Punkte: blinken versetzt auf, als zöge der Strahl vorbei */
+.sintro__blip {
+  position: absolute;
+  width: clamp(12px, 2.6vmin, 18px);
+  color: rgba(244, 241, 220, 0.9);
+  opacity: 0;
+  animation: sintroBlip 2.6s ease-in-out infinite;
+}
+.sintro__blip.is--1 { left: 61%; top: 30%; rotate: -18deg; animation-delay: 0.2s; }
+.sintro__blip.is--2 { left: 68%; top: 56%; rotate: 12deg; animation-delay: 1s; }
+.sintro__blip.is--3 { left: 34%; top: 44%; rotate: -40deg; animation-delay: 1.9s; }
+
+@keyframes sintroSweep { to { transform: rotate(360deg); } }
+@keyframes sintroBlip {
+  0%, 12% { opacity: 0; }
+  18% { opacity: 1; }
+  55%, 100% { opacity: 0; }
+}
+
+/* Textblock: Klammer-Label, condensed Wortmarke, Grundlinie – unten links,
+   damit die Zielscheibe die Bühne behält (wie ein Vorspann-Titel) */
+.sintro__mitte {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(64px, 12vh, 118px);
+  padding: 0 clamp(22px, 6vw, 72px);
+}
 
 .sintro__label {
   margin: 0 0 clamp(10px, 2.5vh, 22px);
@@ -90,7 +145,7 @@
   /* Breiten-Achse der Instrument Sans: condensed, versal, eng laufend */
   font-stretch: 75%;
   font-weight: 640;
-  font-size: clamp(60px, 16.5vw, 210px);
+  font-size: clamp(56px, 14vw, 170px);
   line-height: 0.92;
   letter-spacing: -0.035em;
   text-transform: uppercase;
