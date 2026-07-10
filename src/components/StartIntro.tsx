@@ -122,6 +122,11 @@ export default function StartIntro() {
       x = (x / abstand) * 0.82
       y = (y / abstand) * 0.82
     }
+    // Instrumenten-Gefühl: Position rastet in ein feines Gitter ein und
+    // folgt dem Finger dadurch tickend statt butterweich (wie im Original).
+    const schritt = 0.05
+    x = Math.round(x / schritt) * schritt
+    y = Math.round(y / schritt) * schritt
     setZiel({ x, y })
     if (Math.hypot(x, y) < 0.09) fasse() // im Fadenkreuz → einrasten
   }
@@ -152,7 +157,7 @@ export default function StartIntro() {
     // Nur die Hebe-Phase bekommt ein Sicherheitsnetz, falls transitionend
     // nie feuert (Tab im Hintergrund).
     if (phase === 'hebt') {
-      timer.current = setTimeout(() => setPhase('fertig'), 1200)
+      timer.current = setTimeout(() => setPhase('fertig'), 1400)
     }
     return () => clearTimeout(timer.current)
   }, [phase])

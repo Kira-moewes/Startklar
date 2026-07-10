@@ -20,10 +20,11 @@
   /* Pine-getöntes Fast-Schwarz statt reinem Schwarz – gehört zur Markenwelt */
   background: #0e100a;
   color: #f4f1dc;
-  transition: transform 0.8s var(--ease-expo);
+  /* weicher Übergang zur eigentlichen Seite: ruhiges Ausblenden statt Schieben */
+  transition: opacity 1.2s ease;
   animation: sintroAuf 0.35s ease both;
 }
-.sintro--hebt { transform: translateY(-101%); }
+.sintro--hebt { opacity: 0; pointer-events: none; }
 
 @keyframes sintroAuf { from { opacity: 0; } to { opacity: 1; } }
 
