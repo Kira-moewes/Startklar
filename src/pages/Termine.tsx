@@ -2,6 +2,10 @@ import { useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useTermine, terminAlsIcs, type Termin } from '../hooks/useTermine'
 import { journeys } from '../data'
+import PageHead from '../components/PageHead'
+import Reveal from '../components/Reveal'
+
+const feld = 'rounded-field border border-pine/20 bg-cream px-4 py-3 transition focus:outline-none focus:border-olive focus:ring-2 focus:ring-olive/25'
 
 const heute = () => new Date().toISOString().slice(0, 10)
 
@@ -78,28 +82,27 @@ export default function Termine() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-12 flex flex-col gap-10">
-      <div>
-        <h1 className="font-serif text-5xl font-normal text-pine">Deine Termine</h1>
-        <p className="mt-2 text-lg text-ink/80">
-          Bürgeramt, Beratung, Übergabe – hier landet alles mit Datum. Nichts geht verloren.
-        </p>
-      </div>
+    <div className="mx-auto max-w-[820px] w-full px-7 pt-14 pb-24 flex flex-col gap-9">
+      <PageHead
+        eyebrow="Termine"
+        title={<>Deine <em className="text-olive">Termine</em></>}
+        intro="Bürgeramt, Beratung, Übergabe – hier landet alles mit Datum. Nichts geht verloren."
+      />
 
       {!zeigeForm && (
         <button
           onClick={() => setZeigeForm(true)}
-          className="self-start rounded-pill bg-coral px-6 py-3 font-display font-semibold text-on-akzent hover:bg-coral-deep transition"
+          className="self-start rounded-pill bg-olive px-6 py-3 font-semibold text-on-akzent transition hover:bg-olive-deep hover:-translate-y-0.5 active:translate-y-0"
         >
           + Termin anlegen
         </button>
       )}
 
       {zeigeForm && (
-        <form onSubmit={speichern} className="rounded-card bg-cream-card border border-pine-mist p-6 flex flex-col gap-4">
-          <h2 className="font-display text-xl font-semibold text-pine">Neuer Termin</h2>
+        <form onSubmit={speichern} className="rounded-[22px] bg-cream-card border border-pine/14 p-6 flex flex-col gap-4" style={{ animation: 'panel-in .35s var(--ease-out) both' }}>
+          <h2 className="font-serif text-2xl font-medium text-pine">Neuer Termin</h2>
           {taskRef && (
-            <p className="text-sm text-ink/70 rounded-field bg-pine-mist/50 px-3 py-2">
+            <p className="text-sm text-pine/70 rounded-field bg-olive/10 border border-olive/20 px-3.5 py-2.5">
               Wird mit der Aufgabe „{taskLink({ journeyId: taskRef.journeyId, taskId: taskRef.taskId } as Termin)?.label ?? taskRef.taskId}" verknüpft.
             </p>
           )}
@@ -110,27 +113,27 @@ export default function Termine() {
               onChange={e => setTitel(e.target.value)}
               required
               placeholder="z. B. Termin beim Bürgeramt"
-              className="rounded-field border border-pine-mist bg-cream px-4 py-3 focus:outline-2 focus:outline-coral"
+              className={feld}
             />
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <label className="flex flex-col gap-1">
-              <span className="text-sm font-medium text-ink/80">Datum</span>
+              <span className="text-sm font-medium text-pine/80">Datum</span>
               <input
                 type="date"
                 value={datum}
                 onChange={e => setDatum(e.target.value)}
                 required
-                className="rounded-field border border-pine-mist bg-cream px-4 py-3 focus:outline-2 focus:outline-coral"
+                className={feld}
               />
             </label>
             <label className="flex flex-col gap-1">
-              <span className="text-sm font-medium text-ink/80">Uhrzeit (optional)</span>
+              <span className="text-sm font-medium text-pine/80">Uhrzeit (optional)</span>
               <input
                 type="time"
                 value={uhrzeit}
                 onChange={e => setUhrzeit(e.target.value)}
-                className="rounded-field border border-pine-mist bg-cream px-4 py-3 focus:outline-2 focus:outline-coral"
+                className={feld}
               />
             </label>
           </div>
@@ -140,7 +143,7 @@ export default function Termine() {
               value={ort}
               onChange={e => setOrt(e.target.value)}
               placeholder="z. B. Bürgeramt Mitte, Raum 2.04"
-              className="rounded-field border border-pine-mist bg-cream px-4 py-3 focus:outline-2 focus:outline-coral"
+              className={feld}
             />
           </label>
           <label className="flex flex-col gap-1">
@@ -150,17 +153,17 @@ export default function Termine() {
               onChange={e => setNotiz(e.target.value)}
               rows={2}
               placeholder="z. B. Perso und Mietvertrag mitnehmen"
-              className="rounded-field border border-pine-mist bg-cream px-4 py-3 focus:outline-2 focus:outline-coral"
+              className={feld}
             />
           </label>
           <div className="flex gap-3">
-            <button type="submit" className="rounded-pill bg-olive px-6 py-3 font-display font-semibold text-on-akzent hover:bg-olive-deep transition">
+            <button type="submit" className="rounded-pill bg-olive px-6 py-3 font-semibold text-on-akzent transition hover:bg-olive-deep active:scale-98">
               Speichern
             </button>
             <button
               type="button"
               onClick={() => { setZeigeForm(false); setParams({}, { replace: true }) }}
-              className="rounded-pill border-2 border-pine px-6 py-3 font-display font-semibold text-pine"
+              className="rounded-pill border-[1.5px] border-pine/30 px-6 py-3 font-semibold text-pine transition hover:border-pine"
             >
               Abbrechen
             </button>
@@ -169,8 +172,8 @@ export default function Termine() {
       )}
 
       {!loading && termine.length === 0 && !zeigeForm && (
-        <div className="rounded-card bg-cream-card border border-pine-mist p-8">
-          <p className="text-ink/80">
+        <div className="rounded-[22px] bg-cream-card border border-pine/14 p-8">
+          <p className="text-pine/80 leading-relaxed">
             Noch keine Termine. Wenn du bei einer Aufgabe einen Termin ausmachst – etwa beim Bürgeramt –
             trag ihn hier ein. Wir sortieren ihn dir automatisch in deine Agenda.
           </p>
@@ -178,64 +181,67 @@ export default function Termine() {
       )}
 
       {gruppen.map(g => (
-        <section key={g.titel} className="space-y-3">
-          <h2 className={`font-display text-xl font-semibold ${g.ton === 'alarm' ? 'text-coral-deep' : 'text-pine'}`}>
-            {g.titel}
-          </h2>
-          {g.termine.map(t => {
-            const link = taskLink(t)
-            return (
-              <div
-                key={t.id}
-                className={`rounded-card bg-cream-card border p-5 flex gap-4 items-start ${g.ton === 'alarm' ? 'border-coral' : 'border-pine-mist'}`}
-              >
-                <input
-                  type="checkbox"
-                  checked={t.erledigt}
-                  onChange={() => update(t.id, { erledigt: !t.erledigt })}
-                  aria-label={`${t.titel} als erledigt markieren`}
-                  className="mt-1 size-6 shrink-0 accent-olive rounded"
-                />
-                <div className="flex-1 min-w-0">
-                  <p className="font-display font-semibold text-pine">{t.titel}</p>
-                  <p className="text-sm text-ink/70 mt-0.5">
-                    {formatDatum(t.datum)}{t.uhrzeit ? `, ${t.uhrzeit} Uhr` : ''}{t.ort ? ` · ${t.ort}` : ''}
-                  </p>
-                  {t.notiz && <p className="text-sm text-ink/60 mt-1">{t.notiz}</p>}
-                  {link && (
-                    <Link to={link.to} className="inline-block mt-2 text-sm text-pine underline underline-offset-2 hover:text-coral-deep">
-                      Zur Aufgabe: {link.label}
-                    </Link>
-                  )}
-                  <div className="mt-3 flex gap-4 text-sm">
-                    <button onClick={() => terminAlsIcs(t)} className="text-pine underline underline-offset-2 hover:text-coral-deep">
-                      In Kalender (.ics)
-                    </button>
-                    <button onClick={() => remove(t.id)} className="text-ink/50 underline underline-offset-2 hover:text-coral-deep">
-                      Löschen
-                    </button>
+        <Reveal key={g.titel} className="block">
+          <section className="space-y-3">
+            <h2 className="flex items-center gap-2.5 font-serif text-2xl font-medium text-pine">
+              {g.ton === 'alarm' && <span className="inline-block size-2.5 rounded-full bg-olive" style={{ animation: 'pulse-dot 2.4s ease-in-out infinite' }} />}
+              {g.titel}
+            </h2>
+            {g.termine.map(t => {
+              const link = taskLink(t)
+              return (
+                <div
+                  key={t.id}
+                  className={`rounded-[20px] bg-cream-card border p-5 flex gap-4 items-start transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(40,54,24,.08)] ${g.ton === 'alarm' ? 'border-olive' : 'border-pine/14'}`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={t.erledigt}
+                    onChange={() => update(t.id, { erledigt: !t.erledigt })}
+                    aria-label={`${t.titel} als erledigt markieren`}
+                    className="mt-1 size-6 shrink-0 accent-olive rounded cursor-pointer"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="font-serif text-[19px] font-medium text-pine">{t.titel}</p>
+                    <p className="text-sm text-pine/70 mt-0.5">
+                      {formatDatum(t.datum)}{t.uhrzeit ? `, ${t.uhrzeit} Uhr` : ''}{t.ort ? ` · ${t.ort}` : ''}
+                    </p>
+                    {t.notiz && <p className="text-sm text-pine/60 mt-1">{t.notiz}</p>}
+                    {link && (
+                      <Link to={link.to} className="inline-block mt-2 text-sm font-semibold text-olive underline underline-offset-2 hover:text-olive-deep">
+                        Zur Aufgabe: {link.label}
+                      </Link>
+                    )}
+                    <div className="mt-3 flex gap-4 text-sm">
+                      <button onClick={() => terminAlsIcs(t)} className="text-pine/70 underline underline-offset-2 hover:text-olive transition">
+                        In Kalender (.ics)
+                      </button>
+                      <button onClick={() => remove(t.id)} className="text-pine/45 underline underline-offset-2 hover:text-olive transition">
+                        Löschen
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )
-          })}
-        </section>
+              )
+            })}
+          </section>
+        </Reveal>
       ))}
 
       {erledigte.length > 0 && (
         <section className="space-y-3">
-          <h2 className="font-display text-xl font-semibold text-pine/60">Erledigt</h2>
+          <h2 className="font-serif text-2xl font-medium text-pine/55">Erledigt</h2>
           {erledigte.map(t => (
-            <div key={t.id} className="rounded-card bg-cream-card border border-pine-mist p-4 flex gap-4 items-center opacity-70">
+            <div key={t.id} className="rounded-[18px] bg-cream-card border border-pine/12 p-4 flex gap-4 items-center opacity-70">
               <input
                 type="checkbox"
                 checked
                 onChange={() => update(t.id, { erledigt: false })}
                 aria-label={`${t.titel} wieder öffnen`}
-                className="size-6 shrink-0 accent-olive rounded"
+                className="size-6 shrink-0 accent-olive rounded cursor-pointer"
               />
-              <p className="flex-1 font-display text-ink/50 line-through">{t.titel}</p>
-              <button onClick={() => remove(t.id)} className="text-sm text-ink/40 underline underline-offset-2 hover:text-coral-deep">
+              <p className="flex-1 font-serif text-[18px] text-pine/50 line-through">{t.titel}</p>
+              <button onClick={() => remove(t.id)} className="text-sm text-pine/40 underline underline-offset-2 hover:text-olive transition">
                 Löschen
               </button>
             </div>

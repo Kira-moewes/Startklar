@@ -3,22 +3,36 @@ import { Link } from 'react-router-dom'
 import { journeys } from '../data'
 import { useProfile } from '../hooks/useProfile'
 import { useCountUp } from '../hooks/useCountUp'
+import { useInView } from '../hooks/useInView'
 import { istRelevant, relevanteTasks } from '../data/visibility'
-import PaperPlane from '../components/PaperPlane'
-import MarqueeTiles from '../components/MarqueeTiles'
+import KlaroPlane from '../components/KlaroPlane'
 import Hero from '../components/Hero'
+import Reveal from '../components/Reveal'
+
+// Magnetische Buttons: ziehen sich ein paar Pixel zum Cursor (CSS .magnet)
+const magnetMove = (e: React.MouseEvent<HTMLElement>) => {
+  const el = e.currentTarget
+  const r = el.getBoundingClientRect()
+  el.style.setProperty('--mx', `${(((e.clientX - r.left) / r.width) - 0.5) * 10}px`)
+  el.style.setProperty('--my', `${(((e.clientY - r.top) / r.height) - 0.5) * 8}px`)
+}
+const magnetLeave = (e: React.MouseEvent<HTMLElement>) => {
+  e.currentTarget.style.setProperty('--mx', '0px')
+  e.currentTarget.style.setProperty('--my', '0px')
+}
 
 export default function Home() {
   const { profile, loading } = useProfile()
   const heroRef = useRef<HTMLElement>(null)
+  const statsView = useInView<HTMLDivElement>()
 
   const sichtbar = journeys
     .map(j => ({ journey: j, tasks: relevanteTasks(j, profile) }))
     .filter(({ journey, tasks }) => istRelevant(profile, journey.id) && tasks.length > 0)
 
   const totalTasks = sichtbar.reduce((n, s) => n + s.tasks.length, 0)
-  const statBereiche = useCountUp(sichtbar.length)
-  const statSchritte = useCountUp(totalTasks)
+  const statBereiche = useCountUp(sichtbar.length, 1400, statsView.inView)
+  const statSchritte = useCountUp(totalTasks, 1400, statsView.inView)
 
   // Sanfte Parallaxe des Papierfliegers zur Mausposition (wie im Redesign)
   const heroMove = (e: React.MouseEvent<HTMLElement>) => {
@@ -34,8 +48,8 @@ export default function Home() {
       {/* Video-Hero (Higgsfield) — CTA scrollt zum Inhalt darunter */}
       <Hero />
 
-      {/* Hero – editorial, mehrschichtig */}
-      <section id="start" ref={heroRef} onMouseMove={heroMove} className="relative overflow-hidden px-7 pt-18 pb-16">
+      {/* Hero – editorial, mehrschichtig, viel Luft */}
+      <section id="start" ref={heroRef} onMouseMove={heroMove} className="relative overflow-hidden px-7 pt-24 pb-20">
         <div className="relative h-[480px] flex items-center justify-center">
           {/* dünne Orbit-Linien */}
           <div aria-hidden="true" className="absolute top-1/2 left-1/2 size-[720px] -mt-[360px] -ml-[360px] border border-pine/10 rounded-full pointer-events-none" />
@@ -50,10 +64,18 @@ export default function Home() {
             />
           </svg>
 
-          {/* das große Wort */}
-          <div className="relative text-center pointer-events-none" style={{ animation: 'rise 1.1s cubic-bezier(.2,.7,.2,1) .2s both' }}>
+          {/* das große Wort – Buchstabe für Buchstabe */}
+          <div className="relative text-center pointer-events-none">
             <h1 className="m-0 whitespace-nowrap font-serif font-normal leading-none text-pine tracking-[-.01em] text-[clamp(72px,12.5vw,190px)]">
-              startklar
+              {'startklar'.split('').map((c, i) => (
+                <span
+                  key={i}
+                  className="inline-block"
+                  style={{ animation: `rise .9s var(--ease-expo) ${0.2 + i * 0.05}s both` }}
+                >
+                  {c}
+                </span>
+              ))}
             </h1>
           </div>
 
@@ -65,14 +87,14 @@ export default function Home() {
           >
             <div style={{ animation: 'flyIn 2.4s cubic-bezier(.3,.6,.2,1) both' }}>
               <div style={{ animation: 'glide 5s ease-in-out 2.4s infinite' }}>
-                <PaperPlane />
+                <KlaroPlane />
               </div>
             </div>
           </div>
         </div>
 
         {/* Copy-Zeile */}
-        <div className="relative mt-12 mx-auto max-w-[1200px] w-full flex flex-wrap items-end justify-between gap-8" style={{ animation: 'rise 1s cubic-bezier(.2,.7,.2,1) .25s both' }}>
+        <div className="relative mt-14 mx-auto max-w-[1100px] w-full flex flex-wrap items-end justify-between gap-8" style={{ animation: 'rise 1s cubic-bezier(.2,.7,.2,1) .25s both' }}>
           <div>
             <p className="m-0 text-xs font-semibold tracking-[.24em] uppercase text-olive">Behörden · Geld · Wohnung</p>
             <p className="mt-3 max-w-[440px] text-[17px] leading-relaxed text-pine/75">
@@ -80,67 +102,79 @@ export default function Home() {
             </p>
           </div>
           <div className="flex flex-wrap gap-3.5">
-            <Link to="/onboarding" className="rounded-pill bg-olive text-on-akzent px-7.5 py-4 text-[15px] font-semibold hover:bg-olive-deep transition">
+            <Link to="/onboarding" onMouseMove={magnetMove} onMouseLeave={magnetLeave} className="magnet rounded-pill bg-olive text-on-akzent px-7.5 py-4 text-[15px] font-semibold transition-colors hover:bg-olive-deep active:scale-98">
               In 2 Minuten loslegen
             </Link>
-            <Link to="/fortschritt" className="rounded-pill border-[1.5px] border-pine/30 text-pine px-7.5 py-4 text-[15px] font-semibold hover:border-pine transition">
-              Dein Fortschritt
+            <Link to="/so-gehts" onMouseMove={magnetMove} onMouseLeave={magnetLeave} className="magnet rounded-pill border-[1.5px] border-pine/30 text-pine px-7.5 py-4 text-[15px] font-semibold transition-colors hover:border-pine active:scale-98">
+              So funktioniert's
             </Link>
           </div>
+        </div>
+
+        {/* Angst-Moment-Einstieg – auch ohne Spiel-Modus erreichbar (r7 Kap. 4b.2:
+            der Brief-Pfad ist der Kern, nicht das Nebenfeature). Ruhiger Ton. */}
+        <Link
+          to="/post"
+          className="relative mt-8 mx-auto max-w-[1100px] w-full flex items-center gap-4 rounded-[20px] border-[1.5px] border-pine/20 bg-cream-card/70 px-6 py-5 hover:border-olive transition"
+          style={{ animation: 'rise 1s cubic-bezier(.2,.7,.2,1) .3s both' }}
+        >
+          <span className="grid place-items-center size-12 flex-none rounded-full bg-olive/12 text-2xl">✉️</span>
+          <span className="flex-1">
+            <span className="block text-[16.5px] font-semibold text-pine">Post bekommen und nicht verstanden?</span>
+            <span className="block text-[14px] text-pine/65">Wir schauen gemeinsam drauf – ruhig, kein Notfall, ein Schritt nach dem anderen.</span>
+          </span>
+          <span className="flex-none text-olive font-semibold text-lg">→</span>
+        </Link>
+      </section>
+
+      {/* Zahlen – luftige Reihe auf Creme, zählen beim Scrollen hoch */}
+      <section className="mx-auto max-w-[1100px] w-full px-7 pb-4">
+        <div ref={statsView.ref} className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-11 border-t border-pine/12 pt-12">
+          {[
+            { wert: <>{statBereiche}</>, label: 'Bereiche fürs echte Leben' },
+            { wert: <>{statSchritte}</>, label: 'Schritt-für-Schritt-Anleitungen' },
+            { wert: <>2<span className="text-[26px]"> Min</span></>, label: 'bis dein Plan persönlich ist' },
+            { wert: <>100<span className="text-[26px]"> %</span></>, label: 'lokal — Daten bleiben bei dir' },
+          ].map((stat, i) => (
+            <Reveal key={stat.label} delay={i * 90}>
+              <p className="m-0 font-serif text-[clamp(44px,6vw,64px)] leading-none text-pine">{stat.wert}</p>
+              <p className="mt-2.5 m-0 text-sm text-pine/60">{stat.label}</p>
+            </Reveal>
+          ))}
         </div>
       </section>
 
-      {/* Dunkles Band: Marquee + Zahlen + Bereiche */}
-      <section className="bg-band rounded-t-[56px] pt-18 pb-[90px] text-paper">
-        <MarqueeTiles />
-
-        {/* Zahlen */}
-        <div className="mx-auto max-w-[1200px] px-7 grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4.5">
-          <div className="border border-paper/16 rounded-[20px] p-6.5">
-            <p className="m-0 font-serif text-[56px] leading-none">{statBereiche}</p>
-            <p className="mt-2.5 text-sm text-paper/65">Bereiche fürs echte Leben</p>
-          </div>
-          <div className="border border-paper/16 rounded-[20px] p-6.5">
-            <p className="m-0 font-serif text-[56px] leading-none">{statSchritte}</p>
-            <p className="mt-2.5 text-sm text-paper/65">Schritt-für-Schritt-Anleitungen</p>
-          </div>
-          <div className="border border-paper/16 rounded-[20px] p-6.5">
-            <p className="m-0 font-serif text-[56px] leading-none">2<span className="text-[28px]"> Min</span></p>
-            <p className="mt-2.5 text-sm text-paper/65">bis dein Plan persönlich ist</p>
-          </div>
-          <div className="border border-paper/16 rounded-[20px] p-6.5">
-            <p className="m-0 font-serif text-[56px] leading-none">100<span className="text-[28px]"> %</span></p>
-            <p className="mt-2.5 text-sm text-paper/65">lokal — Daten bleiben bei dir</p>
-          </div>
-        </div>
-
-        {/* Bereiche */}
-        <div className="mx-auto max-w-[1200px] mt-18 px-7">
-          <div className="flex flex-wrap items-baseline justify-between gap-5">
-            <h2 className="m-0 font-serif font-normal text-[clamp(32px,4vw,48px)]">
-              Deine <em className="text-olive-soft">Bereiche</em>
-            </h2>
-            <p className="m-0 text-[15px] text-paper/60 max-w-[340px]">
-              Beantworte 7 Fragen und wir blenden alles aus, was für dich gerade nicht zählt.
-            </p>
-          </div>
-          <div className="mt-8 grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-4.5">
+      {/* Bereiche – dunkles Band, das Herzstück, großzügig gesetzt */}
+      <section id="bereiche" className="bg-band rounded-[56px] mx-3.5 mt-16 text-paper scroll-mt-16">
+        <div className="mx-auto max-w-[1200px] px-7 py-20">
+          <Reveal>
+            <div className="flex flex-wrap items-baseline justify-between gap-5">
+              <h2 className="m-0 font-serif font-normal text-[clamp(34px,4.5vw,52px)]">
+                Deine <em className="text-olive-soft">Bereiche</em>
+              </h2>
+              <p className="m-0 text-[15px] text-paper/60 max-w-[340px]">
+                Beantworte 7 Fragen und wir blenden alles aus, was für dich gerade nicht zählt.
+              </p>
+            </div>
+          </Reveal>
+          <div className="mt-12 grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-5">
             {sichtbar.map(({ journey, tasks }, i) => (
-              <Link
-                key={journey.id}
-                to={`/journey/${journey.id}`}
-                className="text-left bg-cream text-pine border border-paper/10 rounded-[22px] p-7 flex flex-col gap-2.5 transition duration-250 hover:-translate-y-1.5 hover:shadow-[0_18px_40px_rgba(0,0,0,.28)]"
-              >
-                <span className="text-[13px] font-semibold tracking-[.14em] text-olive">0{i + 1}</span>
-                <span className="font-serif text-[28px] font-medium leading-[1.15]">{journey.title}</span>
-                <span className="text-[14.5px] leading-relaxed text-pine/70">{journey.subtitle}</span>
-                <span className="mt-2 flex items-center justify-between gap-2.5">
-                  <span className="text-[13px] font-semibold text-olive border border-olive/40 rounded-pill px-3 py-1.25">
-                    {tasks.length} {tasks.length === 1 ? 'Schritt' : 'Schritte'} für dich
+              <Reveal key={journey.id} delay={i * 80} className="h-full">
+                <Link
+                  to={`/journey/${journey.id}`}
+                  className="group h-full text-left bg-cream text-pine border border-paper/10 rounded-[22px] p-8 flex flex-col gap-2.5 transition duration-300 hover:-translate-y-1.5 hover:shadow-[0_18px_40px_rgba(0,0,0,.28)]"
+                >
+                  <span className="text-[13px] font-semibold tracking-[.14em] text-olive">0{i + 1}</span>
+                  <span className="font-serif text-[28px] font-medium leading-[1.15] transition-colors duration-300 group-hover:text-olive-deep">{journey.title}</span>
+                  <span className="text-[14.5px] leading-relaxed text-pine/70">{journey.subtitle}</span>
+                  <span className="mt-auto pt-3 flex items-center justify-between gap-2.5">
+                    <span className="text-[13px] font-semibold text-olive border border-olive/40 rounded-pill px-3 py-1.25">
+                      {tasks.length} {tasks.length === 1 ? 'Schritt' : 'Schritte'} für dich
+                    </span>
+                    <span className="text-xl transition-transform duration-300 group-hover:translate-x-1.5" aria-hidden="true">→</span>
                   </span>
-                  <span className="text-xl" aria-hidden="true">→</span>
-                </span>
-              </Link>
+                </Link>
+              </Reveal>
             ))}
           </div>
           {!loading && profile && sichtbar.length === 0 && (
@@ -149,31 +183,49 @@ export default function Home() {
             </p>
           )}
         </div>
+      </section>
 
-        {/* CTA */}
-        <div className="mx-auto max-w-[1200px] mt-14 px-7">
-          {!loading && !profile && (
-            <div className="bg-olive text-cream rounded-[26px] p-11 flex flex-wrap items-center justify-between gap-7">
-              <div className="max-w-[560px]">
-                <h3 className="m-0 font-serif font-normal text-[32px]">Zeig uns kurz deine Situation</h3>
-                <p className="mt-2.5 text-base text-cream/85 leading-[1.55]">
-                  7 Fragen, unter 2 Minuten — danach siehst du nur, was für dich zählt. Kein Konto, keine E-Mail.
-                </p>
+      {/* Ruhiger Abschluss – führt zur Erklärseite bzw. zum Fortschritt */}
+      <section className="mx-auto max-w-[760px] w-full px-7 py-28 text-center">
+        <Reveal>
+          {!loading && !profile ? (
+            <>
+              <p className="m-0 text-xs font-semibold tracking-[.24em] uppercase text-olive">Neugierig?</p>
+              <h2 className="mt-4 m-0 font-serif font-normal text-pine text-[clamp(30px,4.5vw,46px)] leading-[1.1]">
+                Ein Schritt nach dem <em className="text-olive">anderen.</em>
+              </h2>
+              <p className="mt-4 mx-auto m-0 max-w-[440px] text-[16px] leading-relaxed text-pine/70">
+                Schau dir in Ruhe an, wie Startklar funktioniert — oder leg direkt los. 7 Fragen, unter 2 Minuten, kein Konto.
+              </p>
+              <div className="mt-8 flex flex-wrap justify-center gap-3.5">
+                <Link to="/onboarding" onMouseMove={magnetMove} onMouseLeave={magnetLeave} className="magnet rounded-pill bg-olive text-on-akzent px-8 py-4 text-base font-semibold transition-colors hover:bg-olive-deep active:scale-98">
+                  In 2 Minuten loslegen
+                </Link>
+                <Link to="/so-gehts" className="rounded-pill border-[1.5px] border-pine/30 text-pine px-8 py-4 text-base font-semibold transition hover:border-pine">
+                  So funktioniert's →
+                </Link>
               </div>
-              <Link to="/onboarding" className="flex-none rounded-pill bg-cream text-pine px-8 py-4 text-base font-semibold transition hover:scale-104">
-                Los geht's →
-              </Link>
-            </div>
+            </>
+          ) : (
+            <>
+              <p className="m-0 text-xs font-semibold tracking-[.24em] uppercase text-olive">Willkommen zurück</p>
+              <h2 className="mt-4 m-0 font-serif font-normal text-pine text-[clamp(30px,4.5vw,46px)] leading-[1.1]">
+                Dein Plan wartet <em className="text-olive">auf dich.</em>
+              </h2>
+              <p className="mt-4 mx-auto m-0 max-w-[440px] text-[16px] leading-relaxed text-pine/70">
+                Die Bereiche oben sind auf dich zugeschnitten. Ändert sich deine Situation, passt du einfach dein Profil an.
+              </p>
+              <div className="mt-8 flex flex-wrap justify-center gap-3.5">
+                <Link to="/fortschritt" onMouseMove={magnetMove} onMouseLeave={magnetLeave} className="magnet rounded-pill bg-olive text-on-akzent px-8 py-4 text-base font-semibold transition-colors hover:bg-olive-deep active:scale-98">
+                  Zum Fortschritt →
+                </Link>
+                <Link to="/profil" className="rounded-pill border-[1.5px] border-pine/30 text-pine px-8 py-4 text-base font-semibold transition hover:border-pine">
+                  Profil anpassen
+                </Link>
+              </div>
+            </>
           )}
-          {!loading && profile && (
-            <div className="border border-paper/20 rounded-[26px] px-9 py-7 flex flex-wrap items-center justify-between gap-5">
-              <p className="m-0 text-base text-paper/85">Dein Profil ist eingerichtet — die Bereiche oben sind auf dich zugeschnitten.</p>
-              <Link to="/profil" className="rounded-pill border-[1.5px] border-paper/40 text-paper px-5.5 py-2.75 text-sm font-semibold hover:border-paper transition">
-                Profil anpassen
-              </Link>
-            </div>
-          )}
-        </div>
+        </Reveal>
       </section>
     </div>
   )

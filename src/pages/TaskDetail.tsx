@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { journeys } from '../data'
 import { faktum } from '../data/fakten'
@@ -5,6 +6,10 @@ import { kategorie, vergleichFuerTask } from '../data/vergleich'
 import { relevanteTasks } from '../data/visibility'
 import { useProfile } from '../hooks/useProfile'
 import { useProgress } from '../hooks/useProgress'
+import { useSpiel } from '../hooks/useSpiel'
+import { useSettings } from '../hooks/useSettings'
+import { questLevel } from '../lib/spiel'
+import Flieger from '../components/spiel/Flieger'
 import CategoryBadge from '../components/CategoryBadge'
 import DokumenteSection from '../components/DokumenteSection'
 import { dokumentKeyTask } from '../data/dokumente'
@@ -22,6 +27,37 @@ export default function TaskDetail() {
   // Versicherungs-Tasks: verknüpfte Vergleichskategorie mit Bedarfscheck (sonst '').
   const checkKatId = (vergleichFuerTask[`${journeyId}:${taskId}`] ?? []).find(hatBedarfsCheck) ?? ''
   const { antworten: checkAntworten, ergebnis: checkErgebnis } = useBedarf(checkKatId)
+
+  // Spiel-Ebene: Öffnen der Aufgabe = „Verstanden" (L1); ausgefüllter Check =
+  // Steckbrief-Artefakt; Erledigen (L2) feiert die erschlossene Insel.
+  const { state: spielState, sende } = useSpiel()
+  const { einstellungen: { ausruestung } } = useSettings()
+  const [feier, setFeier] = useState(false)
+  const vorLevel = useRef(questLevel(spielState, journeyId, taskId))
+  const checkGemeldet = useRef(false)
+
+  useEffect(() => {
+    if (journeyId && taskId) void sende({ typ: 'QUEST_ORIENTED', gebiet: journeyId, quest: taskId })
+  }, [journeyId, taskId, sende])
+
+  useEffect(() => {
+    if (checkAntworten && !checkGemeldet.current) {
+      checkGemeldet.current = true
+      void sende({
+        typ: 'CHECK_COMPLETED',
+        gebiet: journeyId,
+        quest: taskId,
+        titel: checkErgebnis?.titel ?? taskId,
+        datum: new Date().toISOString().slice(0, 10),
+      })
+    }
+  }, [checkAntworten, checkErgebnis, journeyId, taskId, sende])
+
+  useEffect(() => {
+    const lvl = questLevel(spielState, journeyId, taskId)
+    if (vorLevel.current < 2 && lvl === 2) setFeier(true)
+    vorLevel.current = lvl
+  }, [spielState, journeyId, taskId])
 
   if (!journey) return <p className="p-6">Nicht gefunden. <Link to="/" className="underline">Zur Startseite</Link></p>
   const task = journey.tasks.find(t => t.id === taskId)
@@ -51,6 +87,12 @@ export default function TaskDetail() {
       <p className="mt-3.5 m-0 text-[17px] leading-[1.55] text-pine/75" style={{ animation: 'rise .6s cubic-bezier(.2,.7,.2,1) .07s both' }}>
         {task.summary}
       </p>
+
+      {/* Kurze Einordnung – senkt die Angst, bevor irgendetwas verlangt wird */}
+      <div className="mt-4 flex flex-wrap items-center gap-2 text-[13px]" style={{ animation: 'rise .6s cubic-bezier(.2,.7,.2,1) .1s both' }}>
+        <span className="rounded-pill bg-olive/12 text-olive font-semibold px-3 py-1.5">⏱ {task.deadline}</span>
+        <span className="rounded-pill bg-pine/8 text-pine/70 px-3 py-1.5">Kein Notfall – ein Schritt nach dem anderen</span>
+      </div>
 
       <section
         aria-label="Schritt für Schritt"
@@ -137,6 +179,23 @@ export default function TaskDetail() {
       <div className="mt-5">
         <DokumenteSection bezugKey={dokumentKeyTask(journey.id, task.id)} />
       </div>
+
+      {feier && (
+        <div
+          className="mt-7 rounded-[20px] border-[1.5px] border-olive bg-olive/10 p-6 flex items-center gap-4"
+          style={{ animation: 'panel-in .5s cubic-bezier(.2,.7,.2,1) both' }}
+          role="status"
+        >
+          <Flieger size={92} zustand="feiern" ausruestung={ausruestung} shadow={false} />
+          <div>
+            <p className="m-0 font-serif text-xl text-pine">Insel erschlossen ✦</p>
+            <p className="mt-1 m-0 text-[14.5px] text-pine/75">
+              Das kannst du jetzt wirklich – Flugmeilen gutgeschrieben.{' '}
+              <Link to="/sammlung" className="font-semibold text-olive underline">In deiner Sammlung ansehen</Link>
+            </p>
+          </div>
+        </div>
+      )}
 
       <div className="mt-7 flex flex-col sm:flex-row gap-3">
         <button

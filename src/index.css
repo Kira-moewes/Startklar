@@ -57,6 +57,37 @@
 :root[data-schrift='s'] { font-size: 93.75%; }
 :root[data-schrift='l'] { font-size: 112.5%; }
 
+/*
+ * Welt „Himmel" – eigene Token-Achse NUR für die Spiel-Oberfläche
+ * (Himmelskarte, Flieger, Inseln). Klassische Seiten nutzen sie nicht, daher
+ * ist das Attribut auf <html> für die restliche App folgenlos.
+ * Tag = heller Himmel, Sternennacht = dunkles Theme. So folgt „Tag→Nacht"
+ * automatisch dem bestehenden Hell/Dunkel-Schalter.
+ */
+:root[data-welt='himmel'] {
+  /* Ruhiger, tieferer Dämmerhimmel – bewusst weniger hell/blass, damit die
+     Seite zur cremig-erdigen Markenwelt (cream/pine/olive) passt statt hell
+     herauszustechen. */
+  --sky-1: #DFD3B0;   /* oberer Himmel, entsättigtes Warm */
+  --sky-2: #CBB68A;   /* Horizontglühen, tiefer */
+  --sky-3: #B39C74;   /* unterer Rand, erdiger Übergang zur Creme-Welt */
+  --cloud: #F3EEDD;
+  --insel: #92A758;   /* Inselgras */
+  --insel-tief: #6E7F42;
+  --fels: #7C6A52;    /* Felskante der schwebenden Insel */
+  --stern: transparent;
+}
+:root[data-welt='himmel'][data-theme='dunkel'] {
+  --sky-1: #1B2340;
+  --sky-2: #2A2C55;
+  --sky-3: #3A2E5A;
+  --cloud: #E8ECFF;
+  --insel: #4C5D3A;
+  --insel-tief: #33421F;
+  --fels: #3A3550;
+  --stern: #FCF6D8;
+}
+
 @theme {
   --color-pine: var(--t-fg);
   --color-forest: var(--t-fg);
@@ -83,6 +114,12 @@
   --radius-pill: 9999px;
 
   --animate-rise: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+/* Motion-Tokens: eine gemeinsame Kurve/Rhythmik für alle Übergänge */
+:root {
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 body {
@@ -159,6 +196,133 @@ html {
 @keyframes panel-in {
   from { opacity: 0; transform: translateY(24px); }
   to { opacity: 1; transform: none; }
+}
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes cueBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+@keyframes heroWord {
+  to { transform: none; }
+}
+@keyframes heroFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Scroll-Reveal (siehe src/components/Reveal.tsx) */
+.reveal {
+  opacity: 0;
+  transform: translateY(var(--reveal-y, 28px));
+  transition:
+    opacity 0.9s var(--ease-expo),
+    transform 0.9s var(--ease-expo);
+}
+.reveal-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Marquees pausieren unter dem Zeiger */
+.mq-track:hover {
+  animation-play-state: paused;
+}
+
+/* Klaro-Charakter: Blinzeln + Pupillen folgen dem Cursor (--px/--py) */
+.kp-eye {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: blinkEye 4.8s ease-in-out infinite;
+}
+.kp-eye + .kp-eye {
+  animation-delay: 0.07s;
+}
+.kp-pupil {
+  transform: translate(calc(var(--px, 0) * 3.2px), calc(var(--py, 0) * 2.6px));
+  transition: transform 0.18s var(--ease-out);
+}
+@keyframes blinkEye {
+  0%, 91%, 100% { transform: scaleY(1); }
+  94% { transform: scaleY(0.08); }
+}
+
+/* Magnetische Buttons: ziehen sich sanft zum Cursor */
+.magnet {
+  transform: translate(var(--mx, 0px), var(--my, 0px));
+  transition: transform 0.25s var(--ease-out);
+  will-change: transform;
+}
+
+/* Finale-Szene: Klaro fliegt mit Looping ein, sobald das Kapitel sichtbar
+   wird. Motion-Path (offset-path) nur wo unterstützt; die gestrichelte
+   Flugspur blendet parallel ein. */
+@supports (offset-path: path('M 0 0 L 1 1')) {
+  .finale-flug {
+    offset-path: path('M -60 200 C 100 130, 300 70, 440 130 C 480 148, 500 160, 520 160 C 575 160, 575 60, 520 60 C 465 60, 465 160, 520 160 C 560 160, 700 170, 880 120');
+    offset-rotate: auto 21deg;
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  .finale-flug.flieg {
+    animation: finaleFlug 3.6s cubic-bezier(0.45, 0.05, 0.3, 1) 0.2s both;
+  }
+}
+@keyframes finaleFlug {
+  0% { offset-distance: 0%; opacity: 0; }
+  6% { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 1; }
+}
+.finale-pfad {
+  opacity: 0;
+  transition: opacity 1.4s var(--ease-out) 0.2s;
+}
+.finale-pfad.flieg {
+  opacity: 1;
+}
+
+/* Navigation: Unterstrich wächst von links */
+.nav-u {
+  position: relative;
+}
+.nav-u::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 100%;
+  bottom: -3px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--t-akzent);
+  transition: right 0.32s var(--ease-out);
+}
+.nav-u:hover::after,
+.nav-u-on::after {
+  right: 0;
+}
+
+/* Sichtbarer Tastatur-Fokus, markenfarben */
+:focus-visible {
+  outline: 2px solid var(--t-akzent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* Story „Über dem Nebel" (Intro/Tour) */
+@keyframes wink {
+  0%, 100% { transform: rotate(-28deg); }
+  50% { transform: rotate(-8deg); }
+}
+/* Intro „Über dem Nebel": langsam aufsteigender Nebel + sanftes Ein-/Ausblenden */
+@keyframes nebelWogen {
+  0%, 100% { transform: translateY(0) scaleX(1); opacity: 0.85; }
+  50% { transform: translateY(-10px) scaleX(1.05); opacity: 1; }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {

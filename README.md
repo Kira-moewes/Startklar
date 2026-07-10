@@ -90,6 +90,42 @@ Runde 6 ([docs/konzept-r6.md](docs/konzept-r6.md)):
   Papierflieger, Primär-Buttons, Fortschritt, Heatmap und Checkboxen folgen
   ihr – hell wie dunkel, ohne Farb-Flash beim Laden.
 
+## Konzept v7 (Strategie, geplant)
+
+Runde 7 ([docs/konzept-r7-strategie.md](docs/konzept-r7-strategie.md)) ist
+eine Strategierunde statt einer Umsetzungsrunde. Kurs: eine **schlanke
+Consumer-App**, deren Kern das Spielgefühl beim Abhaken echter To-dos und der
+**Brief-Entschlüsseler** für den Angst-Moment ist. Inhalte: psychologisches
+Fundament (Angst/Ambiguität statt Langeweile als Kern-Diagnose),
+Gamification-Engine mit Core Loop und Anti-Dark-Pattern-Leitplanken,
+„was echt hilft", drei Marken-/Design-Richtungen und Monetarisierung über
+eine **Pro-Version (Kosmetik/Komfort) statt Affiliate/Provision** – die
+eigentliche Hilfe bleibt gratis, gesponserter Zugang als spätere Option.
+Grundlage für r8 (Design-Deep-Dive) und r9 (MVP-Umbau).
+
+## Konzept v8 (Spiel-Ebene „Himmel & Papierflieger", erste Scheibe umgesetzt)
+
+Runde 8 ([docs/konzept-r8-himmel-papierflieger.md](docs/konzept-r8-himmel-papierflieger.md))
+bringt das Spielgefühl aus r7 als **additive, abschaltbare** Ebene in die App:
+
+- **Himmelskarte** (`/himmel`, neue Startseite für eingerichtete Profile): eine
+  Piloten-Katze im Papierflieger zieht von schwebender Insel zu Insel; jede real
+  erledigte Aufgabe erschließt eine Insel und bringt Flugmeilen. Umschalter
+  „Startseite: Spiel / Klassisch" im Profil – die bisherige App bleibt komplett
+  erhalten.
+- **Brief-Entschlüsseler** (`/post`): „Ich hab Post und versteh sie nicht" –
+  kuratierte Briefarten (Anmeldung, Rundfunkbeitrag, Nebenkosten, Mietvertrag,
+  Strom) ruhig eingeordnet, mit einem 2-Minuten-Schritt. Eigenes stilles
+  „Morgenhimmel"-Register für den Angst-Moment.
+- **Meisterschaft & Sammlung**: Level „Verstanden/Gemacht", freischaltbare
+  Piloten-Ausrüstung (Kosmetik = späterer Pro-Hebel), Flugbuch + Steckbriefe
+  unter `/sammlung`. Keine Streaks, kein Verlust – XP und Freischaltungen sinken
+  nie (per Unit-Test abgesichert).
+
+Technisch additiv: eigene Spiel-Schicht (`src/lib/spiel.ts`, `useSpiel`), die
+sich an den einen Erledigt-Punkt in `useProgress.ts` hängt; Welt-Theming als
+`data-welt`-Achse. Inhalts-Typen und bestehende Seiten bleiben unverändert.
+
 ## Deployment mit Vercel
 
 1. Repo bei [Vercel](https://vercel.com) importieren („Import from Git") –
