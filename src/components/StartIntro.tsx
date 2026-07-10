@@ -93,6 +93,54 @@ export default function StartIntro() {
   )
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined)
 
+  // Zielpunkt: Position relativ zum Radar-Radius (−1..1), per Finger/Maus
+  // verschiebbar. Erst wenn er im Fadenkreuz einrastet, öffnet sich die App.
+  const radarRef = useRef<HTMLDivElement>(null)
+  const [ziel, setZiel] = useState({ x: 0.46, y: -0.34 })
+  const [gefasst, setGefasst] = useState(false)
+  const zieht = useRef(false)
+  const startPunkt = useRef({ x: 0, y: 0 })
+
+  const fasse = () => setGefasst(true)
+
+  const punktRunter = (e: React.PointerEvent<HTMLButtonElement>) => {
+    if (gefasst) return
+    zieht.current = true
+    startPunkt.current = { x: e.clientX, y: e.clientY }
+    e.currentTarget.setPointerCapture(e.pointerId)
+  }
+  const punktBewegt = (e: React.PointerEvent<HTMLButtonElement>) => {
+    if (!zieht.current || gefasst) return
+    const feld = radarRef.current?.getBoundingClientRect()
+    if (!feld) return
+    const radius = feld.width / 2
+    let x = (e.clientX - (feld.left + radius)) / radius
+    let y = (e.clientY - (feld.top + feld.height / 2)) / radius
+    const abstand = Math.hypot(x, y)
+    if (abstand > 0.82) {
+      // sanft am Ringrand halten
+      x = (x / abstand) * 0.82
+      y = (y / abstand) * 0.82
+    }
+    setZiel({ x, y })
+    if (Math.hypot(x, y) < 0.09) fasse() // im Fadenkreuz → einrasten
+  }
+  const punktLos = (e: React.PointerEvent<HTMLButtonElement>) => {
+    if (!zieht.current) return
+    zieht.current = false
+    // Ein ruhiger Tipp (kaum Bewegung) auf den Zielpunkt rastet ebenfalls
+    // ein – barrierefreier Ersatz fürs Ziehen (Motorik, Screenreader).
+    const dx = e.clientX - startPunkt.current.x
+    const dy = e.clientY - startPunkt.current.y
+    if (!gefasst && Math.hypot(dx, dy) < 6) fasse()
+  }
+
+  useEffect(() => {
+    if (!gefasst) return
+    const t = setTimeout(() => setPhase('hebt'), 700)
+    return () => clearTimeout(t)
+  }, [gefasst])
+
   useEffect(() => {
     if (phase === 'fertig') return
     try {
@@ -100,9 +148,9 @@ export default function StartIntro() {
     } catch {
       /* ohne Storage läuft das Intro schlimmstenfalls beim Reload erneut */
     }
-    // Phase „zeigt" wartet auf den Tipp – kein Auto-Weiter, wie ein
-    // Titelbildschirm. Nur die Hebe-Phase bekommt ein Sicherheitsnetz,
-    // falls transitionend nie feuert (Tab im Hintergrund).
+    // Phase „zeigt" wartet aufs Einrasten des Zielpunkts – kein Auto-Weiter.
+    // Nur die Hebe-Phase bekommt ein Sicherheitsnetz, falls transitionend
+    // nie feuert (Tab im Hintergrund).
     if (phase === 'hebt') {
       timer.current = setTimeout(() => setPhase('fertig'), 1200)
     }
@@ -114,13 +162,7 @@ export default function StartIntro() {
   return (
     <div
       className={`sintro${phase === 'hebt' ? ' sintro--hebt' : ''}`}
-      role="button"
-      tabIndex={0}
-      aria-label="Startklar öffnen"
-      onClick={() => setPhase('hebt')}
-      onKeyDown={e => {
-        if (e.key === 'Enter' || e.key === ' ') setPhase('hebt')
-      }}
+      aria-label="Start-Intro"
       onTransitionEnd={e => {
         if (e.target === e.currentTarget) setPhase('fertig')
       }}
@@ -133,13 +175,33 @@ export default function StartIntro() {
       <div className="sintro__skala is--links" />
       <div className="sintro__skala is--rechts" />
 
-      {/* Radar-Zielscheibe: Ring, rotierender Suchstrahl, Papierflieger-Punkte */}
-      <div className="sintro__radar">
+      {/* Radar-Zielscheibe: Ring, rotierender Suchstrahl, Papierflieger-Punkte
+          und der verschiebbare Zielpunkt, der im Fadenkreuz einrastet */}
+      <div className={`sintro__radar${gefasst ? ' is--gefasst' : ''}`} ref={radarRef}>
         <Radar />
         <div className="sintro__sweep" />
         <Blip className="sintro__blip is--1" />
         <Blip className="sintro__blip is--2" />
         <Blip className="sintro__blip is--3" />
+        <div className="sintro__fang" aria-hidden="true" />
+        <button
+          type="button"
+          className="sintro__ziel"
+          style={{
+            left: `${50 + (gefasst ? 0 : ziel.x * 50)}%`,
+            top: `${50 + (gefasst ? 0 : ziel.y * 50)}%`,
+          }}
+          aria-label="Zielpunkt – zieh ihn ins Fadenkreuz oder drück Enter, um zu starten"
+          onPointerDown={punktRunter}
+          onPointerMove={punktBewegt}
+          onPointerUp={punktLos}
+          onPointerCancel={() => { zieht.current = false }}
+          onKeyDown={e => {
+            if (e.key === 'Enter' || e.key === ' ') fasse()
+          }}
+        >
+          <Blip className="sintro__zielflieger" />
+        </button>
       </div>
 
       <div className="sintro__mitte">
@@ -153,7 +215,9 @@ export default function StartIntro() {
       </div>
 
       <div className="sintro__fuss">
-        <span className="sintro__start">[ Tippen zum Starten</span>
+        <span className="sintro__start">
+          {gefasst ? '[ Ziel erfasst' : '[ Zieh den Flieger ins Fadenkreuz'}
+        </span>
         <span className="sintro__kreuz" />
       </div>
     </div>
