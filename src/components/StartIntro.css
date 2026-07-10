@@ -179,6 +179,9 @@
   color: rgba(244, 241, 220, 0.55);
   animation: sintroTeil 0.7s ease 0.9s both;
 }
+.sintro__start { color: rgba(244, 241, 220, 0.85); animation: sintroPuls 2.2s ease-in-out infinite; }
+@keyframes sintroPuls { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+
 .sintro__kreuz {
   position: relative;
   width: 18px;

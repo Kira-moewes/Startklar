@@ -8,7 +8,8 @@ import './StartIntro.css'
  *
  * Leitplanken (r7):
  *  - läuft nur EINMAL pro Sitzung (sessionStorage), nie bei jeder Navigation
- *  - ein Tipp überspringt sofort – niemand muss zuschauen
+ *  - wartet wie ein Titelbildschirm auf einen Tipp („Tippen zum Starten") –
+ *    das Radar läuft solange ruhig weiter, nichts drängt
  *  - bei reduzierter Bewegung (System ODER App-Einstellung) entfällt es ganz
  */
 const SITZUNGS_MARKE = 'startklar-startintro'
@@ -99,11 +100,10 @@ export default function StartIntro() {
     } catch {
       /* ohne Storage läuft das Intro schlimmstenfalls beim Reload erneut */
     }
-    if (phase === 'zeigt') {
-      timer.current = setTimeout(() => setPhase('hebt'), 3300)
-    } else {
-      // Sicherheitsnetz: auch wenn transitionend nie feuert (Tab im
-      // Hintergrund), verschwindet das Intro garantiert.
+    // Phase „zeigt" wartet auf den Tipp – kein Auto-Weiter, wie ein
+    // Titelbildschirm. Nur die Hebe-Phase bekommt ein Sicherheitsnetz,
+    // falls transitionend nie feuert (Tab im Hintergrund).
+    if (phase === 'hebt') {
       timer.current = setTimeout(() => setPhase('fertig'), 1200)
     }
     return () => clearTimeout(timer.current)
@@ -114,8 +114,13 @@ export default function StartIntro() {
   return (
     <div
       className={`sintro${phase === 'hebt' ? ' sintro--hebt' : ''}`}
-      aria-hidden="true"
+      role="button"
+      tabIndex={0}
+      aria-label="Startklar öffnen"
       onClick={() => setPhase('hebt')}
+      onKeyDown={e => {
+        if (e.key === 'Enter' || e.key === ' ') setPhase('hebt')
+      }}
       onTransitionEnd={e => {
         if (e.target === e.currentTarget) setPhase('fertig')
       }}
@@ -148,7 +153,7 @@ export default function StartIntro() {
       </div>
 
       <div className="sintro__fuss">
-        <span>Tippen zum Überspringen</span>
+        <span className="sintro__start">[ Tippen zum Starten</span>
         <span className="sintro__kreuz" />
       </div>
     </div>
