@@ -7,7 +7,19 @@
       }
     }
   },
-  "enabledPlugins": [
-    "superpowers@superpowers-marketplace"
-  ]
+  "enabledPlugins": {
+    "superpowers@superpowers-marketplace": true
+  },
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"UserPromptSubmit\",\"additionalContext\":\"If the current task involves brainstorming, ideation, exploring ideas, or designing an approach/feature from scratch, you MUST invoke the superpowers brainstorming skill (superpowers:brainstorming) via the Skill tool BEFORE responding or writing any code.\"}}'"
+          }
+        ]
+      }
+    ]
+  }
 }
