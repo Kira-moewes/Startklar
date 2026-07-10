@@ -1,6 +1,7 @@
 import { lazy } from 'react'
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout'
+import StartIntro from './components/StartIntro'
 import Home from './pages/Home'
 import { useProfile } from './hooks/useProfile'
 import { useSettings } from './hooks/useSettings'
@@ -67,6 +68,9 @@ function NichtGefunden() {
 export default function App() {
   return (
     <BrowserRouter>
+      {/* Auftakt beim App-Start: einmal pro Sitzung, antippbar, entfällt bei
+          reduzierter Bewegung (Details in StartIntro.tsx). */}
+      <StartIntro />
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<StartRoute />} />

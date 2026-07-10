@@ -1,0 +1,151 @@
+/*
+ * Start-Intro „Cockpit-Check": kurzer Auftakt beim Öffnen der App.
+ * Editoriales Fast-Schwarz mit Filmkorn, Sucher-Ecken und Mess-Skalen –
+ * bewusst ein einziger dunkler Moment in beiden Themes (wie ein Vorspann),
+ * danach hebt sich die Fläche und gibt die App frei.
+ * Läuft einmal pro Sitzung, ist antippbar (überspringen) und entfällt bei
+ * reduzierter Bewegung komplett (r7: kein erzwungenes Spektakel).
+ */
+
+.sintro {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  cursor: pointer;
+  user-select: none;
+  /* Pine-getöntes Fast-Schwarz statt reinem Schwarz – gehört zur Markenwelt */
+  background: #0e100a;
+  color: #f4f1dc;
+  transition: transform 0.8s var(--ease-expo);
+  animation: sintroAuf 0.35s ease both;
+}
+.sintro--hebt { transform: translateY(-101%); }
+
+@keyframes sintroAuf { from { opacity: 0; } to { opacity: 1; } }
+
+/* Filmkorn als winzige SVG-Noise-Kachel, sehr zurückhaltend */
+.sintro__grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.09;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+}
+
+/* Sucher-Ecken (Viewfinder) */
+.sintro__ecke {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border: 0 solid rgba(244, 241, 220, 0.85);
+  animation: sintroTeil 0.7s ease 0.15s both;
+}
+.sintro__ecke.is--tl { top: 22px; left: 22px; border-top-width: 2px; border-left-width: 2px; }
+.sintro__ecke.is--tr { top: 22px; right: 22px; border-top-width: 2px; border-right-width: 2px; }
+.sintro__ecke.is--bl { bottom: 22px; left: 22px; border-bottom-width: 2px; border-left-width: 2px; }
+.sintro__ecke.is--br { bottom: 22px; right: 22px; border-bottom-width: 2px; border-right-width: 2px; }
+
+/* Mess-Skalen an den Seiten – feine Striche wie am Instrumentenrand */
+.sintro__skala {
+  position: absolute;
+  top: 50%;
+  translate: 0 -50%;
+  height: min(38vh, 300px);
+  width: 16px;
+  opacity: 0.35;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(244, 241, 220, 0.9) 0 1px,
+    transparent 1px 12px
+  );
+  animation: sintroTeil 0.7s ease 0.3s both;
+}
+.sintro__skala.is--links { left: 22px; }
+.sintro__skala.is--rechts { right: 22px; }
+
+/* Mittelteil: Klammer-Label, riesige condensed Wortmarke, Grundlinie */
+.sintro__mitte { position: relative; padding: 0 clamp(22px, 6vw, 72px); }
+
+.sintro__label {
+  margin: 0 0 clamp(10px, 2.5vh, 22px);
+  font-size: clamp(11px, 1.3vw, 13px);
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(244, 241, 220, 0.72);
+  animation: sintroZeile 0.6s var(--ease-out) 0.25s both;
+}
+.sintro__label b { font-weight: 600; color: #a6b56c; }
+
+.sintro__wortmaske { overflow: hidden; }
+.sintro__wort {
+  display: block;
+  margin: 0;
+  font-family: var(--font-display);
+  /* Breiten-Achse der Instrument Sans: condensed, versal, eng laufend */
+  font-stretch: 75%;
+  font-weight: 640;
+  font-size: clamp(60px, 16.5vw, 210px);
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+  color: #f4f1dc;
+  transform: translateY(108%);
+  animation: sintroWort 0.95s var(--ease-expo) 0.4s forwards;
+}
+
+.sintro__linie {
+  margin-top: clamp(14px, 3vh, 26px);
+  height: 1px;
+  background: rgba(166, 181, 108, 0.5);
+  transform-origin: left center;
+  scale: 0 1;
+  animation: sintroLinie 0.8s var(--ease-expo) 0.75s forwards;
+}
+
+/* Fußzeile: ehrliche Bedienhilfe links, Fadenkreuz rechts */
+.sintro__fuss {
+  position: absolute;
+  left: clamp(22px, 6vw, 72px);
+  right: clamp(22px, 6vw, 72px);
+  bottom: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(244, 241, 220, 0.55);
+  animation: sintroTeil 0.7s ease 0.9s both;
+}
+.sintro__kreuz {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  opacity: 0.7;
+}
+.sintro__kreuz::before,
+.sintro__kreuz::after {
+  content: '';
+  position: absolute;
+  background: rgba(244, 241, 220, 0.9);
+}
+.sintro__kreuz::before { left: 50%; top: 0; bottom: 0; width: 1px; }
+.sintro__kreuz::after { top: 50%; left: 0; right: 0; height: 1px; }
+
+@keyframes sintroTeil { from { opacity: 0; } }
+@keyframes sintroZeile { from { opacity: 0; transform: translateY(14px); } }
+@keyframes sintroWort { to { transform: translateY(0); } }
+@keyframes sintroLinie { to { scale: 1 1; } }
+
+/* Reduzierte Bewegung: Intro entfällt vollständig (zusätzlich zum JS-Check) */
+@media (prefers-reduced-motion: reduce) {
+  .sintro { display: none; }
+}
+:root[data-motion='reduziert'] .sintro { display: none; }
