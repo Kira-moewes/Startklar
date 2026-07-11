@@ -7,6 +7,7 @@ import { istRelevant } from '../data/visibility'
 import { useProfile } from '../hooks/useProfile'
 import { suche } from '../lib/retrieval'
 import CategoryBadge from '../components/CategoryBadge'
+import PageHead from '../components/PageHead'
 import type { Task, TaskCategory } from '../data/types'
 
 const kategorieLabels: Record<TaskCategory, string> = {
@@ -92,34 +93,39 @@ export default function Suche() {
   const zeigeErgebnisse = query.trim().length > 0 || filter !== null
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-12 flex flex-col gap-8">
-      <div>
-        <h1 className="font-serif text-5xl font-normal text-pine">Suche</h1>
-        <p className="mt-2 text-lg text-ink/80">
-          Wonach suchst du? Anmeldung, Kaution, Steuer – wir finden den passenden Schritt.
-        </p>
-      </div>
-
-      <input
-        type="search"
-        value={query}
-        onChange={e => suchen(e.target.value)}
-        placeholder="z. B. Rundfunkbeitrag, Kaution, Führerschein …"
-        autoFocus
-        aria-label="Suchbegriff"
-        className="rounded-field border-2 border-pine-mist bg-cream-card px-5 py-4 text-lg focus:outline-2 focus:outline-coral"
+    <div className="mx-auto max-w-[820px] w-full px-7 pt-14 pb-24 flex flex-col gap-7">
+      <PageHead
+        eyebrow="Suche"
+        title={<><em className="text-olive">Finde</em>, was ansteht</>}
+        intro="Wonach suchst du? Anmeldung, Kaution, Steuer – wir finden den passenden Schritt."
       />
 
-      <div className="flex flex-wrap gap-2" role="group" aria-label="Nach Kategorie filtern">
+      <div className="relative" style={{ animation: 'rise .7s var(--ease-out) .2s both' }}>
+        <svg className="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 size-5 text-pine/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="7" />
+          <path d="m20 20-3.2-3.2" />
+        </svg>
+        <input
+          type="search"
+          value={query}
+          onChange={e => suchen(e.target.value)}
+          placeholder="z. B. Rundfunkbeitrag, Kaution, Führerschein …"
+          autoFocus
+          aria-label="Suchbegriff"
+          className="w-full rounded-pill border-[1.5px] border-pine/20 bg-cream-card pl-13 pr-5 py-4 text-lg transition focus:outline-none focus:border-olive focus:ring-2 focus:ring-olive/25"
+        />
+      </div>
+
+      <div className="flex flex-wrap gap-2" role="group" aria-label="Nach Kategorie filtern" style={{ animation: 'rise .7s var(--ease-out) .26s both' }}>
         {alleKategorien.map(k => (
           <button
             key={k}
             onClick={() => setFilter(filter === k ? null : k)}
             aria-pressed={filter === k}
-            className={`rounded-pill px-4 py-2 text-sm font-display font-medium transition border ${
+            className={`rounded-pill px-4 py-2 text-sm font-medium transition border-[1.5px] ${
               filter === k
                 ? 'bg-pine text-cream border-pine'
-                : 'bg-cream-card text-pine border-pine-mist hover:border-coral'
+                : 'bg-cream-card text-pine border-pine/20 hover:border-olive'
             }`}
           >
             {kategorieLabels[k]}
@@ -128,8 +134,8 @@ export default function Suche() {
       </div>
 
       {zeigeErgebnisse && (
-        <section aria-live="polite" className="flex flex-col gap-4">
-          <p className="text-sm text-ink/60">
+        <section aria-live="polite" className="flex flex-col gap-3.5">
+          <p className="text-sm text-pine/60">
             {treffer.length === 0 && vergleichsTreffer.length === 0
               ? 'Nichts gefunden. Versuch es mit einem anderen Begriff – oder stöbere unten in den Bereichen.'
               : `${treffer.length} ${treffer.length === 1 ? 'Schritt' : 'Schritte'} gefunden${vergleichsTreffer.length > 0 ? ` · ${vergleichsTreffer.length} Vergleich${vergleichsTreffer.length === 1 ? '' : 'e'}` : ''}`}
@@ -139,11 +145,11 @@ export default function Suche() {
             <Link
               key={k.id}
               to={`/vergleich/${k.id}`}
-              className="block rounded-card bg-band p-5 text-paper hover:bg-tile transition"
+              className="block rounded-[20px] bg-band p-5 text-paper transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_32px_rgba(40,54,24,.2)]"
             >
-              <p className="text-xs font-semibold uppercase tracking-widest text-paper/70">Anbieter-Vergleich</p>
-              <p className="mt-1 font-display text-lg font-semibold">{k.titel} vergleichen</p>
-              <p className="mt-1 text-sm text-paper/80">{k.intro}</p>
+              <p className="text-xs font-semibold uppercase tracking-[.18em] text-olive-soft">Anbieter-Vergleich</p>
+              <p className="mt-1.5 font-serif text-xl font-medium">{k.titel} vergleichen</p>
+              <p className="mt-1 text-sm text-paper/75">{k.intro}</p>
             </Link>
           ))}
 
@@ -151,19 +157,19 @@ export default function Suche() {
             <Link
               key={`${t.journeyId}-${t.task.id}`}
               to={`/journey/${t.journeyId}/task/${t.task.id}`}
-              className={`block rounded-card bg-cream-card border p-5 transition hover:border-coral ${t.relevant ? 'border-pine-mist' : 'border-pine-mist opacity-60'}`}
+              className={`group block rounded-[20px] bg-cream-card border p-5 transition duration-300 hover:border-olive hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(40,54,24,.08)] ${t.relevant ? 'border-pine/14' : 'border-pine/14 opacity-60'}`}
             >
               <div className="flex flex-wrap items-center gap-2">
-                <p className="font-display text-lg font-semibold text-pine">{t.task.title}</p>
+                <p className="font-serif text-xl font-medium text-pine transition-colors group-hover:text-olive-deep">{t.task.title}</p>
                 <CategoryBadge category={t.task.category} />
                 {!t.relevant && (
-                  <span className="text-xs text-ink/50 rounded-pill border border-pine-mist px-2 py-0.5">
+                  <span className="text-xs text-pine/50 rounded-pill border border-pine/20 px-2 py-0.5">
                     laut Profil gerade nicht relevant
                   </span>
                 )}
               </div>
-              <p className="mt-1 text-sm text-ink/70">{t.task.summary}</p>
-              <p className="mt-2 text-xs font-display font-semibold text-coral-deep uppercase tracking-wide">
+              <p className="mt-1.5 text-sm text-pine/70">{t.task.summary}</p>
+              <p className="mt-2.5 text-xs font-semibold text-olive uppercase tracking-[.14em]">
                 {t.journeyTitel}
               </p>
             </Link>
@@ -173,15 +179,15 @@ export default function Suche() {
 
       {!zeigeErgebnisse && (
         <section className="flex flex-col gap-3">
-          <h2 className="font-display text-xl font-semibold text-pine">Oder stöbere in deinen Bereichen</h2>
+          <h2 className="font-serif text-2xl font-medium text-pine">Oder stöbere in deinen Bereichen</h2>
           {journeys.filter(j => istRelevant(profile, j.id)).map(j => (
             <Link
               key={j.id}
               to={`/journey/${j.id}`}
-              className="block rounded-card bg-cream-card border border-pine-mist p-5 hover:border-coral transition"
+              className="group block rounded-[20px] bg-cream-card border border-pine/14 p-5 transition duration-300 hover:border-olive hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(40,54,24,.08)]"
             >
-              <p className="font-display font-semibold text-pine">{j.title}</p>
-              <p className="text-sm text-ink/70">{j.subtitle}</p>
+              <p className="font-serif text-xl font-medium text-pine transition-colors group-hover:text-olive-deep">{j.title}</p>
+              <p className="text-sm text-pine/70">{j.subtitle}</p>
             </Link>
           ))}
         </section>

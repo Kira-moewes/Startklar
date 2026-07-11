@@ -11,6 +11,12 @@ export type Einstellungen = {
   kiModus: boolean
   kiKontext: boolean
   kiHinweisGesehen: boolean
+  // Spiel-Ebene „Himmel & Papierflieger"
+  welt: 'himmel'
+  startseite: 'spiel' | 'klassisch' // Umschalter: neue Spiel-Startseite oder klassische Ansicht
+  ausruestung: string // angelegtes Kosmetik-Set der Flieger-Figur ('keine' | Freischaltungs-ID)
+  tourGesehen: boolean // geführte Himmelstour schon gezeigt?
+  effekte3d: boolean // Echtzeit-3D-Flugwelt (aus für schwache Geräte / Datensparen)
 }
 
 export const standardEinstellungen: Einstellungen = {
@@ -22,6 +28,11 @@ export const standardEinstellungen: Einstellungen = {
   kiModus: false,
   kiKontext: false,
   kiHinweisGesehen: false,
+  welt: 'himmel',
+  startseite: 'spiel',
+  ausruestung: 'keine',
+  tourGesehen: false,
+  effekte3d: true,
 }
 
 // Hintergrundfarben der Themes (--t-bg in index.css) – für die PWA-/Browserleiste.
@@ -39,6 +50,7 @@ function anwenden(e: Einstellungen) {
   root.setAttribute('data-akzent', e.akzent)
   root.setAttribute('data-schrift', e.schrift)
   root.setAttribute('data-motion', e.wenigerAnimation ? 'reduziert' : 'normal')
+  root.setAttribute('data-welt', e.welt)
   // PWA-/Browserleiste folgt dem Theme (statisches Fallback steht in index.html)
   document.querySelector('meta[name="theme-color"]')
     ?.setAttribute('content', dunkel ? THEME_COLOR.dunkel : THEME_COLOR.hell)
@@ -62,7 +74,7 @@ function anwenden(e: Einstellungen) {
   try {
     localStorage.setItem(SPIEGEL_KEY, JSON.stringify({
       theme: e.theme, akzent: e.akzent, schrift: e.schrift, wenigerAnimation: e.wenigerAnimation,
-      eigene,
+      welt: e.welt, eigene,
     }))
   } catch { /* localStorage nicht verfügbar – Attribute reichen */ }
 }

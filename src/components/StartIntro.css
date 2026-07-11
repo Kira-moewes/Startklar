@@ -1,0 +1,267 @@
+/*
+ * Start-Intro „Cockpit-Check": kurzer Auftakt beim Öffnen der App.
+ * Editoriales Fast-Schwarz mit Filmkorn, Sucher-Ecken und Mess-Skalen –
+ * bewusst ein einziger dunkler Moment in beiden Themes (wie ein Vorspann),
+ * danach hebt sich die Fläche und gibt die App frei.
+ * Läuft einmal pro Sitzung, ist antippbar (überspringen) und entfällt bei
+ * reduzierter Bewegung komplett (r7: kein erzwungenes Spektakel).
+ */
+
+.sintro {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  cursor: pointer;
+  user-select: none;
+  /* Pine-getöntes Fast-Schwarz statt reinem Schwarz – gehört zur Markenwelt */
+  background: #0e100a;
+  color: #f4f1dc;
+  /* weicher Übergang zur eigentlichen Seite: langes, ruhiges Ausblenden.
+     Wichtig: die Einblend-Animation NICHT mit fill-forwards (`both`) laufen
+     lassen – sonst pinnt sie opacity:1 fest und die Ausblend-Transition
+     greift nicht. Ohne fill gibt sie die Deckkraft nach 0,35 s wieder frei. */
+  transition: opacity 2.2s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: sintroAuf 0.35s ease;
+}
+.sintro--hebt { opacity: 0; pointer-events: none; }
+
+@keyframes sintroAuf { from { opacity: 0; } to { opacity: 1; } }
+
+/* Filmkorn als winzige SVG-Noise-Kachel, sehr zurückhaltend */
+.sintro__grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.09;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+}
+
+/* Sucher-Ecken (Viewfinder) */
+.sintro__ecke {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border: 0 solid rgba(244, 241, 220, 0.85);
+  animation: sintroTeil 0.7s ease 0.15s both;
+}
+.sintro__ecke.is--tl { top: 22px; left: 22px; border-top-width: 2px; border-left-width: 2px; }
+.sintro__ecke.is--tr { top: 22px; right: 22px; border-top-width: 2px; border-right-width: 2px; }
+.sintro__ecke.is--bl { bottom: 22px; left: 22px; border-bottom-width: 2px; border-left-width: 2px; }
+.sintro__ecke.is--br { bottom: 22px; right: 22px; border-bottom-width: 2px; border-right-width: 2px; }
+
+/* Mess-Skalen an den Seiten – feine Striche wie am Instrumentenrand */
+.sintro__skala {
+  position: absolute;
+  top: 50%;
+  translate: 0 -50%;
+  height: min(38vh, 300px);
+  width: 16px;
+  opacity: 0.35;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(244, 241, 220, 0.9) 0 1px,
+    transparent 1px 12px
+  );
+  animation: sintroTeil 0.7s ease 0.3s both;
+}
+.sintro__skala.is--links { left: 22px; }
+.sintro__skala.is--rechts { right: 22px; }
+
+/* Radar-Zielscheibe: mittig, ruhig leuchtend; Strahl und Punkte als Ebenen */
+.sintro__radar {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -54%;
+  width: min(82vmin, 640px);
+  aspect-ratio: 1;
+  color: #f4f1dc;
+  animation: sintroTeil 1s ease 0.2s both;
+}
+.sintro__radarring { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* Suchstrahl: rotierender Kegel mit heller Vorderkante und Leuchtspur */
+.sintro__sweep {
+  position: absolute;
+  /* 24/420 des Radars = Ringradius; der Strahl bleibt knapp im Ring */
+  inset: 8.4%;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    rgba(166, 181, 108, 0) 0deg 285deg,
+    rgba(166, 181, 108, 0.16) 340deg,
+    rgba(244, 241, 220, 0.4) 357deg,
+    rgba(244, 241, 220, 0.75) 360deg
+  );
+  animation: sintroSweep 2.6s linear infinite;
+}
+
+/* Papierflieger-Punkte: blinken versetzt auf, als zöge der Strahl vorbei */
+.sintro__blip {
+  position: absolute;
+  width: clamp(12px, 2.6vmin, 18px);
+  color: rgba(244, 241, 220, 0.9);
+  opacity: 0;
+  animation: sintroBlip 2.6s ease-in-out infinite;
+}
+.sintro__blip.is--1 { left: 61%; top: 30%; rotate: -18deg; animation-delay: 0.2s; }
+.sintro__blip.is--2 { left: 68%; top: 56%; rotate: 12deg; animation-delay: 1s; }
+.sintro__blip.is--3 { left: 34%; top: 44%; rotate: -40deg; animation-delay: 1.9s; }
+
+/* Verschiebbarer Zielpunkt: kleiner Ring mit Papierflieger, folgt dem Finger */
+.sintro__ziel {
+  position: absolute;
+  translate: -50% -50%;
+  width: clamp(40px, 9vmin, 56px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1.5px solid rgba(244, 241, 220, 0.75);
+  border-radius: 50%;
+  background: rgba(14, 16, 10, 0.55);
+  color: rgba(244, 241, 220, 0.95);
+  cursor: grab;
+  touch-action: none; /* Ziehen statt Scrollen/Zoomen */
+  animation: sintroZielPuls 2.2s ease-in-out infinite;
+}
+.sintro__ziel:active { cursor: grabbing; animation: none; }
+.sintro__ziel:focus-visible { outline: 2.5px solid #a6b56c; outline-offset: 3px; }
+.sintro__zielflieger { width: 55%; display: block; }
+
+@keyframes sintroZielPuls {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(244, 241, 220, 0.28); }
+  50% { box-shadow: 0 0 0 9px rgba(244, 241, 220, 0); }
+}
+
+/* Einrasten: Zielpunkt schnappt in die Mitte, ein Fangring blitzt auf */
+.is--gefasst .sintro__ziel {
+  transition: left 0.3s var(--ease-out), top 0.3s var(--ease-out);
+  border-color: #a6b56c;
+  color: #c3d089;
+  animation: none;
+  cursor: default;
+}
+.sintro__fang {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  width: clamp(40px, 9vmin, 56px);
+  aspect-ratio: 1;
+  border: 1.5px solid #a6b56c;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+}
+.is--gefasst .sintro__fang { animation: sintroFang 0.7s var(--ease-out) 0.25s; }
+.is--gefasst .sintro__sweep { animation-duration: 1.1s; }
+
+@keyframes sintroFang {
+  from { opacity: 0.9; scale: 1; }
+  to { opacity: 0; scale: 2.4; }
+}
+
+@keyframes sintroSweep { to { transform: rotate(360deg); } }
+@keyframes sintroBlip {
+  0%, 12% { opacity: 0; }
+  18% { opacity: 1; }
+  55%, 100% { opacity: 0; }
+}
+
+/* Textblock: Klammer-Label, condensed Wortmarke, Grundlinie – unten links,
+   damit die Zielscheibe die Bühne behält (wie ein Vorspann-Titel) */
+.sintro__mitte {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(64px, 12vh, 118px);
+  padding: 0 clamp(22px, 6vw, 72px);
+}
+
+.sintro__label {
+  margin: 0 0 clamp(10px, 2.5vh, 22px);
+  font-size: clamp(11px, 1.3vw, 13px);
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(244, 241, 220, 0.72);
+  animation: sintroZeile 0.6s var(--ease-out) 0.25s both;
+}
+.sintro__label b { font-weight: 600; color: #a6b56c; }
+
+.sintro__wortmaske { overflow: hidden; }
+.sintro__wort {
+  display: block;
+  margin: 0;
+  font-family: var(--font-display);
+  /* Breiten-Achse der Instrument Sans: condensed, versal, eng laufend */
+  font-stretch: 75%;
+  font-weight: 640;
+  font-size: clamp(56px, 14vw, 170px);
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+  color: #f4f1dc;
+  transform: translateY(108%);
+  animation: sintroWort 0.95s var(--ease-expo) 0.4s forwards;
+}
+
+.sintro__linie {
+  margin-top: clamp(14px, 3vh, 26px);
+  height: 1px;
+  background: rgba(166, 181, 108, 0.5);
+  transform-origin: left center;
+  scale: 0 1;
+  animation: sintroLinie 0.8s var(--ease-expo) 0.75s forwards;
+}
+
+/* Fußzeile: ehrliche Bedienhilfe links, Fadenkreuz rechts */
+.sintro__fuss {
+  position: absolute;
+  left: clamp(22px, 6vw, 72px);
+  right: clamp(22px, 6vw, 72px);
+  bottom: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(244, 241, 220, 0.55);
+  animation: sintroTeil 0.7s ease 0.9s both;
+}
+.sintro__start { color: rgba(244, 241, 220, 0.85); animation: sintroPuls 2.2s ease-in-out infinite; }
+@keyframes sintroPuls { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+
+.sintro__kreuz {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  opacity: 0.7;
+}
+.sintro__kreuz::before,
+.sintro__kreuz::after {
+  content: '';
+  position: absolute;
+  background: rgba(244, 241, 220, 0.9);
+}
+.sintro__kreuz::before { left: 50%; top: 0; bottom: 0; width: 1px; }
+.sintro__kreuz::after { top: 50%; left: 0; right: 0; height: 1px; }
+
+@keyframes sintroTeil { from { opacity: 0; } }
+@keyframes sintroZeile { from { opacity: 0; transform: translateY(14px); } }
+@keyframes sintroWort { to { transform: translateY(0); } }
+@keyframes sintroLinie { to { scale: 1 1; } }
+
+/* Reduzierte Bewegung: Intro entfällt vollständig (zusätzlich zum JS-Check) */
+@media (prefers-reduced-motion: reduce) {
+  .sintro { display: none; }
+}
+:root[data-motion='reduziert'] .sintro { display: none; }

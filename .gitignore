@@ -26,3 +26,9 @@ dist-ssr
 # Build-Artefakte
 startklar-dist.zip
 *.zip
+
+# Python-Bytecode (Skill-Skripte)
+__pycache__/
+
+# Python-Bytecode aus Skill-Skripten
+__pycache__/

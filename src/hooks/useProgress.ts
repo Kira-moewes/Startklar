@@ -1,16 +1,31 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { progressStore as store, progressDatesStore as dateStore } from '../lib/stores'
+import { journeys } from '../data'
+import { sendeSpielEreignis } from './useSpiel'
 const keyOf = (j: string, t: string) => `${j}:${t}`
 
 const heute = () => new Date().toISOString().slice(0, 10)
 
 // Zentrale Schreiblogik (Store + Erledigt-Datum konsistent) – wird vom
 // Hook-Toggle und von Klaros „erledigt-vorschlag" gleichermaßen genutzt.
+// Hier hängt zugleich die Spiel-Schicht: jede Erledigung (egal ob aus dem UI
+// oder von Klaro) vergibt XP/Meisterschaft/Freischaltungen an EINER Stelle.
 export async function schreibeErledigt(journeyId: string, taskId: string, erledigt: boolean): Promise<void> {
   const key = keyOf(journeyId, taskId)
   await store.setItem(key, erledigt)
   if (erledigt) await dateStore.setItem(key, heute())
   else await dateStore.removeItem(key)
+  const journey = journeys.find(j => j.id === journeyId)
+  const titel = journey?.tasks.find(t => t.id === taskId)?.title ?? taskId
+  await sendeSpielEreignis({
+    typ: 'QUEST_COMPLETED',
+    gebiet: journeyId,
+    quest: taskId,
+    titel,
+    erledigt,
+    gesamtImGebiet: journey?.tasks.length ?? 0,
+    datum: heute(),
+  })
 }
 
 // Toggle-Semantik ohne React-State (z. B. aus dem Agent-Panel): liest den

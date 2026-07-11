@@ -23,12 +23,27 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  /* Sanfter Ken-Burns-Zoom, nur transform (GPU) */
+  animation: heroZoom 26s ease-in-out infinite alternate;
+}
+@keyframes heroZoom {
+  from { transform: scale(1); }
+  to { transform: scale(1.06); }
 }
 
 .hero__scrim {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(40, 54, 24, 0.28) 0%, rgba(40, 54, 24, 0) 42%);
+  background: linear-gradient(180deg, rgba(40, 54, 24, 0.34) 0%, rgba(40, 54, 24, 0) 46%);
+  pointer-events: none;
+}
+
+/* Weicher Übergang vom Video in die Seitenfarbe darunter */
+.hero__fade {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: clamp(90px, 16vh, 170px);
+  background: linear-gradient(to top, var(--t-bg, #fefae0), transparent);
   pointer-events: none;
 }
 
@@ -52,12 +67,13 @@
   opacity: 0.85;
   margin-bottom: 18px;
   text-shadow: 0 1px 12px rgba(40, 54, 24, 0.5);
+  animation: heroFade 1s var(--ease-out, ease-out) 0.1s both;
 }
 .hero__title {
   color: var(--cornsilk);
   font-family: var(--font-serif, Georgia, serif);
   font-size: clamp(2.2rem, 6.2vw, 4.6rem);
-  line-height: 1.05;
+  line-height: 1.08;
   font-weight: 400;
   text-shadow: 0 2px 28px rgba(40, 54, 24, 0.5);
   max-width: 16ch;
@@ -65,6 +81,24 @@
 .hero__title em {
   font-style: italic;
 }
+
+/* Wortweise gestaffelter Auftritt der Headline (Maske pro Wort) */
+.hero__w {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+.hero__w:not(:last-child) {
+  margin-right: 0.24em;
+}
+.hero__w > span {
+  display: inline-block;
+  transform: translateY(112%);
+  animation: heroWord 0.95s var(--ease-expo, cubic-bezier(0.16, 1, 0.3, 1)) both;
+}
+
 .hero__cta {
   margin-top: clamp(22px, 4vh, 34px);
   display: inline-block;
@@ -75,12 +109,44 @@
   font-size: clamp(15px, 1.6vw, 18px);
   font-weight: 600;
   text-decoration: none;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition: background 0.2s ease, transform 0.2s var(--ease-out, ease);
   box-shadow: 0 8px 24px rgba(40, 54, 24, 0.35);
+  animation: heroFade 1s var(--ease-out, ease-out) 0.75s both;
 }
 .hero__cta:hover {
   background: var(--olive);
   transform: translateY(-2px);
+}
+.hero__cta:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Scroll-Hinweis unten */
+.hero__cue {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(18px, 4vh, 38px);
+  transform: translateX(-50%);
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  color: var(--cornsilk);
+  border: 1.5px solid color-mix(in srgb, var(--cornsilk) 55%, transparent);
+  background: color-mix(in srgb, var(--forest) 30%, transparent);
+  backdrop-filter: blur(4px);
+  transition: border-color 0.2s ease, background 0.2s ease;
+  animation: heroFade 1s ease-out 1.2s both;
+}
+.hero__cue:hover {
+  border-color: var(--cornsilk);
+  background: color-mix(in srgb, var(--forest) 55%, transparent);
+}
+.hero__cue svg {
+  animation: cueBounce 2.2s ease-in-out infinite;
 }
 
 /* Video aus: Systemeinstellung, manueller Schalter oder kleine Screens —

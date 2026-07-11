@@ -5,9 +5,12 @@ import { fragen, type Profile } from '../data/profile'
 import { istRelevant, relevanteTasks } from '../data/visibility'
 import { useProfile } from '../hooks/useProfile'
 import { useSettings, type Einstellungen } from '../hooks/useSettings'
+import { useSpiel } from '../hooks/useSpiel'
 import { beschreibeSicherung, exportiereAlles, importiereAlles, liesSicherung, loescheAlles, type ExportDatei } from '../lib/datenExport'
 import { luminanz } from '../lib/farben'
 import { agentChatStore } from '../lib/stores'
+import PageHead from '../components/PageHead'
+import Flieger, { GEAR_SETS } from '../components/spiel/Flieger'
 
 function sichtbareSchritte(profile: Profile | null): number {
   return journeys
@@ -73,6 +76,7 @@ function Zeile({ label, hinweis, children }: { label: string; hinweis?: string; 
 export default function Profil() {
   const { profile, save, loading } = useProfile()
   const { einstellungen, setEinstellung } = useSettings()
+  const { state: spielState } = useSpiel()
   const [offeneFrage, setOffeneFrage] = useState<string | null>(null)
   const [aenderung, setAenderung] = useState<string | null>(null)
   const [zeigeKiHinweis, setZeigeKiHinweis] = useState(false)
@@ -157,15 +161,14 @@ export default function Profil() {
 
   return (
     <div className="mx-auto max-w-[780px] w-full px-7 pt-14 pb-24">
-      <h1 className="m-0 font-serif font-normal text-[clamp(38px,5vw,60px)] text-pine" style={{ animation: 'rise .6s cubic-bezier(.2,.7,.2,1) both' }}>
-        Dein <em className="text-olive">Profil</em>
-      </h1>
-      <p className="mt-3 m-0 text-[17px] text-pine/70" style={{ animation: 'rise .6s cubic-bezier(.2,.7,.2,1) .05s both' }}>
-        Deine Angaben bestimmen, welche Schritte du siehst. Alles bleibt auf deinem Gerät.
-      </p>
+      <PageHead
+        eyebrow="Profil"
+        title={<>Dein <em className="text-olive">Profil</em></>}
+        intro="Deine Angaben bestimmen, welche Schritte du siehst. Alles bleibt auf deinem Gerät."
+      />
 
       {/* Antworten */}
-      <h2 className="mt-10 m-0 font-serif font-medium text-[28px] text-pine">Deine Antworten</h2>
+      <h2 className="mt-2 m-0 font-serif font-medium text-[28px] text-pine">Deine Antworten</h2>
       {aenderung && (
         <p role="status" className="mt-3 m-0 rounded-[14px] border border-olive/40 bg-olive/8 px-4 py-2.5 text-sm font-semibold text-olive">
           ✓ {aenderung}
@@ -257,15 +260,15 @@ export default function Profil() {
             </label>
           </Zeile>
           {einstellungen.akzent === 'eigene' && luminanz(einstellungen.akzentHex) > 0.75 && (
-            <p className="m-0 text-[13px] text-coral-deep">
+            <p className="m-0 text-[13px] text-olive-deep font-semibold">
               Sehr helle Farbe – Schrift und Kontrast leiden. Etwas kräftiger wählen wirkt besser.
             </p>
           )}
           <Zeile label="Vorschau" hinweis="So wirkt deine Farbe in der App.">
             <span className="flex items-center gap-3">
-              <span className="rounded-pill bg-olive text-on-akzent px-4 py-2 text-sm font-display font-semibold">Button</span>
-              <span className="rounded-pill bg-pine-mist text-olive px-3 py-1 text-xs font-display font-semibold">Chip</span>
-              <span className="h-2 w-24 rounded-pill bg-pine-mist overflow-hidden inline-block">
+              <span className="rounded-pill bg-olive text-on-akzent px-4 py-2 text-sm font-semibold">Button</span>
+              <span className="rounded-pill bg-pine/10 text-olive px-3 py-1 text-xs font-semibold">Chip</span>
+              <span className="h-2 w-24 rounded-pill bg-pine/12 overflow-hidden inline-block">
                 <span className="block h-full w-2/3 rounded-pill bg-olive" />
               </span>
             </span>
@@ -279,6 +282,56 @@ export default function Profil() {
           </Zeile>
           <Zeile label="Weniger Animationen" hinweis="Schaltet Einflug- und Endlos-Animationen ab.">
             <Schalter an={einstellungen.wenigerAnimation} onToggle={() => setEinstellung('wenigerAnimation', !einstellungen.wenigerAnimation)} label="Weniger Animationen" />
+          </Zeile>
+        </Gruppe>
+
+        <Gruppe titel="Spiel & Figur">
+          <Zeile label="Startseite" hinweis="Das Himmels-Abenteuer als Start – oder die klassische Ansicht. Jederzeit umschaltbar, es geht nichts verloren.">
+            <OptionPill aktiv={einstellungen.startseite === 'spiel'} onClick={() => setEinstellung('startseite', 'spiel')}>Spiel (Himmel)</OptionPill>
+            <OptionPill aktiv={einstellungen.startseite === 'klassisch'} onClick={() => setEinstellung('startseite', 'klassisch')}>Klassisch</OptionPill>
+          </Zeile>
+          <Zeile label="Deine Figur" hinweis="So sieht deine Flieger-Katze gerade aus.">
+            <Flieger size={110} zustand="fliegen" ausruestung={einstellungen.ausruestung} shadow={false} />
+          </Zeile>
+          <Zeile label="Ausrüstung" hinweis="Kosmetik zum Selbstausdruck – erspielt oder (später) Teil der Pro-Version. Ändert nie den Fortschritt.">
+            <span className="flex flex-col gap-2 w-full">
+              {GEAR_SETS.map(g => {
+                const frei = g.id === 'keine' || spielState.freigeschaltet.includes(g.id)
+                const aktiv = einstellungen.ausruestung === g.id
+                return (
+                  <button
+                    key={g.id}
+                    disabled={!frei}
+                    onClick={() => frei && setEinstellung('ausruestung', g.id)}
+                    aria-pressed={aktiv}
+                    className={`text-left rounded-[14px] border-[1.5px] px-4 py-2.5 transition ${
+                      aktiv ? 'border-olive bg-olive/10' : 'border-pine/20 hover:border-olive'
+                    } ${frei ? '' : 'opacity-55 cursor-not-allowed'}`}
+                  >
+                    <span className="flex items-center justify-between gap-2">
+                      <span className="text-sm font-semibold text-pine">{g.titel}</span>
+                      {!frei && <span className="text-[12px] text-pine/55">{g.pro ? 'Pro 🔒' : 'noch gesperrt 🔒'}</span>}
+                      {aktiv && <span className="text-[12px] font-semibold text-olive">angelegt</span>}
+                    </span>
+                    <span className="block mt-0.5 text-[13px] text-pine/65">{g.beschreibung}</span>
+                  </button>
+                )
+              })}
+            </span>
+          </Zeile>
+          <Zeile label="Geschichte" hinweis="Die kurze Himmelstour jederzeit erneut ansehen.">
+            <span className="flex flex-wrap gap-2">
+              <Link
+                to="/himmel"
+                onClick={() => setEinstellung('tourGesehen', false)}
+                className="rounded-pill border-[1.5px] border-pine/20 px-4 py-2 text-sm font-semibold text-pine hover:border-olive transition"
+              >
+                Tour nochmal zeigen
+              </Link>
+            </span>
+          </Zeile>
+          <Zeile label="3D-Flugwelt" hinweis="Die räumliche Himmels-Animation. Auf schwachen Geräten oder zum Akkusparen ausschalten – dann zeigt die App eine ruhige 2D-Ansicht.">
+            <Schalter an={einstellungen.effekte3d} onToggle={() => setEinstellung('effekte3d', !einstellungen.effekte3d)} label="3D-Flugwelt" />
           </Zeile>
         </Gruppe>
 
