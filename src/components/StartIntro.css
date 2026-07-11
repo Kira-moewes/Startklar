@@ -20,9 +20,12 @@
   /* Pine-getöntes Fast-Schwarz statt reinem Schwarz – gehört zur Markenwelt */
   background: #0e100a;
   color: #f4f1dc;
-  /* weicher Übergang zur eigentlichen Seite: langes, ruhiges Ausblenden */
+  /* weicher Übergang zur eigentlichen Seite: langes, ruhiges Ausblenden.
+     Wichtig: die Einblend-Animation NICHT mit fill-forwards (`both`) laufen
+     lassen – sonst pinnt sie opacity:1 fest und die Ausblend-Transition
+     greift nicht. Ohne fill gibt sie die Deckkraft nach 0,35 s wieder frei. */
   transition: opacity 2.2s cubic-bezier(0.4, 0, 0.2, 1);
-  animation: sintroAuf 0.35s ease both;
+  animation: sintroAuf 0.35s ease;
 }
 .sintro--hebt { opacity: 0; pointer-events: none; }
 
