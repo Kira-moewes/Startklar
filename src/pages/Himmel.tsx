@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ersteWohnungJourney } from '../data'
 import { useSpiel } from '../hooks/useSpiel'
@@ -20,11 +19,8 @@ export default function Himmel() {
   const { einstellungen, setEinstellung, loading } = useSettings()
   const tasks = ersteWohnungJourney.tasks
 
-  // Beim ersten Himmel-Besuch: erst der Story-Intro. Danach die geführte Tour.
-  useEffect(() => {
-    if (!loading && !einstellungen.introGesehen) navigate('/intro', { replace: true })
-  }, [loading, einstellungen.introGesehen, navigate])
-  const zeigeTour = !loading && einstellungen.introGesehen && !einstellungen.tourGesehen
+  // Beim ersten Himmel-Besuch die geführte Tour zeigen.
+  const zeigeTour = !loading && !einstellungen.tourGesehen
 
   const level = (id: string) => questLevel(state, GEBIET, id)
   const naechsterIndex = tasks.findIndex(t => level(t.id) < 2)

@@ -319,11 +319,8 @@ export default function Profil() {
               })}
             </span>
           </Zeile>
-          <Zeile label="Geschichte" hinweis="Den Story-Intro oder die kurze Tour jederzeit erneut ansehen.">
+          <Zeile label="Geschichte" hinweis="Die kurze Himmelstour jederzeit erneut ansehen.">
             <span className="flex flex-wrap gap-2">
-              <Link to="/intro" className="rounded-pill border-[1.5px] border-pine/20 px-4 py-2 text-sm font-semibold text-pine hover:border-olive transition">
-                Intro nochmal ansehen
-              </Link>
               <Link
                 to="/himmel"
                 onClick={() => setEinstellung('tourGesehen', false)}

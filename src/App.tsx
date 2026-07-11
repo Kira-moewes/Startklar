@@ -13,7 +13,6 @@ import { useSettings } from './hooks/useSettings'
 // bleibt, während eine Seite lädt.
 const SoGehts = lazy(() => import('./pages/SoGehts'))
 const Himmel = lazy(() => import('./pages/Himmel'))
-const Intro = lazy(() => import('./pages/Intro'))
 const Post = lazy(() => import('./pages/Post'))
 const Sammlung = lazy(() => import('./pages/Sammlung'))
 const Dashboard = lazy(() => import('./pages/Dashboard'))
@@ -76,7 +75,6 @@ export default function App() {
           <Route path="/" element={<StartRoute />} />
           <Route path="/so-gehts" element={<SoGehts />} />
           <Route path="/himmel" element={<Himmel />} />
-          <Route path="/intro" element={<Intro />} />
           <Route path="/post" element={<Post />} />
           <Route path="/sammlung" element={<Sammlung />} />
           <Route path="/dashboard" element={<Dashboard />} />
