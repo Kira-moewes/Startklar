@@ -1,5 +1,7 @@
-import { guthabenStore, progressStore } from './stores'
+import { guthabenStore, progressStore, profilStore } from './stores'
 import { journeys } from '../data'
+import { relevanteTasks } from '../data/visibility'
+import type { Profile } from '../data/profile'
 
 // ---------------------------------------------------------------------------
 // Guthaben/Sterne-Engine (lokaler Prototyp des Startklar+ Ökosystems)
@@ -143,8 +145,14 @@ const ereignis = (betrag: number, grund: GuthabenGrund): GuthabenEreignis => ({
 // useProgress), ohne den Hook zu importieren → kein Zyklus.
 async function istJourneyKomplett(journeyId: string): Promise<boolean> {
   const journey = journeys.find(j => j.id === journeyId)
-  if (!journey || journey.tasks.length === 0) return false
-  for (const t of journey.tasks) {
+  if (!journey) return false
+  // Der Bonus greift, wenn alle für DIESES Profil sichtbaren Aufgaben erledigt
+  // sind – deckungsgleich mit den „100 %", die der/die Nutzer:in im Dashboard
+  // sieht (relevanteTasks blendet je nach Profil Aufgaben aus).
+  const profile = await profilStore.getItem<Profile>('profil')
+  const tasks = relevanteTasks(journey, profile ?? null)
+  if (tasks.length === 0) return false
+  for (const t of tasks) {
     const erledigt = (await progressStore.getItem<boolean>(`${journeyId}:${t.id}`)) ?? false
     if (!erledigt) return false
   }
