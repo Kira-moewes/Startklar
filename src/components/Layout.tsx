@@ -1,6 +1,7 @@
 import { Link, NavLink, Outlet } from 'react-router-dom'
 import { useProfile } from '../hooks/useProfile'
 import AgentButton from './agent/AgentButton'
+import SterneToast from './SterneToast'
 
 const navClass = ({ isActive }: { isActive: boolean }) =>
   `text-[15px] font-medium py-1 transition ${isActive ? 'text-olive' : 'text-pine hover:text-olive'}`
@@ -20,6 +21,7 @@ export default function Layout() {
             <NavLink to="/fortschritt" className={navClass}>Fortschritt</NavLink>
             <NavLink to="/termine" className={navClass}>Termine</NavLink>
             <NavLink to="/vergleich" className={navClass}>Vergleich</NavLink>
+            <NavLink to="/guthaben" className={navClass}>Guthaben</NavLink>
             <NavLink to="/suche" className={navClass}>Suche</NavLink>
             <NavLink to="/profil" className={navClass}>Profil</NavLink>
             {!loading && !profile && (
@@ -37,6 +39,7 @@ export default function Layout() {
         <Outlet />
       </main>
       <AgentButton />
+      <SterneToast />
       <footer className="bg-band text-paper/65 border-t border-paper/10">
         <div className="mx-auto max-w-[1200px] px-7 py-6 flex flex-wrap gap-x-6 gap-y-2 items-center text-[13.5px]">
           <span className="font-serif text-[17px] text-paper">Startklar</span>

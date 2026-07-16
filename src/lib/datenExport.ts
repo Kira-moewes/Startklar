@@ -60,6 +60,14 @@ export function beschreibeSicherung(daten: ExportDatei): string[] {
   if (unterlagen > 0) teile.push(`${unterlagen} ${unterlagen === 1 ? 'Unterlage' : 'Unterlagen'}`)
   const chat = anzahl('agent-chat')
   if (chat > 0) teile.push('Klaro-Chatverlauf')
+  // Guthaben liegt als EIN Objekt unter dem Key 'guthaben' – Anzahl der Keys
+  // wäre immer 1, deshalb das verschachtelte Objekt auslesen.
+  const g = daten.stores['guthaben']?.['guthaben'] as
+    | { sterne?: number; freigeschaltet?: string[] }
+    | undefined
+  if (g && ((g.sterne ?? 0) > 0 || (g.freigeschaltet?.length ?? 0) > 0)) {
+    teile.push(`${g.sterne ?? 0} Sterne`)
+  }
   if (anzahl('einstellungen') > 0) teile.push('Einstellungen')
   if (teile.length === 0) teile.push('Die Sicherung ist leer.')
   return teile

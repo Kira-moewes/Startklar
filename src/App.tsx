@@ -13,6 +13,8 @@ import Termine from './pages/Termine'
 import Vergleich from './pages/Vergleich'
 import VergleichDetail from './pages/VergleichDetail'
 import BedarfsCheck from './pages/BedarfsCheck'
+import Guthaben from './pages/Guthaben'
+import Portfolio from './pages/Portfolio'
 
 export default function App() {
   return (
@@ -29,6 +31,8 @@ export default function App() {
           <Route path="/vergleich/:kategorieId/check" element={<BedarfsCheck />} />
           <Route path="/journey/:journeyId" element={<JourneyOverview />} />
           <Route path="/journey/:journeyId/task/:taskId" element={<TaskDetail />} />
+          <Route path="/guthaben" element={<Guthaben />} />
+          <Route path="/portfolio" element={<Portfolio />} />
           <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/profil" element={<Profil />} />
           <Route path="/impressum" element={<Impressum />} />

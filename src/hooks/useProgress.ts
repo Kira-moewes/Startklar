@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { progressStore as store, progressDatesStore as dateStore } from '../lib/stores'
+import { belohneSchritt } from '../lib/guthaben'
 const keyOf = (j: string, t: string) => `${j}:${t}`
 
 const heute = () => new Date().toISOString().slice(0, 10)
@@ -9,8 +10,14 @@ const heute = () => new Date().toISOString().slice(0, 10)
 export async function schreibeErledigt(journeyId: string, taskId: string, erledigt: boolean): Promise<void> {
   const key = keyOf(journeyId, taskId)
   await store.setItem(key, erledigt)
-  if (erledigt) await dateStore.setItem(key, heute())
-  else await dateStore.removeItem(key)
+  if (erledigt) {
+    await dateStore.setItem(key, heute())
+    // Sterne fürs Erledigen gutschreiben (einmalig pro Schritt; die Engine ist
+    // idempotent). Fire-and-forget, damit die Checkbox sofort reagiert.
+    void belohneSchritt(journeyId, taskId)
+  } else {
+    await dateStore.removeItem(key)
+  }
 }
 
 // Toggle-Semantik ohne React-State (z. B. aus dem Agent-Panel): liest den

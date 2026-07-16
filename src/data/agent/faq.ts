@@ -147,4 +147,22 @@ export const faqEintraege: FaqEintrag[] = [
     text: 'Im Profil unter Darstellung kannst du neben den Vorgaben mit dem Regenbogen-Kreis jede eigene Farbe wählen. Sie färbt Buttons, den Papierflieger, Fortschritt und Chips – die Schriftfarbe passt sich automatisch an, damit alles lesbar bleibt.',
     route: '/profil',
   },
+  {
+    id: 'sterne-verdienen',
+    titel: 'Was sind Sterne (Guthaben) und wie verdiene ich sie?',
+    text: 'Für jeden erledigten Schritt bekommst du 10 Sterne, für einen ganzen abgeschlossenen Bereich 100 extra. Deinen Kontostand und den Verlauf siehst du unter Guthaben. Startklar selbst bleibt dabei immer kostenlos – Sterne sind eine Belohnung, keine Bezahlschranke.',
+    route: '/guthaben',
+  },
+  {
+    id: 'kostprobe-freischalten',
+    titel: 'Wie schalte ich eine App frei?',
+    text: 'Mit 800 Sternen schaltest du dir im Portfolio eine App als Kostprobe gratis frei. Du hast keine Zeit zum Sammeln? Unter Guthaben kannst du Sterne auch dazukaufen (im Prototyp nur als Demo) – so wird niemand ausgeschlossen.',
+    route: '/portfolio',
+  },
+  {
+    id: 'startklar-pass',
+    titel: 'Was ist der Startklar+ Pass?',
+    text: 'Der Startklar+ Pass öffnet mit einem Preis das ganze Portfolio. Je mehr Sterne du hast, desto günstiger wird dein Pass – nie ganz umsonst, aber wer viel beiträgt, zahlt weniger. Im Prototyp ist die Aktivierung eine Demo, echte Zahlung kommt später.',
+    route: '/guthaben',
+  },
 ]

@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { journeys } from '../data'
 import { relevanteTasks, istRelevant } from '../data/visibility'
+import { empfehlungFuerProfil } from '../data/portfolio'
 import { useProfile } from '../hooks/useProfile'
 import { useAllProgress } from '../hooks/useProgress'
 import { useTermine } from '../hooks/useTermine'
@@ -87,6 +88,8 @@ export default function Dashboard() {
     })
     return notDone.slice(0, 3)
   }, [journeyData, progress])
+
+  const empfehlung = useMemo(() => empfehlungFuerProfil(profile), [profile])
 
   const naechsteTermine = useMemo(
     () => termine
@@ -174,6 +177,23 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+
+      {/* Timing-Empfehlung aus dem Portfolio (dezent, nur wenn ein Signal passt) */}
+      {empfehlung && (
+        <Link
+          to="/portfolio"
+          className="mt-8 flex items-center gap-4 rounded-[22px] bg-cream-card border border-pine/14 px-6 py-5 hover:border-olive transition"
+          style={{ animation: 'rise .6s cubic-bezier(.2,.7,.2,1) .15s both' }}
+        >
+          <span className="text-3xl leading-none">{empfehlung.emoji}</span>
+          <span className="flex-1 min-w-0">
+            <span className="block text-[12.5px] font-semibold uppercase tracking-wide text-olive">Das könnte dir jetzt helfen</span>
+            <span className="block mt-0.5 font-serif text-[19px] font-medium text-pine">{empfehlung.name}</span>
+            <span className="block mt-0.5 text-sm text-pine/65">{empfehlung.tagline}</span>
+          </span>
+          <span className="text-lg text-olive" aria-hidden="true">→</span>
+        </Link>
+      )}
 
       {/* Termine-Vorschau */}
       {(naechsteTermine.length > 0 || ueberfaellig > 0) && (
