@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { journeys } from '../data'
 import { vergleichsKategorien } from '../data/vergleich'
 import { wissensbasis } from '../data/agent/wissensbasis'
+import { fuelleFakten } from '../data/fakten'
 import { istRelevant } from '../data/visibility'
 import { useProfile } from '../hooks/useProfile'
 import { suche } from '../lib/retrieval'
@@ -162,7 +163,7 @@ export default function Suche() {
                   </span>
                 )}
               </div>
-              <p className="mt-1 text-sm text-ink/70">{t.task.summary}</p>
+              <p className="mt-1 text-sm text-ink/70">{fuelleFakten(t.task.summary)}</p>
               <p className="mt-2 text-xs font-display font-semibold text-coral-deep uppercase tracking-wide">
                 {t.journeyTitel}
               </p>

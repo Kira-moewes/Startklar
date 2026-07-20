@@ -1,6 +1,6 @@
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { journeys } from '../data'
-import { faktum } from '../data/fakten'
+import { faktum, fuelleFakten } from '../data/fakten'
 import { kategorie, vergleichFuerTask } from '../data/vergleich'
 import { relevanteTasks } from '../data/visibility'
 import { useProfile } from '../hooks/useProfile'
@@ -10,6 +10,10 @@ import DokumenteSection from '../components/DokumenteSection'
 import { dokumentKeyTask } from '../data/dokumente'
 import { hatBedarfsCheck } from '../data/bedarf'
 import { useBedarf } from '../hooks/useBedarf'
+
+function hostLabel(url: string): string {
+  try { return new URL(url).hostname.replace(/^www\./, '') } catch { return 'Quelle' }
+}
 
 export default function TaskDetail() {
   const { journeyId = '', taskId = '' } = useParams()
@@ -39,6 +43,16 @@ export default function TaskDetail() {
     .sort()
     .at(-1) ?? null
 
+  const hilfeLinks = task.hilfen ?? []
+  const quellLinks = Array.from(
+    new Map(
+      (task.faktenKeys ?? [])
+        .map(key => faktum(key)?.quelle)
+        .filter((u): u is string => Boolean(u))
+        .map(u => [u, { label: hostLabel(u), url: u }] as const)
+    ).values()
+  )
+
   return (
     <div className="mx-auto max-w-[780px] w-full px-7 pt-12 pb-24">
       <Link to={`/journey/${journey.id}`} className="text-sm font-semibold text-olive">← {journey.title}</Link>
@@ -49,7 +63,7 @@ export default function TaskDetail() {
         <CategoryBadge category={task.category} />
       </div>
       <p className="mt-3.5 m-0 text-[17px] leading-[1.55] text-pine/75" style={{ animation: 'rise .6s cubic-bezier(.2,.7,.2,1) .07s both' }}>
-        {task.summary}
+        {fuelleFakten(task.summary)}
       </p>
 
       <section
@@ -84,7 +98,7 @@ export default function TaskDetail() {
           {task.steps.map((step, i) => (
             <li key={i} className="flex gap-4 items-start" style={{ animation: `rise .5s cubic-bezier(.2,.7,.2,1) ${(i + (checkKatId ? 1 : 0)) * 0.08}s both` }}>
               <span className="flex-none size-8 rounded-full bg-pine text-cream text-sm font-semibold flex items-center justify-center">{i + (checkKatId ? 2 : 1)}</span>
-              <p className="m-0 mt-[3px] text-[15.5px] leading-[1.55] text-pine/85">{step}</p>
+              <p className="m-0 mt-[3px] text-[15.5px] leading-[1.55] text-pine/85">{fuelleFakten(step)}</p>
             </li>
           ))}
         </ol>
@@ -96,8 +110,8 @@ export default function TaskDetail() {
         style={{ animation: 'rise .6s cubic-bezier(.2,.7,.2,1) .24s both' }}
       >
         <h2 className="m-0 font-serif font-medium text-2xl text-pine">Was, wenn nicht?</h2>
-        <p className="mt-3 m-0 text-[15px]"><span className="font-bold text-olive">Frist:</span> {task.deadline}</p>
-        <p className="mt-2.5 m-0 text-[15.5px] leading-[1.55] text-pine/85">{task.consequence}</p>
+        <p className="mt-3 m-0 text-[15px]"><span className="font-bold text-olive">Frist:</span> {fuelleFakten(task.deadline)}</p>
+        <p className="mt-2.5 m-0 text-[15.5px] leading-[1.55] text-pine/85">{fuelleFakten(task.consequence)}</p>
         <p className="mt-3.5 m-0 text-[13.5px] text-pine/55">Kein Grund zur Panik — jetzt weißt du ja Bescheid.</p>
         {task.faktenKeys && task.faktenKeys.length > 0 && (
           <div className="mt-4 flex items-center gap-2 text-sm">
@@ -109,6 +123,35 @@ export default function TaskDetail() {
           </div>
         )}
       </section>
+
+      {(hilfeLinks.length > 0 || quellLinks.length > 0) && (
+        <section aria-label="Offizielle Hilfen und Portale" className="mt-5 bg-cream-card border border-pine/14 rounded-[20px] p-7" style={{ animation: 'rise .6s cubic-bezier(.2,.7,.2,1) .27s both' }}>
+          <h2 className="m-0 font-serif font-medium text-2xl text-pine">Offizielle Hilfen &amp; Portale</h2>
+          {hilfeLinks.length > 0 && (
+            <div className="mt-4 flex flex-wrap gap-3">
+              {hilfeLinks.map(l => (
+                <a key={l.url} href={l.url} target="_blank" rel="noopener noreferrer"
+                  className="rounded-pill border-[1.5px] border-olive px-4 py-1.5 text-sm font-semibold text-olive hover:bg-olive hover:text-on-akzent transition">
+                  {l.label} ↗
+                </a>
+              ))}
+            </div>
+          )}
+          {quellLinks.length > 0 && (
+            <div className="mt-4">
+              <p className="m-0 text-[13px] text-pine/55">Belege zu den genannten Fristen und Beträgen:</p>
+              <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+                {quellLinks.map(l => (
+                  <a key={l.url} href={l.url} target="_blank" rel="noopener noreferrer"
+                    className="text-[13px] text-olive underline underline-offset-2 hover:text-pine transition">
+                    {l.label} ↗
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+        </section>
+      )}
 
       {(vergleichFuerTask[`${journey.id}:${task.id}`] ?? []).length > 0 && (
         <section aria-label="Passender Vergleich" className="mt-5 bg-band rounded-[20px] p-7 text-paper" style={{ animation: 'rise .6s cubic-bezier(.2,.7,.2,1) .3s both' }}>

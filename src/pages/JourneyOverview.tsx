@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom'
 import { journeys } from '../data'
 import { relevanteTasks } from '../data/visibility'
+import { fuelleFakten } from '../data/fakten'
 import { useProfile } from '../hooks/useProfile'
 import { useProgress } from '../hooks/useProgress'
 import CategoryBadge from '../components/CategoryBadge'
@@ -73,8 +74,8 @@ export default function JourneyOverview() {
                   </span>
                   <CategoryBadge category={task.category} />
                 </span>
-                <span className="block mt-1.5 text-[14.5px] leading-relaxed text-pine/70">{task.summary}</span>
-                <span className="block mt-2 text-[13.5px] font-semibold text-olive">Frist: {task.deadline}</span>
+                <span className="block mt-1.5 text-[14.5px] leading-relaxed text-pine/70">{fuelleFakten(task.summary)}</span>
+                <span className="block mt-2 text-[13.5px] font-semibold text-olive">Frist: {fuelleFakten(task.deadline)}</span>
               </Link>
             </li>
           )

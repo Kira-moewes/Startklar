@@ -1,5 +1,6 @@
 import { Link, NavLink, Outlet } from 'react-router-dom'
 import { useProfile } from '../hooks/useProfile'
+import { KONTAKT_MAILTO } from '../data/kontakt'
 import AgentButton from './agent/AgentButton'
 
 const navClass = ({ isActive }: { isActive: boolean }) =>
@@ -40,8 +41,9 @@ export default function Layout() {
       <footer className="bg-band text-paper/65 border-t border-paper/10">
         <div className="mx-auto max-w-[1200px] px-7 py-6 flex flex-wrap gap-x-6 gap-y-2 items-center text-[13.5px]">
           <span className="font-serif text-[17px] text-paper">Startklar</span>
-          <span>Keine Rechtsberatung. Angaben können sich ändern.</span>
+          <span>Keine Rechts- oder Steuerberatung. Angaben können sich ändern.</span>
           <span className="ml-auto flex gap-4.5">
+            <a href={KONTAKT_MAILTO} className="underline underline-offset-3 hover:text-paper transition">Kontakt</a>
             <Link to="/impressum" className="underline underline-offset-3 hover:text-paper transition">Impressum</Link>
             <Link to="/datenschutz" className="underline underline-offset-3 hover:text-paper transition">Datenschutz</Link>
           </span>

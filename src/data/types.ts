@@ -9,6 +9,8 @@ export interface Task {
   consequence: string
   category: TaskCategory
   faktenKeys?: string[]
+  // Offizielle Portale/Hilfen zu dieser Aufgabe (z. B. Behördenfinder, ELSTER).
+  hilfen?: { label: string; url: string }[]
 }
 
 export interface Journey {
