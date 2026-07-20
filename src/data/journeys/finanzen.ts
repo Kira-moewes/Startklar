@@ -27,19 +27,21 @@ export const finanzenJourney: Journey = {
         'Schätze kurz, ob sich eine Abgabe lohnt (Rückerstattung: {BETRAG_RUECKERSTATTUNG}).',
         'Lege ein ELSTER-Konto an und reiche die Erklärung online ein.'
       ],
-      deadline: '{FRIST_STEUER}', // [GEGENCHECKEN: von Kira zu verifizieren]
+      deadline: '{FRIST_STEUER}',
       consequence: 'Wenn du nicht prüfst, könntest du eine Rückerstattung verpassen — das ist unangenehm, aber du kannst die Abgabe in den meisten Fällen nachholen oder professionelle Hilfe nutzen.',
       category: 'finanzen',
-      faktenKeys: ['FRIST_STEUER', 'BETRAG_RUECKERSTATTUNG']
+      faktenKeys: ['FRIST_STEUER', 'BETRAG_RUECKERSTATTUNG'],
+      hilfen: [{ label: 'ELSTER – Steuererklärung online', url: 'https://www.elster.de/' }]
     },
     {
       id: 'lohnabrechnung',
       title: 'Erstes Gehalt verstehen',
       summary: 'Brutto vs. Netto und die wichtigsten Abzüge kurz erklärt, damit du dein Gehalt einordnen kannst.',
       steps: [
-        'Vergleiche Brutto- und Nettobetrag auf deiner Lohnabrechnung.',
-        'Identifiziere typische Abzüge (Steuern, Sozialversicherung) ohne Prozentzahlen.',
-        'Bei Fragen Personal oder Lohnbüro kurz kontaktieren.'
+        'Vergleiche oben den Bruttobetrag (vor Abzügen) mit dem Nettobetrag – das ist, was tatsächlich auf deinem Konto landet.',
+        'Die wichtigsten Abzüge: Lohnsteuer (ggf. plus Kirchensteuer/Soli) und dein Anteil an der Sozialversicherung – Renten-, Kranken-, Pflege- und Arbeitslosenversicherung.',
+        'Prüfe, ob Steuerklasse und Steuer-Identifikationsnummer stimmen – eine falsche Steuerklasse kostet dich sonst Monat für Monat Geld.',
+        'Hebe die Abrechnungen auf (du brauchst sie z. B. für die Steuererklärung, Wohnungssuche oder einen Kredit). Bei Unklarheiten kurz in der Personalabteilung nachfragen.'
       ],
       deadline: 'Kurz nach der ersten Auszahlung',
       consequence: 'Wenn du nichts prüfst, bleibt das Einkommen gleich — du hast aber weniger Klarheit. Eine kurze Nachfrage beim Arbeitgeber klärt meist schnell alles.',
@@ -50,9 +52,10 @@ export const finanzenJourney: Journey = {
       title: 'Private Haftpflichtversicherung',
       summary: 'Eine Haftpflicht schützt vor hohen Kosten bei Schäden, die du anderen zufügst.',
       steps: [
-        'Überblick über Pflicht/Empfehlung und was versichert ist.',
-        'Kurz zwei Angebote neutral vergleichen (Leistungen, Selbstbeteiligung).',
-        'Tarif wählen und Vertrag abschließen.'
+        'Die Privathaftpflicht ist keine Pflicht, aber eine der wichtigsten Versicherungen: Sie zahlt, wenn du versehentlich anderen Menschen oder deren Sachen einen Schaden zufügst.',
+        'Prüfe zuerst, ob du noch über deine Eltern mitversichert bist (oft bis zum Ende der ersten Ausbildung bzw. des Erststudiums) – dann brauchst du keine eigene.',
+        'Wenn du eine eigene brauchst: auf eine hohe Deckungssumme und passende Bausteine (z. B. Schlüsselverlust) achten. Der Bedarfscheck und der neutrale Vergleich helfen dir dabei.',
+        'Angebote in Ruhe vergleichen und den passenden Tarif abschließen – ein Wechsel ist später jederzeit möglich.'
       ],
       deadline: 'Vor dem Einzug bzw. bei Bedarf',
       consequence: 'Ohne Haftpflicht kannst du im Schadensfall selbst zahlen müssen — das ist belastend, aber oft lassen sich Lösungen finden; eine Versicherung reduziert dieses Risiko.',
@@ -70,16 +73,18 @@ export const finanzenJourney: Journey = {
       deadline: 'Kein fester Termin',
       consequence: 'Wenn du es ignorierst, können Fehler später Mühe machen — meist lassen sich solche Probleme aber mit dem Anbieter oder der Schufa klären.',
       category: 'finanzen',
-      faktenKeys: ['ANZAHL_SCHUFA_KOSTENLOS']
+      faktenKeys: ['ANZAHL_SCHUFA_KOSTENLOS'],
+      hilfen: [{ label: 'SCHUFA – kostenlose Datenkopie (Art. 15 DSGVO)', url: 'https://www.schufa.de/datenkopie/' }]
     },
     {
       id: 'depot-etf',
       title: 'Depot & ETF — eine einfache Erklärung',
       summary: 'Was ein Depot und ETFs grundsätzlich sind — ohne Anlageberatung.',
       steps: [
-        'Kurz erklären, was ein Depot ist und wie ETFs funktionieren.',
-        'Vor- und Nachteile grob skizzieren ohne Zahlen.',
-        'Hinweis: Wir verkaufen nichts und beraten nicht — das hier ist reine Erklärung.'
+        'Ein Depot ist wie ein Konto, nur für Wertpapiere – du eröffnest es kostenlos bei einer Bank oder einem Online-Broker.',
+        'Ein ETF ist ein Fonds, der einen ganzen Index nachbildet (z. B. viele große Firmen weltweit auf einmal), statt auf eine einzelne Aktie zu setzen – so verteilt sich das Risiko.',
+        'Grundgedanke: langfristig und regelmäßig (Sparplan) statt kurzfristig zu raten. Kurse schwanken – Geld, das du bald brauchst, gehört nicht in Aktien oder ETFs.',
+        'Wichtig: Das hier ist reine Erklärung, keine Anlageberatung – wir empfehlen kein Produkt und verdienen nichts daran.'
       ],
       deadline: 'Informativ',
       consequence: 'Wenn du das nicht liest, änderst du nichts an deinem Geld — das ist in Ordnung; bei Interesse kannst du dich später gezielt informieren.',
@@ -90,9 +95,10 @@ export const finanzenJourney: Journey = {
       title: 'Altersvorsorge: erste Schritte',
       summary: 'Grundlagen zur gesetzlichen Rente und privaten Vorsorge, ohne Anlageempfehlungen.',
       steps: [
-        'Überblick über gesetzliche Rente und mögliche Lücken.',
-        'Kurz prüfen, ob private Vorsorge sinnvoll erscheint.',
-        'Sammele Angebote und notiere Fragen für eine Beratung.'
+        'Die gesetzliche Rente ist die Basis, deckt später aber oft nicht den gewohnten Lebensstandard – diese Lücke schließt man mit zusätzlicher Vorsorge.',
+        'Dein größter Vorteil ist Zeit: Wer früh und regelmäßig kleine Beträge zurücklegt, profitiert stark vom Zinseszinseffekt.',
+        'Mögliche Bausteine sind z. B. ein ETF-Sparplan oder geförderte Modelle ({STATUS_ALTERSVORSORGEDEPOT}). Verschaff dir erst einen Überblick, bevor du etwas abschließt.',
+        'Wichtig: keine Anlageberatung. Bei konkreten Produkten hilft eine unabhängige Beratung, z. B. bei der Verbraucherzentrale.'
       ],
       deadline: 'Langfristig planen',
       consequence: 'Wenn du nichts tust, ändert sich kurzfristig nichts; langfristig kann früheres Planen Vorteile bringen — du kannst jederzeit anfangen.',

@@ -32,7 +32,8 @@ export const ersteWohnungJourney: Journey = {
       deadline: '{FRIST_ANMELDUNG}',
       consequence: 'Wenn du dich nicht rechtzeitig anmeldest, riskierst du ein Bußgeld ({BUSSGELD_ANMELDUNG}). Wichtiger: Es kann zu Problemen bei Versicherungen, der Bank oder Behörden kommen.',
       category: 'amt',
-      faktenKeys: ['FRIST_ANMELDUNG', 'BUSSGELD_ANMELDUNG']
+      faktenKeys: ['FRIST_ANMELDUNG', 'BUSSGELD_ANMELDUNG'],
+      hilfen: [{ label: 'Zuständiges Bürgeramt finden', url: 'https://verwaltung.bund.de/' }]
     },
     {
       id: 'nebenkosten-kaution',
@@ -85,13 +86,14 @@ export const ersteWohnungJourney: Journey = {
       steps: [
         'Prüfe, ob dein Haushalt bereits erfasst ist oder ob du dich neu anmelden musst.',
         'Der monatliche Beitrag liegt bei {BETRAG_RUNDFUNK} — dieser ist gesetzlich festgelegt.',
-        'Falls du BAföG bekommst, Sozialleistungen erhältst oder berufsunfähig bist: Du kannst dich oft befreien oder ermäßigen lassen. Stelle den Antrag bei der Rundfunkgebühreneinzugszentrale.',
+        'Falls du BAföG oder bestimmte Sozialleistungen (z. B. Bürgergeld) bekommst, kannst du dich oft befreien oder ermäßigen lassen. Den Antrag stellst du beim ARD ZDF Deutschlandradio Beitragsservice.',
         'Sende die Meldung oder Befreiungsanfrage ab und speichere die Bestätigung.'
       ],
-      deadline: 'Zeitnah nach Einzug anmelden',
+      deadline: '{FRIST_RUNDFUNKBEITRAG}',
       consequence: 'Wenn du dich nicht anmeldest, kann es zu Zahlungsaufforderungen oder Mahnungen kommen — eine rechtzeitige Meldung vermeidet das.',
       category: 'wohnen',
-      faktenKeys: ['BETRAG_RUNDFUNK']
+      faktenKeys: ['BETRAG_RUNDFUNK', 'FRIST_RUNDFUNKBEITRAG'],
+      hilfen: [{ label: 'Beitragsservice – anmelden & befreien', url: 'https://www.rundfunkbeitrag.de/' }]
     }
   ]
 }

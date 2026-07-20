@@ -32,7 +32,11 @@ export const startJourney: Journey = {
       deadline: 'Zeitnah, bevor der alte Ausweis abläuft',
       consequence: 'Ohne gültigen Ausweis hast du später Probleme — bei der Bank, beim Reisen oder bei Behörden. Eine rechtzeitige Beantragung erspart dir Stress.',
       category: 'amt',
-      faktenKeys: ['BETRAG_PERSO']
+      faktenKeys: ['BETRAG_PERSO'],
+      hilfen: [
+        { label: 'Personalausweis – Infos & Gebühren', url: 'https://www.personalausweisportal.de/' },
+        { label: 'Zuständiges Amt finden', url: 'https://verwaltung.bund.de/' },
+      ]
     },
     {
       id: 'wahlrecht',
@@ -46,7 +50,8 @@ export const startJourney: Journey = {
       ],
       deadline: 'Zu den Wahlterminen',
       consequence: 'Wenn du nicht wählst, verpasst du die Gelegenheit, Politik mitzugestalten — das ist zwar deine freie Wahl, aber deine Stimme zählt.',
-      category: 'recht'
+      category: 'recht',
+      hilfen: [{ label: 'Bundeswahlleiterin', url: 'https://www.bundeswahlleiterin.de/' }]
     },
     {
       id: 'vertraege',
@@ -69,7 +74,7 @@ export const startJourney: Journey = {
       summary: 'Mit 18 Jahren musst du prüfen, ob dich deine Familie noch mitversichert oder ob du dich selbst anmelden musst.',
       steps: [
         'Frage deine Eltern oder deinen Versicherer: Bin ich noch familienversichert?',
-        'Familienversicherung läuft bis zum Ende deines 25. Lebensjahres (oder länger, wenn du noch in Ausbildung bist) — aber nur, wenn du kein Einkommen hast oder einen Minijob machst.',
+        'Die Familienversicherung gilt bis 25, solange du in Ausbildung oder Studium bist – ohne Ausbildung nur bis 23. Und nur, wenn du kein oder wenig Einkommen (z. B. Minijob) hast.',
         'Wenn du mit Familienversicherung einen Job mit zu viel Einkommen annimmst, musst du dich selbst anmelden.',
         'Prüfe die Frist {FRIST_FAMILIENVERSICHERUNG} — nach Ablauf brauchst du einen eigenen Krankenversicherungsschutz.'
       ],
@@ -105,7 +110,8 @@ export const startJourney: Journey = {
       ],
       deadline: 'Jederzeit — eine bewusste Entscheidung ist wichtig',
       consequence: 'Ohne Ausweis müssen im Ernstfall deine Angehörigen rätseln, was du wolltest — ein Ausweis gibt ihnen Klarheit.',
-      category: 'gesundheit'
+      category: 'gesundheit',
+      hilfen: [{ label: 'Organspende-Register', url: 'https://www.organspende-register.de/' }]
     },
     {
       id: 'blut-plasmaspende',
@@ -144,12 +150,13 @@ export const startJourney: Journey = {
         'BAföG gibt es für Schule, Ausbildung oder Studium — prüfe, ob deine Ausbildung förderfähig ist.',
         'Stelle den Antrag beim BAföG-Amt (online oder vor Ort); du brauchst Unterlagen zu deinem Einkommen, Vermögen und dem deiner Eltern.',
         'Die Frist ist wichtig ({FRIST_BAFOEG}) — stelle den Antrag rechtzeitig, sonst bekommst du kein Geld für vergangene Monate.',
-        'BAföG ist Darlehen + Zuschuss — später zahlst du die Hälfte des Darlehens zurück (zinslos, nach Ende der Ausbildung).'
+        'Studenten-BAföG ist zur Hälfte Zuschuss und zur Hälfte ein zinsloses Darlehen — zurück zahlst du nur den Darlehensteil, gedeckelt (aktuell rund 10.010 €) und erst etwa 5 Jahre nach dem Förderende. Schüler-BAföG ist meist voller Zuschuss ohne Rückzahlung.'
       ],
       deadline: '{FRIST_BAFOEG}',
       consequence: 'Wenn du zu spät antragst, bekommst du weniger oder nichts — ein rechtzeitiger Antrag ist entscheidend.',
       category: 'finanzen',
-      faktenKeys: ['FRIST_BAFOEG']
+      faktenKeys: ['FRIST_BAFOEG'],
+      hilfen: [{ label: 'BAföG Digital – Online-Antrag', url: 'https://www.bafoeg-digital.de/' }]
     },
     {
       id: 'bewerbung-ausbildung',
@@ -158,7 +165,7 @@ export const startJourney: Journey = {
       steps: [
         'Bewerbung: Anschreiben, Lebenslauf, Zeugnisse (muss nicht perfekt sein, aber sauber und ehrlich).',
         'Im Ausbildungsvertrag achte auf: Ausbildungsdauer, Ausbildungsinhalte, Lohn/Gehalt, Urlaub und Kündigungsfristen.',
-        'Typisch: 3–3,5 Jahre Ausbildung; mindestens 4 Wochen Urlaub pro Jahr; Probezeit bis 4 Wochen.',
+        'Typisch: 3–3,5 Jahre Ausbildung; gesetzlicher Mindesturlaub (Minderjährige haben Anspruch auf mehr); Probezeit ein bis vier Monate (§ 20 BBiG).',
         'Wenn etwas unklar ist, frage deinen zukünftigen Arbeitgeber oder einen Vertrauensperson — unterschreibe erst, wenn alles passt.'
       ],
       deadline: 'Vor Ausbildungsbeginn',
@@ -170,9 +177,9 @@ export const startJourney: Journey = {
       title: 'Studentenjob und Minijob — Regeln und Steuern verstehen',
       summary: 'Ein Nebenjob braucht Klarheit: Wie viel darfst du verdienen? Wie funktionieren die Steuern?',
       steps: [
-        'Minijob: Bis {BETRAG_MINIJOB} pro Monat ist steuerfrei, aber dein Arbeitgeber zahlt Pauschalbeiträge.',
+        'Minijob: Bis {BETRAG_MINIJOB} pro Monat bleibt für dich meist ohne Steuern und Sozialabgaben — dein Arbeitgeber führt eine Pauschale ab.',
         'Wichtig: Mehrere Minijobs zusammen dürfen die Grenze nicht überschreiten — merke dir deine monatliche Verdienstgrenze.',
-        'Steuern: Minijobs sind meist steuerfrei; größere Einkommen erfordern Lohnsteuer- und Sozialversicherungsbeiträge (dein Arbeitgeber berät dich).',
+        'Steuern: Beim Minijob fallen für dich in der Regel keine Steuern an; bei höherem Einkommen kommen Lohnsteuer und Sozialversicherungsbeiträge dazu (dein Arbeitgeber berät dich).',
         'Familienversicherung: Vorsicht — ein zu hohes Einkommen kann dich aus der Familienversicherung rauswerfen.'
       ],
       deadline: 'Vor Jobantritt',

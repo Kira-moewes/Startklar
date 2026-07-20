@@ -107,7 +107,7 @@ export const kfzCheck: BedarfsCheck = {
 
     const bausteine: string[] = []
     if (antworten.fahrer === 'mehrere') {
-      bausteine.push('Fahrerkreis „weitere Fahrer" korrekt angeben – falsche Angabe kann teuren Regress bedeuten')
+      bausteine.push('Fahrerkreis „weitere Fahrer" korrekt angeben – eine falsche Angabe kann eine Vertragsstrafe oder Beitragsnachzahlung bedeuten')
     }
     if (antworten.km === 'wenig') {
       bausteine.push('Kilometer-genauer Tarif (Wenigfahrer sparen deutlich)')

@@ -3,12 +3,12 @@ import { parseEuro, enthaeltJa } from '../../lib/bedarfMatch'
 
 // GKV-Wahl ist Sozialversicherung, keine Versicherungsvermittlung – trotzdem
 // gleiche Neutralitäts-Mechanik wie bei den anderen Checks.
-// Zusatzbeitrags-Schwelle ≈ Durchschnitt; redaktionell ungeprüft.
+// Zusatzbeitrags-Schwelle ≈ durchschnittlicher Zusatzbeitrag 2026 (2,9 %, §242a SGB V).
 
 const beitragZiel: Zielwert = {
   kriteriumKey: 'zusatzbeitrag',
   label: 'Zusatzbeitrag',
-  ziel: 'unter dem Durchschnitt (≈ 2,5 %)',
+  ziel: 'unter dem Durchschnitt (≈ 2,9 %)',
   pruefe: (wert): ZielStatus => {
     const p = parseEuro(wert) // nimmt bei Spannen die Obergrenze; ',' als Dezimaltrenner
     if (p === null) return 'unklar'
@@ -91,9 +91,9 @@ export const krankenkasseCheck: BedarfsCheck = {
       return {
         stufe: 'verzichtbar',
         titel: 'Noch nichts zu tun',
-        begruendung: 'Du bist familienversichert – eine eigene Kasse brauchst du erst mit eigenem Einkommen oder ab 25.',
+        begruendung: 'Du bist familienversichert – eine eigene Kasse brauchst du erst, wenn die Familienversicherung endet (in Ausbildung meist mit 25, sonst früher) oder du mehr als geringfügig verdienst.',
         zielwerte: [],
-        hinweise: ['Merk dir: Beim ersten Job oder ab 25 wird die Kassenwahl aktuell – mach den Check dann neu.'],
+        hinweise: ['Merk dir: Beim ersten eigenen Einkommen oder wenn die Familienversicherung ausläuft wird die Kassenwahl aktuell – mach den Check dann neu.'],
       }
     }
 

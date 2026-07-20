@@ -149,7 +149,7 @@ export const hausratCheck: BedarfsCheck = {
       bausteine.push('Elementarschäden (Starkregen, Rückstau, Hochwasser)')
     }
     if (antworten.wertsachen === 'ja') {
-      hinweise.push('Prüfe die Wertsachengrenze der Police (oft 20–40 % der Versicherungssumme) – teure Einzelstücke ggf. extra melden.')
+      hinweise.push('Prüfe die Wertsachengrenze der Police (oft rund 20–30 % der Versicherungssumme) – teure Einzelstücke ggf. extra melden.')
     }
     const zielwerte = [summeZiel(antworten.flaeche), sbZiel]
     if (antworten.fahrrad === 'ja_teuer') zielwerte.push(fahrradZiel)
