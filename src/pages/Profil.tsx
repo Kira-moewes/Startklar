@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { journeys } from '../data'
 import { fragen, type Profile } from '../data/profile'
+import { FEEDBACK_MAILTO } from '../data/kontakt'
 import { istRelevant, relevanteTasks } from '../data/visibility'
 import { useProfile } from '../hooks/useProfile'
 import { useSettings, type Einstellungen } from '../hooks/useSettings'
@@ -76,6 +77,7 @@ export default function Profil() {
   const [offeneFrage, setOffeneFrage] = useState<string | null>(null)
   const [aenderung, setAenderung] = useState<string | null>(null)
   const [zeigeKiHinweis, setZeigeKiHinweis] = useState(false)
+  const [alterBestaetigt, setAlterBestaetigt] = useState(false)
   const [loeschStufe, setLoeschStufe] = useState(0)
   const [importVorschau, setImportVorschau] = useState<{ daten: ExportDatei; inhalt: string[] } | null>(null)
   const [datenStatus, setDatenStatus] = useState<string | null>(null)
@@ -297,11 +299,24 @@ export default function Profil() {
                 Claude-API von Anthropic geschickt. Nichts wird dauerhaft gespeichert. Offline und ohne
                 KI-Modus bleibt alles auf deinem Gerät.
               </p>
+              <label className="mt-3 flex items-start gap-2.5 text-sm text-pine/85 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={alterBestaetigt}
+                  onChange={e => setAlterBestaetigt(e.target.checked)}
+                  className="mt-0.5 size-4 accent-olive"
+                />
+                <span>Ich bin mindestens 16 Jahre alt.</span>
+              </label>
               <div className="mt-3 flex flex-wrap gap-2">
-                <button onClick={kiUmschalten} className="rounded-pill bg-pine text-cream px-4.5 py-2 text-sm font-semibold hover:bg-olive transition">
+                <button
+                  onClick={kiUmschalten}
+                  disabled={!alterBestaetigt}
+                  className="rounded-pill bg-pine text-cream px-4.5 py-2 text-sm font-semibold hover:bg-olive transition disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-pine"
+                >
                   Verstanden, aktivieren
                 </button>
-                <button onClick={() => setZeigeKiHinweis(false)} className="rounded-pill border-[1.5px] border-pine/30 text-pine px-4.5 py-2 text-sm font-semibold hover:border-pine transition">
+                <button onClick={() => { setZeigeKiHinweis(false); setAlterBestaetigt(false) }} className="rounded-pill border-[1.5px] border-pine/30 text-pine px-4.5 py-2 text-sm font-semibold hover:border-pine transition">
                   Lieber nicht
                 </button>
               </div>
@@ -386,8 +401,11 @@ export default function Profil() {
 
         <Gruppe titel="Über Startklar">
           <p className="m-0 text-sm text-pine/70 leading-relaxed">
-            Startklar ist keine Rechtsberatung. Angaben können sich ändern — wichtige Fristen und Beträge
-            werden redaktionell geprüft und entsprechend gekennzeichnet.
+            Startklar ist keine Rechts- oder Steuerberatung. Angaben können sich ändern — wichtige Fristen
+            und Beträge werden redaktionell geprüft und entsprechend gekennzeichnet.
+          </p>
+          <p className="m-0 text-sm text-pine/70 leading-relaxed">
+            Fehler entdeckt oder eine Idee? <a href={FEEDBACK_MAILTO} className="underline underline-offset-3 text-olive hover:text-pine transition font-semibold">Feedback geben</a> — das hilft, Startklar besser zu machen.
           </p>
           <p className="m-0 text-sm">
             <Link to="/impressum" className="underline underline-offset-3 text-pine hover:text-olive transition">Impressum</Link>

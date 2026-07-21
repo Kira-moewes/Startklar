@@ -7,7 +7,7 @@ import { hatBedarfsCheck } from '../data/bedarf'
 import type { Zielwert } from '../data/bedarf/types'
 import { useVergleich } from '../hooks/useVergleich'
 import { useBedarf } from '../hooks/useBedarf'
-import { besteWahl } from '../lib/bedarfMatch'
+import { erfuellerAngebote } from '../lib/bedarfMatch'
 import DokumenteSection from '../components/DokumenteSection'
 import { dokumentKeyVergleich } from '../data/dokumente'
 
@@ -55,7 +55,7 @@ export default function VergleichDetail() {
     return m
   }, [ergebnis])
 
-  const best = ergebnis ? besteWahl(angebote, ergebnis) : null
+  const erfueller = ergebnis ? erfuellerAngebote(angebote, ergebnis) : { ids: [], pruefbar: 0 }
 
   // Katalog-Anbieter, die noch nicht in der Tabelle stehen – als Antipp-Chips.
   const chipVorschlaege = useMemo(() => {
@@ -292,9 +292,9 @@ export default function VergleichDetail() {
                 )}
                 {angebote.map(a => (
                   <th key={a.id} className={`align-bottom p-3 rounded-t-card ${a.favorit ? 'bg-pine text-cream' : 'bg-cream-card'}`}>
-                    {best?.angebotId === a.id && (
+                    {erfueller.ids.includes(a.id) && (
                       <div className="mb-2 rounded-pill bg-olive px-2 py-1 text-[11px] leading-tight font-display font-semibold text-cream text-center">
-                        Passt am besten ({best.erfuellt}/{best.pruefbar} Zielen)
+                        Erfüllt deine Zielwerte
                       </div>
                     )}
                     <input
@@ -390,10 +390,11 @@ export default function VergleichDetail() {
 
       <DokumenteSection bezugKey={dokumentKeyVergleich(kategorieId)} />
 
-      {best && (
+      {erfueller.ids.length > 0 && (
         <p className="text-sm text-ink/60">
-          „Passt am besten" bezieht sich nur auf deine eingetragenen Angebote und deinen
-          Bedarfscheck – das ist keine Markt- oder Anbieterempfehlung. Deine Favoriten-Wahl
+          „Erfüllt deine Zielwerte" heißt: Dieses Angebot erfüllt laut deinen eigenen Eingaben
+          alle Ziele deines Bedarfschecks – gleichrangig mit anderen Treffern, ohne Reihung und
+          ohne Preisbewertung. Das ist keine Markt- oder Anbieterempfehlung; deine Favoriten-Wahl
           bleibt davon unberührt.
         </p>
       )}

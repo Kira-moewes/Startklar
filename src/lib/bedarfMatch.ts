@@ -54,34 +54,17 @@ export function passendeAnbieter(kategorieId: string, ergebnis: BedarfsErgebnis)
   return { treffer, pruefbar: pruefbar.length }
 }
 
-export type BestMatch = { angebotId: string; erfuellt: number; pruefbar: number }
+export type Erfueller = { ids: string[]; pruefbar: number }
 
-// Ermittelt das Angebot, das die prüfbaren Zielwerte am besten erfüllt.
-// Nur ab 2 Angeboten und ≥1 prüfbarem Ziel; sonst / bei nicht auflösbarem
-// Gleichstand → null (lieber keine Empfehlung als eine willkürliche).
-export function besteWahl(angebote: Angebot[], ergebnis: BedarfsErgebnis): BestMatch | null {
-  if (angebote.length < 2) return null
+// Welche der EIGENEN eingetragenen Angebote erfüllen ALLE prüfbaren Zielwerte
+// des Bedarfschecks? Reine Information, ausdrücklich gleichrangig: Es wird KEIN
+// „Bestes" ausgewählt und nicht nach Preis gereiht – jedes voll passende
+// Angebot wird nur markiert. Bezieht sich allein auf deine eigenen Eingaben.
+export function erfuellerAngebote(angebote: Angebot[], ergebnis: BedarfsErgebnis): Erfueller {
   const pruefbar = ergebnis.zielwerte.filter(z => z.pruefe && z.kriteriumKey)
-  if (pruefbar.length === 0) return null
-
-  const punkte = angebote.map(a => ({
-    a,
-    erfuellt: pruefbar.filter(z => z.pruefe!(a.werte[z.kriteriumKey!] ?? '') === 'erfuellt').length,
-  }))
-  const max = Math.max(...punkte.map(p => p.erfuellt))
-  if (max === 0) return null
-
-  const beste = punkte.filter(p => p.erfuellt === max)
-  if (beste.length === 1) {
-    return { angebotId: beste[0].a.id, erfuellt: max, pruefbar: pruefbar.length }
-  }
-  // Gleichstand → günstigerer Beitrag/Preis/Gebühr gewinnt.
-  const mitKosten = beste
-    .map(p => ({ id: p.a.id, kosten: parseEuro(p.a.werte.beitrag ?? p.a.werte.preis ?? p.a.werte.gebuehr ?? '') }))
-    .filter((p): p is { id: string; kosten: number } => p.kosten !== null)
-  if (mitKosten.length !== beste.length) return null
-  const minKosten = Math.min(...mitKosten.map(p => p.kosten))
-  const gewinner = mitKosten.filter(p => p.kosten === minKosten)
-  if (gewinner.length !== 1) return null
-  return { angebotId: gewinner[0].id, erfuellt: max, pruefbar: pruefbar.length }
+  if (pruefbar.length === 0) return { ids: [], pruefbar: 0 }
+  const ids = angebote
+    .filter(a => pruefbar.every(z => z.pruefe!(a.werte[z.kriteriumKey!] ?? '') === 'erfuellt'))
+    .map(a => a.id)
+  return { ids, pruefbar: pruefbar.length }
 }

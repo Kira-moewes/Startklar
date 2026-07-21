@@ -13,10 +13,13 @@ import Termine from './pages/Termine'
 import Vergleich from './pages/Vergleich'
 import VergleichDetail from './pages/VergleichDetail'
 import BedarfsCheck from './pages/BedarfsCheck'
+import NotFound from './pages/NotFound'
+import ErrorBoundary from './components/ErrorBoundary'
 
 export default function App() {
   return (
     <BrowserRouter>
+      <ErrorBoundary>
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
@@ -33,8 +36,10 @@ export default function App() {
           <Route path="/profil" element={<Profil />} />
           <Route path="/impressum" element={<Impressum />} />
           <Route path="/datenschutz" element={<Datenschutz />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
+      </ErrorBoundary>
     </BrowserRouter>
   )
 }
