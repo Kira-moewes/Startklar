@@ -46,18 +46,23 @@ export function useDokumente(bezugKey: string) {
       setFehler(`Maximal ${MAX_DATEIEN_PRO_BEZUG} Dateien pro Stelle – lösche erst eine alte.`)
       return
     }
-    const datenUrl = await alsDataUrl(file)
-    const neu: Dokument = {
-      id: crypto.randomUUID(),
-      name: file.name,
-      typ: file.type,
-      groesse: file.size,
-      datenUrl,
-      angelegtAm: new Date().toISOString(),
+    try {
+      const datenUrl = await alsDataUrl(file)
+      const neu: Dokument = {
+        id: crypto.randomUUID(),
+        name: file.name,
+        typ: file.type,
+        groesse: file.size,
+        datenUrl,
+        angelegtAm: new Date().toISOString(),
+      }
+      const next = [...aktuelle, neu]
+      await dokumenteStore.setItem(bezugKey, next)
+      setDokumente(next)
+    } catch {
+      // z. B. Speicherplatz voll (QuotaExceeded) oder Lesefehler – nicht still verschlucken.
+      setFehler('Die Datei konnte nicht gespeichert werden – womöglich ist der Speicher deines Geräts voll. Versuch es mit einer kleineren Datei oder lösche zuerst alte Unterlagen.')
     }
-    const next = [...aktuelle, neu]
-    await dokumenteStore.setItem(bezugKey, next)
-    setDokumente(next)
   }, [bezugKey])
 
   const entfernen = useCallback(async (id: string) => {

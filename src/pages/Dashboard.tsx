@@ -4,6 +4,7 @@ import { journeys } from '../data'
 import { relevanteTasks, istRelevant } from '../data/visibility'
 import { useProfile } from '../hooks/useProfile'
 import { useAllProgress } from '../hooks/useProgress'
+import { useSettings } from '../hooks/useSettings'
 import { useTermine } from '../hooks/useTermine'
 import { useCountUp } from '../hooks/useCountUp'
 import Heatmap from '../components/ui/Heatmap'
@@ -19,6 +20,7 @@ const RING_UMFANG = 414.7 // 2 * PI * r66, wie im Redesign
 
 export default function Dashboard() {
   const { profile, loading: profileLoading } = useProfile()
+  const { einstellungen, setEinstellung } = useSettings()
   const { termine } = useTermine()
 
   const journeyData = useMemo(() => {
@@ -174,6 +176,27 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+
+      {/* Backup-Hinweis: Daten liegen nur lokal – nach etwas Fortschritt dezent ans Sichern erinnern */}
+      {stats.totalDone >= 5 && !einstellungen.backupErinnerungWeg && (
+        <div
+          className="mt-8 rounded-[18px] border-[1.5px] border-olive bg-olive/8 px-5.5 py-4.5 flex flex-wrap items-center gap-x-4 gap-y-3"
+          style={{ animation: 'rise .6s cubic-bezier(.2,.7,.2,1) .12s both' }}
+        >
+          <span className="flex-1 min-w-[220px] text-[15px] text-pine/85">
+            Deine Daten liegen nur auf diesem Gerät. Sichere sie kurz als Datei, damit bei Handywechsel oder gelöschtem Cache nichts verloren geht.
+          </span>
+          <Link to="/profil" className="rounded-pill bg-olive px-5 py-2.5 text-sm font-semibold text-on-akzent hover:bg-olive-deep transition">
+            Daten sichern
+          </Link>
+          <button
+            onClick={() => setEinstellung('backupErinnerungWeg', true)}
+            className="text-sm text-pine/55 underline underline-offset-3 hover:text-pine transition"
+          >
+            Später
+          </button>
+        </div>
+      )}
 
       {/* Termine-Vorschau */}
       {(naechsteTermine.length > 0 || ueberfaellig > 0) && (

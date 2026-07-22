@@ -11,6 +11,7 @@ export type Einstellungen = {
   kiModus: boolean
   kiKontext: boolean
   kiHinweisGesehen: boolean
+  backupErinnerungWeg: boolean
 }
 
 export const standardEinstellungen: Einstellungen = {
@@ -22,6 +23,7 @@ export const standardEinstellungen: Einstellungen = {
   kiModus: false,
   kiKontext: false,
   kiHinweisGesehen: false,
+  backupErinnerungWeg: false,
 }
 
 // Hintergrundfarben der Themes (--t-bg in index.css) – für die PWA-/Browserleiste.
