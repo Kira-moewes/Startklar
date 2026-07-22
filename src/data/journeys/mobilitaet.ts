@@ -10,12 +10,13 @@ export const mobilitaetJourney: Journey = {
       title: 'Führerschein: Fristen im Blick',
       summary: 'Von der Anmeldung in der Fahrschule bis zur Prüfung gibt es ein paar Fristen, die du kennen solltest — damit nichts verfällt.',
       steps: [
-        'Vor dem Antrag: Sehtest (bei Optiker oder Augenarzt) und einen Erste-Hilfe-Kurs machen — beide Nachweise brauchst du für die Anmeldung.',
-        'Antrag auf Fahrerlaubnis bei der Führerscheinstelle stellen (oft schon 6 Monate vor dem 18. Geburtstag möglich, damit du pünktlich starten kannst).',
+        'Vor dem Antrag: Sehtest (Optiker/Augenarzt, gilt 2 Jahre) und einen Erste-Hilfe-Kurs (läuft nicht ab) machen – beide Nachweise brauchst du für die Anmeldung.',
+        'Antrag auf Fahrerlaubnis bei der Führerscheinstelle stellen (oft schon 6 Monate vorher möglich, damit du pünktlich starten kannst).',
+        'Schon mit 17: Begleitetes Fahren (BF17) – Theorie und Praxis wie üblich, danach fährst du mit eingetragenen Begleitpersonen, bis du 18 wirst.',
         'Nach bestandener Theorieprüfung hast du 12 Monate Zeit für die praktische Prüfung — sonst musst du die Theorie wiederholen.',
         'Extra-Hinweis für alte Führerscheine: Papier- und Kartenführerscheine werden gestaffelt umgetauscht ({FRIST_FUEHRERSCHEIN}) — prüfe deinen Jahrgang.'
       ],
-      deadline: 'Theorie- und Praxisprüfung sind je 12 Monate gültig',
+      deadline: 'Nach bestandener Theorie: 12 Monate Zeit für die praktische Prüfung',
       consequence: 'Wenn Fristen verstreichen, müssen oft Teile neu gemacht werden – das ist nervig und kostet extra, aber meist noch machbar.',
       category: 'mobilitaet',
       faktenKeys: ['FRIST_FUEHRERSCHEIN'],
@@ -28,7 +29,7 @@ export const mobilitaetJourney: Journey = {
       steps: [
         'Vorher die Kfz-Haftpflicht abschließen und die eVB-Nummer (elektronische Versicherungsbestätigung) besorgen — ohne sie geht die Zulassung nicht.',
         'Termin bei der Zulassungsstelle vereinbaren (viele bieten Online-Terminbuchung an).',
-        'Unterlagen mitnehmen: eVB-Nummer, Fahrzeugpapiere (Zulassungsbescheinigung Teil I und II), gültige HU/AU, Personalausweis, ggf. SEPA-Mandat für die Kfz-Steuer.',
+        'Unterlagen mitnehmen: eVB-Nummer, Fahrzeugpapiere (Zulassungsbescheinigung Teil I und II – Teil II beim Gebrauchtwagen vom Vorbesitzer), gültige HU/AU, Personalausweis, ggf. SEPA-Mandat für die Kfz-Steuer.',
         'Kennzeichen beantragen und prägen lassen; mit Gebühren von {BETRAG_ZULASSUNG} rechnen (Schilder kosten extra).'
       ],
       deadline: '{FRIST_ZULASSUNG}',

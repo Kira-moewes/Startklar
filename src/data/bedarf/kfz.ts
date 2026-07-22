@@ -13,7 +13,7 @@ const schutzZiel = (alter: string): Zielwert => {
   }
   if (alter === '3-8') {
     return {
-      kriteriumKey: 'schutz', label: 'Kaskoschutz', ziel: 'Teilkasko meist ausreichend',
+      kriteriumKey: 'schutz', label: 'Kaskoschutz', ziel: 'Bis ca. 5 Jahre Vollkasko oft noch sinnvoll, danach meist Teilkasko',
       pruefe: (w): ZielStatus => { const l = normalisiere(w); if (!l.trim()) return 'unklar'; return l.includes('teilkasko') || l.includes('vollkasko') ? 'erfuellt' : 'nicht-erfuellt' },
     }
   }

@@ -149,7 +149,7 @@ export const hausratCheck: BedarfsCheck = {
       bausteine.push('Elementarschäden (Starkregen, Rückstau, Hochwasser)')
     }
     if (antworten.wertsachen === 'ja') {
-      hinweise.push('Prüfe die Wertsachengrenze der Police (oft rund 20–30 % der Versicherungssumme) – teure Einzelstücke ggf. extra melden.')
+      hinweise.push('Wertsachengrenze prüfen: Schmuck, Uhren und Bargeld sind oft nur bis rund 20–30 % der Versicherungssumme abgedeckt. Elektronik zählt dagegen zum normalen Hausrat – teure Einzelstücke trotzdem dokumentieren.')
     }
     const zielwerte = [summeZiel(antworten.flaeche), sbZiel]
     if (antworten.fahrrad === 'ja_teuer') zielwerte.push(fahrradZiel)

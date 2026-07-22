@@ -113,7 +113,7 @@ export const vergleichsKategorien: VergleichsKategorie[] = [
     intro: 'Pflicht fürs erste Auto. Als Fahranfänger:in zahlst du viel – mit ein paar Tricks wird es günstiger.',
     tipps: [
       'Als Zweitwagen der Eltern oder mit deren Schadenfreiheitsklasse startest du oft deutlich günstiger.',
-      'Teilkasko lohnt sich meist, Vollkasko nur bei neueren Autos.',
+      'Teilkasko lohnt sich meist; Vollkasko vor allem in den ersten rund 5 Jahren.',
       'Werkstattbindung und jährliche Zahlweise drücken den Preis.',
     ],
     kriterien: [

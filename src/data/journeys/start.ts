@@ -26,7 +26,8 @@ export const startJourney: Journey = {
       steps: [
         'Prüfe, ob dein Ausweis noch gültig ist oder bald abläuft.',
         'Gehe zum Bürgeramt oder beantrage online, wenn deine Stadt das anbietet.',
-        'Mitnahmen: Personalausweis (falls Erneuerung), Reisepass, Geburtsurkunde oder Pass.',
+        'Mitnahmen: bisheriger Ausweis/Reisepass (falls vorhanden), sonst Geburtsurkunde zur Identität.',
+        'Du brauchst ein biometrisches Passfoto – seit 2025 muss es digital sein (Foto-Terminal im Amt oder zertifizierter Fotograf); mitgebrachte Papierbilder werden nicht mehr akzeptiert.',
         'Rechne mit Gebühren von {BETRAG_PERSO} — das ist gesetzlich festgelegt.'
       ],
       deadline: 'Zeitnah, bevor der alte Ausweis abläuft',
@@ -59,7 +60,7 @@ export const startJourney: Journey = {
       summary: 'Jetzt darfst du Verträge unterschreiben. Lerne, worauf du achten musst — bevor es teuer wird.',
       steps: [
         'Lies Verträge immer komplett durch, bevor du unterschreibst — auch wenn es mühsam ist.',
-        'Achte auf: Laufzeit (wie lange bindet dich der Vertrag?), Kündigungsfrist ({FRIST_WIDERRUF} kann auch für Widerruf gelten), Gebühren und Nebenbedingungen.',
+        'Achte auf: Laufzeit, Kündigungsfrist, Gebühren und Nebenbedingungen. Ein Widerrufsrecht ({FRIST_WIDERRUF}) gibt es vor allem bei Online-/Haustürgeschäften – bei normalen Verträgen zählt nur die Kündigungsfrist.',
         'Wenn etwas unklar ist, frage nach oder hole dir Rat (Familie, Freunde, Verbraucherzentrale).',
         'Merke: Du kannst einen Vertrag unterschreiben und — unter Bedingungen — auch wieder kündigen. Kenne die Fristen und Bedingungen.'
       ],
@@ -88,7 +89,7 @@ export const startJourney: Journey = {
       title: 'Krankenversicherung wechseln — wann und wie?',
       summary: 'Mit deiner eigenen Versicherung darfst du auch wechseln. Hier erfährst du, wann es sinnvoll ist.',
       steps: [
-        'Du kannst die Krankenkasse wechseln, wenn die Frist {FRIST_KK_WECHSEL} vorbei ist und du dich bei einer anderen besser aufgehoben fühlst.',
+        'Du kannst die Krankenkasse wechseln, wenn die Frist {FRIST_KK_WECHSEL} vorbei ist. Ausnahme: Erhöht deine Kasse den Zusatzbeitrag, kannst du sofort wechseln (Sonderkündigungsrecht).',
         'Vergleiche zwei bis drei Kassen nach Leistungen, Zusatzbeiträgen und Service — kleine Unterschiede zählen sich im Jahr auf.',
         'Kündige die alte Kasse schriftlich mit der richtigen Frist; die neue kümmert sich oft um die Formalitäten.',
         'Ein Wechsel ist einfach und kostet nichts — lass dich nicht von deiner alten Kasse überreden, wenn du gehen möchtest.'
@@ -101,7 +102,7 @@ export const startJourney: Journey = {
     {
       id: 'organspende',
       title: 'Organspendeausweis — deine Entscheidung dokumentieren',
-      summary: 'Mit 18 Jahren kannst du selbst entscheiden, ob du Organe spenden möchtest. Halte deine Entscheidung fest.',
+      summary: 'Zustimmen darfst du schon ab 16, widersprechen ab 14 – spätestens ab 18 ist es ganz deine Entscheidung. Halte sie fest.',
       steps: [
         'In Deutschland ist Organspende unentgeltlich — es geht nicht um Geld, sondern um deine dokumentierte Entscheidung.',
         'Du darfst selbst entscheiden: Ja, ich möchte spenden; Nein, das möchte ich nicht; oder: Entscheidung den Angehörigen überlassen.',

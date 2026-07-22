@@ -21,7 +21,7 @@ export const finanzenJourney: Journey = {
     {
       id: 'steuererklaerung',
       title: 'Steuererklärung – lohnt sie sich?',
-      summary: 'Viele erhalten Geld zurück; prüfen lohnt sich oft.',
+      summary: 'Für die meisten ist die Abgabe freiwillig (bis zu 4 Jahre rückwirkend) und bringt oft Geld zurück – Pflicht ist sie nur in bestimmten Fällen.',
       steps: [
         'Sammle deine Lohnsteuerbescheinigung und Belege.',
         'Schätze kurz, ob sich eine Abgabe lohnt (Rückerstattung: {BETRAG_RUECKERSTATTUNG}).',
@@ -84,6 +84,7 @@ export const finanzenJourney: Journey = {
         'Ein Depot ist wie ein Konto, nur für Wertpapiere – du eröffnest es kostenlos bei einer Bank oder einem Online-Broker.',
         'Ein ETF ist ein Fonds, der einen ganzen Index nachbildet (z. B. viele große Firmen weltweit auf einmal), statt auf eine einzelne Aktie zu setzen – so verteilt sich das Risiko.',
         'Grundgedanke: langfristig und regelmäßig (Sparplan) statt kurzfristig zu raten. Kurse schwanken – Geld, das du bald brauchst, gehört nicht in Aktien oder ETFs.',
+        'Praxis-Tipp: Richte bei deiner Bank oder deinem Broker einen Freistellungsauftrag ein – bis 1.000 € Kapitalerträge pro Jahr bleiben so steuerfrei, sonst wird zu früh Abgeltungsteuer einbehalten.',
         'Wichtig: Das hier ist reine Erklärung, keine Anlageberatung – wir empfehlen kein Produkt und verdienen nichts daran.'
       ],
       deadline: 'Informativ',
@@ -108,7 +109,7 @@ export const finanzenJourney: Journey = {
     {
       id: 'kindergeld-ab-18',
       title: 'Kindergeld ab 18: Nachweis einreichen',
-      summary: 'Kindergeld endet nicht automatisch mit 18 — oft braucht die Familienkasse einen Nachweis für Ausbildung oder Studium.',
+      summary: 'Kindergeld gibt es {ALTER_KINDERGELD_MAX}, solange du in Ausbildung oder Studium bist – es endet nicht automatisch mit 18, aber die Familienkasse braucht oft einen Nachweis.',
       steps: [
         'Prüfe bei der Familienkasse, welche Nachweise nötig sind.',
         'Sammle Bescheinigungen (Ausbildung, Studium, Arbeitslosmeldung).',

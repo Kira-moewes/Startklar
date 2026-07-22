@@ -12,7 +12,7 @@ const beitragZiel: Zielwert = {
   pruefe: (wert): ZielStatus => {
     const p = parseEuro(wert) // nimmt bei Spannen die Obergrenze; ',' als Dezimaltrenner
     if (p === null) return 'unklar'
-    return p <= 2.5 ? 'erfuellt' : 'nicht-erfuellt'
+    return p <= 2.9 ? 'erfuellt' : 'nicht-erfuellt'
   },
 }
 
