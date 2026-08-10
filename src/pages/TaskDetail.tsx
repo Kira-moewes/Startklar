@@ -1,10 +1,15 @@
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { journeys } from '../data'
 import { faktum } from '../data/fakten'
+import { kategorie, vergleichFuerTask } from '../data/vergleich'
 import { relevanteTasks } from '../data/visibility'
 import { useProfile } from '../hooks/useProfile'
 import { useProgress } from '../hooks/useProgress'
 import CategoryBadge from '../components/CategoryBadge'
+import DokumenteSection from '../components/DokumenteSection'
+import { dokumentKeyTask } from '../data/dokumente'
+import { hatBedarfsCheck } from '../data/bedarf'
+import { useBedarf } from '../hooks/useBedarf'
 
 export default function TaskDetail() {
   const { journeyId = '', taskId = '' } = useParams()
@@ -14,6 +19,9 @@ export default function TaskDetail() {
   const tasks = journey ? relevanteTasks(journey, profile) : []
   const taskIds = tasks.map(t => t.id)
   const { done, toggle } = useProgress(journeyId, taskIds)
+  // Versicherungs-Tasks: verknüpfte Vergleichskategorie mit Bedarfscheck (sonst '').
+  const checkKatId = (vergleichFuerTask[`${journeyId}:${taskId}`] ?? []).find(hatBedarfsCheck) ?? ''
+  const { antworten: checkAntworten, ergebnis: checkErgebnis } = useBedarf(checkKatId)
 
   if (!journey) return <p className="p-6">Nicht gefunden. <Link to="/" className="underline">Zur Startseite</Link></p>
   const task = journey.tasks.find(t => t.id === taskId)
@@ -32,57 +40,135 @@ export default function TaskDetail() {
     .at(-1) ?? null
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-10 flex flex-col gap-8">
-      <div>
-        <Link to={`/journey/${journey.id}`} className="text-sm text-pine underline underline-offset-2">← Zur Übersicht</Link>
-        <div className="mt-3 flex flex-wrap items-center gap-3">
-          <h1 className="font-display text-3xl font-semibold text-pine">{task.title}</h1>
-          <CategoryBadge category={task.category} />
-        </div>
-        <p className="mt-2 text-lg text-ink/80">{task.summary}</p>
+    <div className="mx-auto max-w-[780px] w-full px-7 pt-12 pb-24">
+      <Link to={`/journey/${journey.id}`} className="text-sm font-semibold text-olive">← {journey.title}</Link>
+      <div className="mt-4.5 flex items-center gap-3 flex-wrap">
+        <h1 className="m-0 font-serif font-normal text-[clamp(30px,4.4vw,46px)] leading-[1.12] text-pine" style={{ animation: 'rise .6s cubic-bezier(.2,.7,.2,1) both' }}>
+          {task.title}
+        </h1>
+        <CategoryBadge category={task.category} />
       </div>
+      <p className="mt-3.5 m-0 text-[17px] leading-[1.55] text-pine/75" style={{ animation: 'rise .6s cubic-bezier(.2,.7,.2,1) .07s both' }}>
+        {task.summary}
+      </p>
 
-      <section aria-label="Schritt für Schritt" className="rounded-card bg-cream-card border border-pine-mist p-6">
-        <h2 className="font-display text-xl font-semibold text-pine">So gehst du vor</h2>
-        <ol className="mt-4 flex flex-col gap-4">
+      <section
+        aria-label="Schritt für Schritt"
+        className="mt-8 bg-cream-card border border-pine/14 rounded-[20px] p-7"
+        style={{ animation: 'rise .6s cubic-bezier(.2,.7,.2,1) .14s both' }}
+      >
+        <h2 className="m-0 font-serif font-medium text-2xl text-pine">So gehst du vor</h2>
+        <ol className="mt-5 m-0 p-0 list-none flex flex-col gap-4.5">
+          {checkKatId && (
+            <li className="flex gap-4 items-start" style={{ animation: 'rise .5s cubic-bezier(.2,.7,.2,1) 0s both' }}>
+              <span className={`flex-none size-8 rounded-full text-sm font-semibold flex items-center justify-center ${
+                checkAntworten ? 'bg-olive text-on-akzent' : 'bg-pine text-cream'
+              }`}>
+                {checkAntworten ? '✓' : 1}
+              </span>
+              <div className="mt-[3px] flex-1">
+                <p className="m-0 text-[15.5px] leading-[1.55] text-pine/85">
+                  {checkAntworten && checkErgebnis
+                    ? <>Fragebogen ausgefüllt – dein Ergebnis: <strong>{checkErgebnis.titel}</strong>.</>
+                    : 'Fragebogen ausfüllen – zeigt dir, was DU wirklich brauchst (≈ 3 Minuten).'}
+                </p>
+                <Link
+                  to={`/vergleich/${checkKatId}/check`}
+                  className="mt-1.5 inline-block rounded-pill border-[1.5px] border-olive px-4 py-1.5 text-sm font-semibold text-olive hover:bg-olive hover:text-on-akzent transition"
+                >
+                  {checkAntworten ? 'Ergebnis ansehen' : 'Fragebogen starten'}
+                </Link>
+              </div>
+            </li>
+          )}
           {task.steps.map((step, i) => (
-            <li key={i} className="flex gap-4">
-              <span className="flex size-8 shrink-0 items-center justify-center rounded-pill bg-pine text-cream font-display font-semibold text-sm">{i + 1}</span>
-              <p className="pt-1">{step}</p>
+            <li key={i} className="flex gap-4 items-start" style={{ animation: `rise .5s cubic-bezier(.2,.7,.2,1) ${(i + (checkKatId ? 1 : 0)) * 0.08}s both` }}>
+              <span className="flex-none size-8 rounded-full bg-pine text-cream text-sm font-semibold flex items-center justify-center">{i + (checkKatId ? 2 : 1)}</span>
+              <p className="m-0 mt-[3px] text-[15.5px] leading-[1.55] text-pine/85">{step}</p>
             </li>
           ))}
         </ol>
       </section>
 
-      <section aria-label="Was, wenn nicht?" className="rounded-card border-2 border-pine-mist bg-cream p-6">
-        <h2 className="font-display text-xl font-semibold text-pine">Was, wenn nicht?</h2>
-        <p className="mt-2"><span className="font-medium text-coral-deep">Frist:</span> {task.deadline}</p>
-        <p className="mt-2 text-ink/90">{task.consequence}</p>
-        <p className="mt-3 text-sm text-ink/60">Kein Grund zur Panik – jetzt weißt du ja Bescheid.</p>
+      <section
+        aria-label="Was, wenn nicht?"
+        className="mt-5 border-[1.5px] border-olive rounded-[20px] p-7 bg-olive/7"
+        style={{ animation: 'rise .6s cubic-bezier(.2,.7,.2,1) .24s both' }}
+      >
+        <h2 className="m-0 font-serif font-medium text-2xl text-pine">Was, wenn nicht?</h2>
+        <p className="mt-3 m-0 text-[15px]"><span className="font-bold text-olive">Frist:</span> {task.deadline}</p>
+        <p className="mt-2.5 m-0 text-[15.5px] leading-[1.55] text-pine/85">{task.consequence}</p>
+        <p className="mt-3.5 m-0 text-[13.5px] text-pine/55">Kein Grund zur Panik — jetzt weißt du ja Bescheid.</p>
         {task.faktenKeys && task.faktenKeys.length > 0 && (
           <div className="mt-4 flex items-center gap-2 text-sm">
             {hasUnverified ? (
-              <span className="rounded-full bg-[#f9d9d3] px-3 py-1 text-[#a84a3a]">Wird gerade geprüft</span>
+              <span className="rounded-pill border border-olive/40 px-3 py-1 text-[13px] font-semibold text-olive">Wird gerade geprüft</span>
             ) : latestDate ? (
-              <span className="text-ink/70">Zuletzt geprüft am {latestDate}</span>
+              <span className="text-pine/70">Zuletzt geprüft am {latestDate}</span>
             ) : null}
           </div>
         )}
       </section>
 
-      <button
-        onClick={() => toggle(task.id)}
-        className={`min-h-14 rounded-pill px-8 font-display text-lg font-semibold transition ${isDone ? 'bg-pine text-cream active:bg-pine-soft' : 'bg-coral text-white active:bg-coral-deep'}`}
-      >
-        {isDone ? '✓ Erledigt – rückgängig machen' : 'Als erledigt markieren'}
-      </button>
+      {(vergleichFuerTask[`${journey.id}:${task.id}`] ?? []).length > 0 && (
+        <section aria-label="Passender Vergleich" className="mt-5 bg-band rounded-[20px] p-7 text-paper" style={{ animation: 'rise .6s cubic-bezier(.2,.7,.2,1) .3s both' }}>
+          <h2 className="m-0 font-serif font-medium text-2xl">Anbieter vergleichen</h2>
+          <p className="mt-2 m-0 text-[15px] text-paper/85 leading-[1.55]">
+            Zu diesem Schritt gibt es einen neutralen Vergleich — trag deine Angebote ein und behalte den Überblick.
+          </p>
+          <div className="mt-4.5 flex flex-wrap gap-3">
+            {(vergleichFuerTask[`${journey.id}:${task.id}`] ?? []).map(katId => {
+              const kat = kategorie(katId)
+              if (!kat) return null
+              return (
+                <Link
+                  key={katId}
+                  to={`/vergleich/${katId}`}
+                  className="rounded-pill bg-paper text-band px-5.5 py-2.75 text-sm font-semibold hover:bg-olive-soft hover:text-on-akzent transition"
+                >
+                  {kat.titel} →
+                </Link>
+              )
+            })}
+          </div>
+        </section>
+      )}
 
-      <nav aria-label="Aufgaben-Navigation" className="flex justify-between gap-4">
+      <div className="mt-5">
+        <DokumenteSection bezugKey={dokumentKeyTask(journey.id, task.id)} />
+      </div>
+
+      <div className="mt-7 flex flex-col sm:flex-row gap-3">
+        <button
+          onClick={() => toggle(task.id)}
+          className={`flex-1 min-h-14 rounded-pill px-8 text-[17px] font-semibold text-on-akzent transition hover:scale-[1.02] ${isDone ? 'bg-pine text-cream' : 'bg-olive'}`}
+        >
+          {isDone ? '✓ Erledigt — rückgängig machen' : 'Als erledigt markieren'}
+        </button>
+        <Link
+          to={`/termine?neu=1&titel=${encodeURIComponent(task.title)}&journey=${journey.id}&task=${task.id}`}
+          className="min-h-14 rounded-pill border-[1.5px] border-pine/30 px-8 text-[15px] font-semibold text-pine flex items-center justify-center hover:border-pine transition"
+        >
+          Termin dazu anlegen
+        </Link>
+      </div>
+
+      <nav aria-label="Aufgaben-Navigation" className="mt-8 flex justify-between gap-3">
         {prev ? (
-          <button onClick={() => navigate(`/journey/${journey.id}/task/${prev.id}`)} className="min-h-12 rounded-pill border-2 border-pine px-5 font-display font-semibold text-pine">← {prev.title}</button>
+          <button
+            onClick={() => navigate(`/journey/${journey.id}/task/${prev.id}`)}
+            className="rounded-pill border-[1.5px] border-pine/30 px-5.5 py-3 text-sm font-semibold text-pine max-w-[46%] overflow-hidden text-ellipsis whitespace-nowrap hover:border-pine transition"
+          >
+            ← {prev.title}
+          </button>
         ) : <span />}
         {next && (
-          <button onClick={() => navigate(`/journey/${journey.id}/task/${next.id}`)} className="min-h-12 rounded-pill border-2 border-pine px-5 font-display font-semibold text-pine ml-auto">{next.title} →</button>
+          <button
+            onClick={() => navigate(`/journey/${journey.id}/task/${next.id}`)}
+            className="ml-auto rounded-pill border-[1.5px] border-pine/30 px-5.5 py-3 text-sm font-semibold text-pine max-w-[46%] overflow-hidden text-ellipsis whitespace-nowrap hover:border-pine transition"
+          >
+            {next.title} →
+          </button>
         )}
       </nav>
     </div>

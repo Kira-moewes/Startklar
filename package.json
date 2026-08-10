@@ -1,5 +1,5 @@
 {
-  "name": "temp",
+  "name": "startklar",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,9 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@fontsource-variable/fraunces": "^5.2.9",
-    "@fontsource-variable/inter": "^5.2.8",
-    "@fontsource-variable/outfit": "^5.2.8",
+    "@fontsource-variable/instrument-sans": "^5.2.8",
+    "@fontsource/instrument-serif": "^5.2.8",
     "@tailwindcss/vite": "^4.3.2",
     "localforage": "^1.10.0",
     "react": "^19.2.7",

@@ -1,32 +1,142 @@
-# React + TypeScript + Vite
+# Startklar
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Erwachsenwerden – aber machbar. Startklar begleitet junge Menschen bei den
+ersten Behörden-, Geld- und Wohnungs-To-dos: verständlich, neutral und ohne
+erhobenen Zeigefinger.
 
-Currently, two official plugins are available:
+## Repo-Struktur: zwei getrennte Apps
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Dieses Repo enthält **zwei eigenständige Apps**, die keinen Code teilen:
 
-## React Compiler
+- **Startklar** – die App im **Repo-Root** (`src/`, `api/`, `public/`,
+  root-`package.json`, `vercel.json`). Deployment via Vercel. Alle Konzept-Runden
+  (`docs/konzept-r3…r6.md`, „Runde 3–6") gehören ausschließlich hierher.
+- **Notizen/Ideen** – die App im Unterordner **`notizen/`** mit eigener
+  `package.json`, eigenem Build und eigenen Deploy-Configs. Unabhängig von
+  Startklar (siehe `notizen/CLAUDE.md`).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+**Wichtig für künftige Änderungen:** Anweisungen aus den Konzept-Runden immer in
+`src/` (Startklar) umsetzen, nie in `notizen/`. Kein `import` überquert die
+Grenze zwischen beiden Apps; Deploy-Configs bleiben je App in ihrem eigenen
+Verzeichnis.
 
-## Expanding the Oxlint configuration
+## Konzept v3 (umgesetzt)
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+Runde 3 ist geplant ([docs/konzept-r3.md](docs/konzept-r3.md)) und vollständig
+umgesetzt:
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+- **Klaro, der Assistent** – schwebender Button auf jeder Seite. Antwortet
+  standardmäßig komplett lokal (Intents + Suche über alle Schritte, Vergleiche
+  und eine App-Hilfe-FAQ, kennt Profil/Fortschritt/Termine) und verlinkt immer
+  die passende Stelle in der App. Kann mit Bestätigung Aktionen ausführen
+  (Termin vorbereiten, Schritt abhaken, Navigation). Optionaler **KI-Modus**
+  (Opt-in in den Einstellungen): schickt die Frage an eine Serverless Function
+  (`api/agent.ts`, auf Vercel als `/api/agent`), die die Claude-API
+  nutzt – mit Guardrails, Rate-Limit und lokalem Fallback.
+- **Profilseite** (`/profil`) – alle 7 Onboarding-Antworten einzeln änderbar,
+  mit Live-Vorschau, wie viele Schritte sich dadurch ändern.
+- **Einstellungen** – Hell/Dunkel/System, 4 Akzentfarben, Schriftgröße,
+  weniger Animationen, KI-Schalter sowie Datenexport/-import als JSON und
+  „Alles löschen" (Datenhoheit, alles bleibt lokal).
+
+## Konzept v4 (umgesetzt)
+
+Runde 4 ist geplant ([docs/konzept-r4.md](docs/konzept-r4.md)) und umgesetzt –
+zwei Erweiterungen des Vergleichs:
+
+- **Anbieter-Autofill** – im Vergleich reicht der Anbietername: Bei bekannten
+  Anbietern (Erstbestand für Haftpflicht, Hausrat, Kfz) schlägt die App welche
+  vor und füllt die Kriterien mit **Richtwerten** aus einem kuratierten lokalen
+  Katalog vor. Richtwerte sind mit ≈ markiert, editierbar und tragen ein
+  Stand-Datum; nach 12 Monaten warnt die App. Grenze der Neutralität neu
+  gezogen: Startklar **nennt** Anbieter (sachliche Info, keine Provision, keine
+  Links), **bewertet** sie aber nicht.
+- **Bedarfscheck je Versicherung** – vor dem Vergleich beantwortest du 3–4
+  kurze Fragen (Wizard, bekannte Profil-Antworten sind vorausgewählt). Daraus
+  ergibt sich, ob und wie viel du brauchst (Stufe + Zielwerte). In der
+  Vergleichstabelle erscheinen die Zielwerte als Referenzspalte „Dein Bedarf",
+  eine Ampel prüft die Angebote dagegen, und das am besten passende **eigene**
+  Angebot wird markiert – ausdrücklich nur unter deinen Eingaben, kein
+  Marktranking. Alles bleibt lokal; Export/Import erfasst den Check automatisch.
+
+## Konzept v5 (umgesetzt)
+
+Runde 5 ([docs/konzept-r5.md](docs/konzept-r5.md)) baut den Vergleich weiter aus:
+
+- **Anbieter-Chips** – die bekannten Anbieter stehen direkt als „+ Anbieter"-
+  Buttons auf der Vergleichsseite: ein Tipp, und die Spalte ist mit
+  Richtwerten vorbefüllt. Kein Tippen nötig.
+- **Deine Unterlagen** – auf jeder Aufgaben-Seite und in jedem Vergleich
+  lassen sich Dokumente (PDF oder Foto, max. 4 MB) lokal ablegen, ansehen und
+  löschen. Sie bleiben auf dem Gerät und wandern mit in den Daten-Export;
+  das Profil zeigt die Speichernutzung.
+- **Drucken / PDF** – Vergleichstabelle und Bedarfscheck-Ergebnis lassen sich
+  über den Druckdialog des Browsers als PDF sichern (ohne Zusatz-Bibliothek).
+
+## Konzept v6 (umgesetzt)
+
+Runde 6 ([docs/konzept-r6.md](docs/konzept-r6.md)):
+
+- **Fragebogen-First** – bei jeder Versicherungs-Aufgabe (Haftpflicht, Hausrat,
+  Kfz, neu: Krankenkasse) ist der Bedarfscheck jetzt sichtbarer Schritt 1 der
+  Anleitung, mit Häkchen nach dem Ausfüllen. Die Fragebögen wurden auf 5–7
+  Fragen erweitert und erzeugen einen druckbaren **Tarif-Steckbrief**
+  (Zielwerte + empfohlene Bausteine) sowie die alphabetische Liste der
+  Katalog-Anbieter, deren Richtwerte alle Zielwerte erfüllen – Information,
+  keine Empfehlung: gleichrangig, ohne Provision, Richtwerte ungeprüft.
+- **Echte Farbwahl** – neben den vier Vorgaben gibt es einen freien Farbwähler
+  (Profil → Darstellung); die App leitet Abstufungen und kontrastsichere
+  Schrift automatisch ab. Die Akzentfarbe prägt jetzt wirklich das Bild:
+  Papierflieger, Primär-Buttons, Fortschritt, Heatmap und Checkboxen folgen
+  ihr – hell wie dunkel, ohne Farb-Flash beim Laden.
+
+## Deployment mit Vercel
+
+1. Repo bei [Vercel](https://vercel.com) importieren („Import from Git") –
+   Framework-Preset **Vite**, Root Directory `./`. Build (`npm run build`) und
+   Ausgabeverzeichnis (`dist`) erkennt Vercel automatisch; jeder Push auf `main`
+   deployt. Die SPA-Fallback-Regel steht in `vercel.json`, damit react-router
+   auch bei direktem Aufruf von Unterseiten greift.
+2. Optional für den KI-Modus: In den Project-Settings → Environment Variables
+   die Variable `ANTHROPIC_API_KEY` setzen. Die Function `api/agent.ts` wird von
+   Vercel automatisch unter `/api/agent` bereitgestellt. Ohne Key funktioniert
+   die App vollständig – Klaro antwortet dann ausschließlich lokal.
+
+## Module (Planungskonzept v2)
+
+- **Onboarding & Personalisierung** – 7 Fragen, danach werden nur relevante
+  Bereiche und Schritte angezeigt (`src/data/profile.ts`, `src/data/visibility.ts`).
+- **Bereiche & Aufgaben** – Journeys wie „Erste Wohnung", „Finanzen",
+  „Mobilität" mit Schritt-für-Schritt-Anleitungen und Fristen (`src/data/journeys/`).
+- **Suche** – Volltextsuche über alle Schritte inkl. Kategorie-Filter und
+  Treffer in den Vergleichen (`/suche`).
+- **Anbieter-Vergleich** – neutrale Vergleichstabellen (Strom, Internet,
+  Haftpflicht, Hausrat, Girokonto, Kfz, Handy). Kriterien kommen von Startklar,
+  Angebote trägt man selbst ein, Favorit markierbar. Keine Werbung, keine
+  Provision (`/vergleich`).
+- **Fortschritt** – Gesamt-Ring, Fortschritt je Bereich, Aktivitäts-Heatmap
+  aus echten Erledigt-Daten, zuletzt erledigte und nächste Schritte
+  (`/fortschritt`).
+- **Termine/Agenda** – Termine anlegen (auch direkt aus einer Aufgabe),
+  Gruppierung in Überfällig/Heute/Nächste 7 Tage/Später, ICS-Export für den
+  Kalender (`/termine`).
+
+Alle Nutzerdaten bleiben lokal auf dem Gerät (IndexedDB via localforage).
+
+## Entwicklung
+
+```bash
+npm install
+npm run dev      # Entwicklungsserver
+npm run build    # Type-Check + Produktions-Build (inkl. PWA)
+npm run lint     # oxlint
+npm run preview  # Build lokal testen
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Stack: React 19, TypeScript, Vite 8, Tailwind CSS 4, react-router 7,
+localforage, vite-plugin-pwa. Deployment via Vercel (`vercel.json`) – die
+SPA-Fallback-Regel leitet alle Routen auf `index.html`, damit react-router auch
+bei direktem Aufruf von Unterseiten greift.
+
+Hinweis: Inhalte sind keine Rechtsberatung; Beträge und Fristen stehen als
+`{PLATZHALTER}` in `src/data/fakten.ts`, bis sie redaktionell geprüft sind.

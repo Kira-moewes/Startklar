@@ -1,21 +1,20 @@
 import type { TaskCategory } from '../data/types'
 
-const meta: Record<TaskCategory, { label: string; cls: string }> = {
-  amt: { label: 'Amt', cls: 'bg-pine text-cream' },
-  versicherung: { label: 'Versicherung', cls: 'bg-pine-soft text-cream' },
-  wohnen: { label: 'Wohnen', cls: 'bg-coral text-white' },
-  finanzen: { label: 'Finanzen', cls: 'bg-coral-deep text-white' },
-  mobilitaet: { label: 'Mobilität', cls: 'bg-pine-mist text-pine' },
-  gesundheit: { label: 'Gesundheit', cls: 'bg-pine text-cream' },
-  recht: { label: 'Recht', cls: 'bg-pine-mist text-pine' },
-  arbeit: { label: 'Arbeit', cls: 'bg-coral-deep text-white' },
+const labels: Record<TaskCategory, string> = {
+  amt: 'Amt',
+  versicherung: 'Versicherung',
+  wohnen: 'Wohnen',
+  finanzen: 'Finanzen',
+  mobilitaet: 'Mobilität',
+  gesundheit: 'Gesundheit',
+  recht: 'Recht',
+  arbeit: 'Arbeit',
 }
 
 export default function CategoryBadge({ category }: { category: TaskCategory }) {
-  const m = meta[category]
   return (
-    <span className={`inline-block rounded-pill px-3 py-1 text-xs font-display font-semibold ${m.cls}`}>
-      {m.label}
+    <span className="inline-block rounded-pill border border-olive/40 px-2.5 py-[3px] text-[11.5px] font-semibold tracking-[.06em] uppercase text-olive">
+      {labels[category]}
     </span>
   )
 }
