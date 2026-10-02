@@ -23,11 +23,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.status(204).end()
     return
   }
+  // Abschalter: Der KI-Modus kostet Geld (Anthropic-API). Er läuft nur, wenn in
+  // Vercel die Umgebungsvariable KI_MODUS_AKTIV=true gesetzt ist. Standard: aus.
+  // Klaro antwortet dann lokal; der Client fällt bei !res.ok automatisch zurück.
+  if (process.env.KI_MODUS_AKTIV !== 'true') {
+    res.status(503).json({ fehler: 'KI-Modus ist abgeschaltet.' })
+    return
+  }
   if (req.method !== 'POST') {
     res.status(405).json({ fehler: 'Nur POST.' })
     return
   }
-  if (!originErlaubt(headerWert(req.headers['origin']), headerWert(req.headers['host']))) {
+  const origin = headerWert(req.headers['origin'])
+  // Ohne Herkunftsangabe (z. B. direkter Skript-Aufruf) wird abgelehnt.
+  if (!origin || !originErlaubt(origin, headerWert(req.headers['host']))) {
     res.status(403).json({ fehler: 'Nicht erlaubt.' })
     return
   }
