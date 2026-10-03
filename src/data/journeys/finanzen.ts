@@ -1,4 +1,4 @@
-import type { Journey } from '../types'
+import type { Journey } from '../types.js'
 
 export const finanzenJourney: Journey = {
   id: 'finanzen',
