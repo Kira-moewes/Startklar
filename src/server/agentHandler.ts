@@ -3,9 +3,9 @@
 // Die Function wird nur genutzt, wenn Nutzer:innen den KI-Modus in den
 // Einstellungen aktiv einschalten (Opt-in) und die lokale Antwort nicht reicht.
 
-import { journeys } from '../data'
-import { vergleichsKategorien } from '../data/vergleich'
-import { faqEintraege } from '../data/agent/faq'
+import { journeys } from '../data/index.js'
+import { vergleichsKategorien } from '../data/vergleich.js'
+import { faqEintraege } from '../data/agent/faq.js'
 
 const MODELL = 'claude-haiku-4-5'
 const MAX_OUTPUT_TOKENS = 1024
