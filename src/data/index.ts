@@ -1,7 +1,7 @@
-import { ersteWohnungJourney } from './journeys/erste-wohnung'
-import { mobilitaetJourney } from './journeys/mobilitaet'
-import { finanzenJourney } from './journeys/finanzen'
-import { startJourney } from './journeys/start'
+import { ersteWohnungJourney } from './journeys/erste-wohnung.js'
+import { mobilitaetJourney } from './journeys/mobilitaet.js'
+import { finanzenJourney } from './journeys/finanzen.js'
+import { startJourney } from './journeys/start.js'
 
 export const journeys = [startJourney, ersteWohnungJourney, finanzenJourney, mobilitaetJourney]
 
