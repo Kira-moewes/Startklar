@@ -1,6 +1,7 @@
 // Vercel-Adapter für Klaros KI-Modus – dünne Hülle um agentHandler,
 // benötigt ANTHROPIC_API_KEY in den Vercel-Env-Variablen.
-import { originErlaubt, verarbeiteAgentAnfrage } from '../src/server/agentHandler'
+import { timingSafeEqual } from 'node:crypto'
+import { originErlaubt, verarbeiteAgentAnfrage } from '../src/server/agentHandler.js'
 
 type VercelRequest = {
   method?: string
@@ -11,6 +12,16 @@ type VercelResponse = {
   status: (code: number) => VercelResponse
   json: (body: unknown) => void
   end: () => void
+}
+
+// Zweites Schloss: Nur wer das Passwort aus der Vercel-Variable KI_PASSWORT
+// mitschickt, bekommt eine KI-Antwort. Fehlt die Variable, kommt niemand rein.
+function passwortStimmt(gesendet: string | undefined): boolean {
+  const richtig = process.env.KI_PASSWORT
+  if (!richtig || !gesendet) return false
+  const a = Buffer.from(gesendet)
+  const b = Buffer.from(richtig)
+  return a.length === b.length && timingSafeEqual(a, b)
 }
 
 function headerWert(h: string | string[] | undefined): string | undefined {
@@ -37,6 +48,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const origin = headerWert(req.headers['origin'])
   // Ohne Herkunftsangabe (z. B. direkter Skript-Aufruf) wird abgelehnt.
   if (!origin || !originErlaubt(origin, headerWert(req.headers['host']))) {
+    res.status(403).json({ fehler: 'Nicht erlaubt.' })
+    return
+  }
+  if (!passwortStimmt(headerWert(req.headers['x-ki-passwort']))) {
     res.status(403).json({ fehler: 'Nicht erlaubt.' })
     return
   }
