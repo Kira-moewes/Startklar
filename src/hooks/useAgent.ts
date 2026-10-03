@@ -38,6 +38,23 @@ function retrievalAntwort(frage: string): AgentMessage | null {
   })
 }
 
+// KI-Passwort: einmal per ?ki=… aufrufen, dann merkt sich der Browser es.
+// Ohne Passwort lehnt der Server ab und Klaro antwortet lokal.
+const KI_PASSWORT_KEY = 'startklar-ki-passwort'
+function kiPasswort(): string {
+  try {
+    const url = new URL(window.location.href)
+    const neu = url.searchParams.get('ki')
+    if (neu) {
+      localStorage.setItem(KI_PASSWORT_KEY, neu)
+      url.searchParams.delete('ki')
+      window.history.replaceState(null, '', url.toString())
+    }
+    return localStorage.getItem(KI_PASSWORT_KEY) ?? ''
+  } catch { return '' }
+}
+kiPasswort() // beim Laden der App einmal ?ki=… übernehmen
+
 // Cloud-Aufruf (Stufe 4) – nur bei aktivem KI-Modus.
 async function kiAntwort(frage: string, verlauf: AgentMessage[], kontext: string | null): Promise<AgentMessage | null> {
   const controller = new AbortController()
@@ -45,7 +62,7 @@ async function kiAntwort(frage: string, verlauf: AgentMessage[], kontext: string
   try {
     const res = await fetch('/api/agent', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'x-ki-passwort': kiPasswort() },
       signal: controller.signal,
       body: JSON.stringify({
         frage,
